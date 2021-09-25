@@ -11,8 +11,11 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  NavbarText
+  NavbarText,
+  Breadcrumb,
+  BreadcrumbItem
 } from 'reactstrap';
+import {Link} from 'react-router-dom';
 import Logo from '../../assets/images/Encheres.png'
 import './Header.css'
 
@@ -37,7 +40,9 @@ class Header extends Component {
         return (
             <div className='container-fluid'>
                 <div className='row align-items-center'>
-                <Navbar style={{backgroundColor: '#150050'}} dark expand="md">
+                <Navbar style={{backgroundColor: '#222242'}} 
+                        className='header-navbar' 
+                        dark expand="md">
                     <NavbarBrand href="/">
                         <img src={Logo} height="70" width="70" alt='Encheres' />
                     </NavbarBrand>
@@ -54,10 +59,10 @@ class Header extends Component {
                                     <span className='NavBarLink fa fa-plus-square fa-lg'/> Create
                                 </DropdownToggle>
                                 <DropdownMenu right>
-                                    <DropdownItem>
+                                    <DropdownItem href='/create/New-Item'>
                                         Live Auction
                                     </DropdownItem>
-                                    <DropdownItem>
+                                    <DropdownItem href='/create/New-Item'>
                                         Independent Item
                                     </DropdownItem>
                                 </DropdownMenu>
