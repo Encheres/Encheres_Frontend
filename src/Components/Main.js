@@ -14,8 +14,8 @@ class Main extends Component {
       <div>
         <Header />
           <Switch>
-              <Route exact path='/create/New-Item' component={() => <NewItem/>}/>
-              <Redirect to='/create/Live-Auction' />
+              <Route exact path='/create/Independent-Item' component={() => <NewItem/>}/>
+              <Redirect to='/create/Independent-Item' />
           </Switch>
         <Footer />
       </div>
