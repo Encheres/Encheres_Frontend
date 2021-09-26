@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import '../Create/NewItem.css'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {Badge, Row, Image} from 'react-bootstrap';
 import {Card, CardText, CardBody,
@@ -13,7 +12,8 @@ import {GiCardRandom, GiBearFace} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
 import {Link} from 'react-router-dom'
 import bgImg from '../../assets/images/dark-header.png'
-import preview from '../../assets/images/preview-piece.jfif'
+import preview from '../../assets/images/preview-piece.jfif';
+import '../Create/NewItem.css'
 
 class NewItem extends Component {
 
@@ -32,12 +32,14 @@ class NewItem extends Component {
     render(){        
         return(
             <div className='container-fluid'>
-                <div className='row justify-content-center new-item-card-row'>
-                    <h3 className='rainbow-lr col-12' style={{textAlign: 'center'}}>CREATE INDEPENDENT ITEM</h3>
-                    <div className='col-11 col-lg-7'>
-                        <Card className='new-item-card'>
+                <div className='row justify-content-center' id='new-item-card-row'>
+                    <h3 className='col-12 rainbow-lr' style={{textAlign: 'center'}}>
+                        CREATE INDEPENDENT ITEM
+                    </h3>
+                    <div className='col-11 col-sm-8 col-md-7 col-lg-7'>
+                        <Card id='new-item-card'>
                             <CardBody>
-                            <CardSubtitle tag="h6" className="mt-4 new-item-card-subtitle">
+                            <CardSubtitle tag="h6" className="new-item-card-subtitle">
                                 UPLOAD ITEM FILE
                             </CardSubtitle>
                             <div className='new-item-dropbox'>
@@ -108,7 +110,7 @@ class NewItem extends Component {
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
                                                 }}
-                                            placeholder="Item Price in ETH" />
+                                            placeholder="Price in ETH" />
                                     </Form.Group>
                                     </div>
                                     <div className='col-6'>
@@ -165,8 +167,8 @@ class NewItem extends Component {
                             </CardBody>
                         </Card>
                     </div>
-                    <div className='col-11 col-lg-3'>
-                        <Card className='new-item-card'>
+                    <div className='col-11 col-sm-8 col-md-4 col-lg-3'>
+                        <Card id='new-item-card'>
                             <span className='mb-3' style={{marginLeft: 25, color: 'cyan'}}>
                                 10Ds 08Hs 37Ms 05Ss
                             </span>
