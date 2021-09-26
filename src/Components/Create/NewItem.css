@@ -3,6 +3,11 @@
     margin-bottom: 100px;
 }
 
+.new-item-heading{
+    text-align: center !important;
+    margin-top: 100px !important;
+}
+
 /* General Card CSS */
 
 #new-item-card{

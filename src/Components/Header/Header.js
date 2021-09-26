@@ -41,7 +41,7 @@ class Header extends Component {
             <div className='container-fluid'>
                 <div className='row align-items-center'>
                 <Navbar style={{backgroundColor: '#222242'}} 
-                        className='header-navbar' 
+                        id='header-navbar' 
                         dark expand="md">
                     <NavbarBrand href="/">
                         <img src={Logo} height="70" width="70" alt='Encheres' />

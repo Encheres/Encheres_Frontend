@@ -33,7 +33,7 @@ class NewItem extends Component {
         return(
             <div className='container-fluid'>
                 <div className='row justify-content-center' id='new-item-card-row'>
-                    <h3 className='col-12 rainbow-lr' style={{textAlign: 'center'}}>
+                    <h3 className='col-12 rainbow-lr new-item-heading'>
                         CREATE INDEPENDENT ITEM
                     </h3>
                     <div className='col-11 col-sm-8 col-md-7 col-lg-7'>
@@ -138,7 +138,7 @@ class NewItem extends Component {
                                     <div key={`inline-checkbox`} className="mb-3">
                                         <Form.Check
                                             inline
-                                            label="Put On Auction"
+                                            label="Allow Bids"
                                             name="group1"
                                             type={"checkbox"}
                                             id={`inline-checkbox-1`}
@@ -146,7 +146,7 @@ class NewItem extends Component {
                                         />
                                         <Form.Check
                                             inline
-                                            label="Instant Sale Price"
+                                            label="Fixed Price Sale"
                                             name="group1"
                                             type={"checkbox"}
                                             id={`inline-checkbox-2`}
