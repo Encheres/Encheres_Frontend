@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
 import NewItem from './Create/NewItem';
-import Contactus from './contact-us/Contactus'
 import Contact from './Contactus/Contactus'
 class Main extends Component {
 
