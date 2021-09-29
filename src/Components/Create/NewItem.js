@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import {Badge, Row, Image} from 'react-bootstrap';
+import Switch from "react-switch";
+import DateTimePicker from 'react-datetime-picker';
+import {Badge, Row, Image, FloatingLabel} from 'react-bootstrap';
 import {Card, CardText, CardBody,
     CardTitle, CardSubtitle, Button, Breadcrumb, BreadcrumbItem, ButtonGroup} from "reactstrap";
 import Form from 'react-bootstrap/Form';
@@ -21,8 +22,29 @@ class NewItem extends Component {
         super(props);
         this.state={
             username: 'ultimate_creater',
-            copied: 'false'
+            copied: 'false',
+            bids: false,
+            startDateTime: new Date(),
+            endDateTime: new Date()
         }
+    }
+    
+    handleCheckChange() {
+        this.setState({
+            bids : !this.state.bids
+        });
+    }
+
+    onStartDateTimeChange(){
+        this.setState({
+            startDateTime: this.state.startDateTime
+        })
+    }
+
+    onEndDateTimeChange(){
+        this.setState({
+            endDateTime: this.state.endDateTime
+        })
     }
 
     componentDidMount() {
@@ -34,13 +56,22 @@ class NewItem extends Component {
             <div className='container-fluid'>
                 <div className='row justify-content-center' id='new-item-card-row'>
                     <h3 className='col-12 rainbow-lr new-item-heading'>
-                        CREATE INDEPENDENT ITEM
+                        ADD INDEPENDENT ASSET
                     </h3>
+                    <div className='new-item-card-button-div mt-4'>
+                        <Button className='new-item-card-button'>
+                            DIGITAL (NFT) 
+                        </Button>
+                        {" "}
+                        <Button className='new-item-card-button'>
+                            PHYSICAL
+                        </Button>
+                    </div>
                     <div className='col-11 col-sm-8 col-md-7 col-lg-7'>
                         <Card id='new-item-card'>
                             <CardBody>
                             <CardSubtitle tag="h6" className="new-item-card-subtitle">
-                                UPLOAD ITEM FILE
+                                UPLOAD ASSET FILE
                             </CardSubtitle>
                             <div className='new-item-dropbox'>
                                 <CardText className='new-item-card-text'>
@@ -55,7 +86,7 @@ class NewItem extends Component {
                             </CardBody>
                             <CardBody> 
                                 <CardText className='new-item-card-text'>
-                                    Select Item Categories
+                                    Select Asset Categories
                                 </CardText>
                                 <div>
                                     <Badge className='new-item-badge' pill bg="light" text="dark">
@@ -89,6 +120,7 @@ class NewItem extends Component {
                                             className='new-item-form-field' 
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
+                                                color: 'white'
                                                 }}
                                             placeholder="Item Name" />
                                     </Form.Group>
@@ -97,6 +129,7 @@ class NewItem extends Component {
                                             as="textarea"
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
+                                                color: 'white'
                                                 }}
                                             className='new-item-form-field' 
                                             placeholder='Description'
@@ -109,6 +142,7 @@ class NewItem extends Component {
                                             className='new-item-form-field' 
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
+                                                color: 'white'
                                                 }}
                                             placeholder="Price in ETH" />
                                     </Form.Group>
@@ -119,6 +153,7 @@ class NewItem extends Component {
                                             className='new-item-form-field' 
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
+                                                color: 'white'
                                                 }}
                                             placeholder="Royality" />
                                     </Form.Group>
@@ -131,28 +166,27 @@ class NewItem extends Component {
                                             className='new-item-form-field' 
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
+                                                color: 'white'
                                                 }}
                                             placeholder="Size" />
                                     </Form.Group>
                                     </div>
-                                    <div key={`inline-checkbox`} className="mb-3">
-                                        <Form.Check
-                                            inline
-                                            label="Allow Bids"
-                                            name="group1"
-                                            type={"checkbox"}
-                                            id={`inline-checkbox-1`}
-                                            style={{color: 'grey'}}
-                                        />
-                                        <Form.Check
-                                            inline
-                                            label="Fixed Price Sale"
-                                            name="group1"
-                                            type={"checkbox"}
-                                            id={`inline-checkbox-2`}
-                                            style={{color: 'grey'}}
-                                        />
+                                    <div className='mt-4'>
+                                        <span className='new-item-switch-label'>
+                                            Allow Bids
+                                        </span>
+                                        <Switch 
+                                            onChange={() => this.handleCheckChange()} 
+                                            checked={this.state.bids}
+                                            height={24}
+                                            width={50}
+                                             />
                                     </div>
+                                    </div>
+                                    <div className='mt-4 mb-4'>
+                                    <span className='new-item-date-time-label'>
+                                        Enter Start and End Date-Time
+                                    </span>
                                     </div>
                                     <div className='new-item-card-button-div'>
                                         <Button className='new-item-card-button'>
@@ -160,7 +194,7 @@ class NewItem extends Component {
                                         </Button>
                                         {" "}
                                         <Button className='new-item-card-button'>
-                                            CREATE ITEM
+                                            CREATE ASSET
                                         </Button>
                                     </div>
                                 </Form>

@@ -8,6 +8,12 @@
     margin-top: 100px !important;
 }
 
+.new-item-checkbox{
+    height: 10px !important;
+    width: 10px !important;
+    color: grey;
+}
+
 /* General Card CSS */
 
 #new-item-card{
@@ -96,6 +102,14 @@
     border: dashed 2px gray;
 }
 
+.new-item-switch-label{
+    color: white;
+    margin-right: 15px;
+}
+
+.new-item-date-time-label{
+    color: white;
+}
 
 /* Text Beautification */
 

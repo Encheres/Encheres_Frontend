@@ -56,14 +56,14 @@ class Header extends Component {
                             </NavItem>
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle nav caret>
-                                    <span className='NavBarLink fa fa-plus-square fa-lg'/> Create
+                                    <span className='NavBarLink fa fa-plus-square fa-lg'/> Add
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem href='/create/New-Item'>
                                         Live Auction
                                     </DropdownItem>
                                     <DropdownItem href='/create/New-Item'>
-                                        Independent Item
+                                        Independent Asset
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
@@ -73,10 +73,10 @@ class Header extends Component {
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem>
-                                        Live Auction
+                                        Live Auctions
                                     </DropdownItem>
                                     <DropdownItem>
-                                        On Sale Assets
+                                        Independent Assets
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
