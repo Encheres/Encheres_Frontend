@@ -11,10 +11,10 @@ import {FaPalette, FaMusic, FaFootballBall,
 import {GrDomain } from 'react-icons/gr';
 import {GiCardRandom, GiBearFace} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
-import {Link} from 'react-router-dom'
-import bgImg from '../../assets/images/dark-header.png'
-import preview from '../../assets/images/preview-piece.jfif';
-import '../Create/NewItem.css'
+import { Link } from "react-router-dom";
+import bgImg from "../../assets/images/dark-header.png";
+import preview from "../../assets/images/preview-piece.jfif";
+import "../Create/NewItem.css";
 
 class NewItem extends Component {
 
@@ -180,6 +180,8 @@ class NewItem extends Component {
                                             checked={this.state.bids}
                                             height={24}
                                             width={50}
+                                            offColor='#03091F'
+                                            onColor='#00CAFF'
                                              />
                                     </div>
                                     </div>
@@ -195,65 +197,87 @@ class NewItem extends Component {
                                         {" "}
                                         <Button className='new-item-card-button'>
                                             CREATE ASSET
-                                        </Button>
+                                        </Button>      
                                     </div>
                                 </Form>
                             </CardBody>
                         </Card>
-                    </div>
-                    <div className='col-11 col-sm-8 col-md-4 col-lg-3'>
-                        <Card id='new-item-card'>
-                            <span className='mb-3' style={{marginLeft: 25, color: 'cyan'}}>
+                        </div>
+                        <div className="col-11 col-sm-8 col-md-4 col-lg-3">
+                            <Card id="new-item-card">
+                            <span className="mb-3" style={{ marginLeft: 25, color: "cyan" }}>
                                 10Ds 08Hs 37Ms 05Ss
                             </span>
-                            <Image className='new-item-image' src={preview} rounded />
+                            <Image className="new-item-image" src={preview} rounded />
                             <CardBody>
-                                <CardSubtitle tag="h5" className="mt-3 mb-3 new-item-card-subtitle" 
-                                    id='new-item-card-username'>
-                                    Deslajd ed d
+                                <CardSubtitle
+                                tag="h5"
+                                className="mt-3 mb-3 new-item-card-subtitle"
+                                id="new-item-card-username"
+                                >
+                                Deslajd ed d
                                 </CardSubtitle>
-                                <CardText id='new-item-card-info' className='mb-4'>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                <CardText id="new-item-card-info" className="mb-4">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                                 </CardText>
                                 <div>
-                                <Badge className='new-item-badge' pill bg="light" text="dark">
-                                    <span><FaPalette/></span> Art
+                                <Badge className="new-item-badge" pill bg="light" text="dark">
+                                    <span>
+                                    <FaPalette />
+                                    </span>{" "}
+                                    Art
                                 </Badge>
-                                <Badge className='new-item-badge' pill bg="light" text="dark">
-                                    <span><GiBearFace/></span> Collectibles
+                                <Badge className="new-item-badge" pill bg="light" text="dark">
+                                    <span>
+                                    <GiBearFace />
+                                    </span>{" "}
+                                    Collectibles
                                 </Badge>
                                 </div>
                                 <div>
-                                    <CardSubtitle tag="h6" className='new-item-preview-price'>
-                                        Price{"  "}<span style={{marginLeft: 10, color: 'cyan'}}>10 ETH</span>
-                                    </CardSubtitle>
-                                    <CardSubtitle tag="h6" className='new-item-preview-price'>
-                                        Royality{"  "}<span style={{marginLeft: 10, color: 'cyan'}}>5%</span>
-                                    </CardSubtitle>
-                                    <CardSubtitle tag="h6" className='new-item-preview-price'>
-                                        Size{"  "}<span style={{marginLeft: 10, color: 'cyan'}}>10 Mb</span>
-                                    </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Price{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                    10 ETH
+                                    </span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Royality{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>5%</span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Size{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>10 Mb</span>
+                                </CardSubtitle>
                                 </div>
-                                <div className='new-item-accountbox'>
-                                    <CardText id='new-item-card-account'>
-                                        @{this.state.username}
-                                    </CardText>
+                                <div className="new-item-accountbox">
+                                <CardText id="new-item-card-account">
+                                    @{this.state.username}
+                                </CardText>
                                 </div>
-                                <div className='row justify-content-center mt-4'>
+                                <div className="row justify-content-center mt-4">
                                 <ButtonGroup size="md">
-                                    <Button className='new-item-card-social'><FaLinkedin/></Button>
-                                    <Button className='new-item-card-social'><FaFacebook/></Button>
-                                    <Button className='new-item-card-social'><FaTwitter/></Button>
-                                    <Button className='new-item-card-social'><FaInstagram/></Button>
+                                    <Button className="new-item-card-social">
+                                    <FaLinkedin />
+                                    </Button>
+                                    <Button className="new-item-card-social">
+                                    <FaFacebook />
+                                    </Button>
+                                    <Button className="new-item-card-social">
+                                    <FaTwitter />
+                                    </Button>
+                                    <Button className="new-item-card-social">
+                                    <FaInstagram />
+                                    </Button>
                                 </ButtonGroup>
                                 </div>
                             </CardBody>
-                        </Card>
-                    </div>
+                            </Card>
+                        </div>
+                  </div>
                 </div>
-            </div>
-        )
-    }
+        );
+        }
 }
 
 export default NewItem;

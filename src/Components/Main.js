@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
 import NewItem from './Create/NewItem';
-import Contactus from './contact-us/Contactus'
+import Contact from './Contactus/Contactus'
 class Main extends Component {
 
 
@@ -15,10 +15,8 @@ class Main extends Component {
       <div>
         <Header />
         <Switch>
-
           {/*Contact us page*/}
-          <Route exact path='/contact-us' component={() => <Contactus />} />
-
+          <Route exact path='/contact-us' component={() => <Contact />} />
           <Route exact path='/create/Independent-Item' component={() => <NewItem />} />
           <Redirect to='/create/Independent-Item' />
 
