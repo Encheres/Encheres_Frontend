@@ -23,6 +23,7 @@ class NewItem extends Component {
         this.state={
             username: 'ultimate_creater',
             copied: 'false',
+            onSale: false,
             bids: false,
             startDateTime: new Date(),
             endDateTime: new Date()
@@ -75,7 +76,7 @@ class NewItem extends Component {
                             </CardSubtitle>
                             <div className='new-item-dropbox'>
                                 <CardText className='new-item-card-text'>
-                                    PNG, GIF, WEBP, MP4 or MP3. Max 100mb
+                                    PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb
                                 </CardText>
                                 <div className='new-item-card-button-div'>
                                 <Button className='new-item-card-button'>
@@ -109,6 +110,9 @@ class NewItem extends Component {
                                     </Badge>
                                     <Badge className='new-item-badge' pill bg="light" text="dark">
                                         <span><FaFootballBall/></span> Sports
+                                    </Badge>
+                                    <Badge className='new-item-badge' pill bg="light" text="dark">
+                                        <span className='fa fa-file'/> Documents
                                     </Badge>
                                     <Badge className='new-item-badge' pill bg="light" text="dark">
                                         <span><FaWallet/></span> Utility
@@ -171,32 +175,47 @@ class NewItem extends Component {
                                             placeholder="Size" />
                                     </Form.Group>
                                     </div>
-                                    <div className='mt-4'>
-                                        <span className='new-item-switch-label'>
-                                            Allow Bids
-                                        </span>
-                                        <Switch 
-                                            onChange={() => this.handleCheckChange()} 
-                                            checked={this.state.bids}
-                                            height={24}
-                                            width={50}
-                                            offColor='#03091F'
-                                            onColor='#00CAFF'
-                                             />
                                     </div>
-                                    </div>
-                                    <div className='mt-4 mb-4'>
-                                    <span className='new-item-date-time-label'>
-                                        Enter Start and End Date-Time
-                                    </span>
-                                    </div>
-                                    <div className='new-item-card-button-div'>
+                                    {
+                                        this.state.onSale ?
+                                        <div>
+                                            <div className='mt-4'>
+                                            <span className='new-item-switch-label'>
+                                                Allow Bids
+                                            </span>
+                                            <Switch 
+                                                onChange={() => this.handleCheckChange()} 
+                                                checked={this.state.bids}
+                                                height={24}
+                                                width={50}
+                                                offColor='#03091F'
+                                                onColor='#00CAFF'
+                                                />
+                                            </div>
+                                            <div className='mt-4 mb-4'>
+                                            <span className='new-item-date-time-label'>
+                                                Enter Start and End Date-Time
+                                            </span>
+                                            </div>
+                                        </div>
+                                        :
+                                        <div></div>
+                                    }
+                                    <div className='mt-4 new-item-card-button-div'>
                                         <Button className='new-item-card-button'>
                                             PREVIEW
                                         </Button>
                                         {" "}
                                         <Button className='new-item-card-button'>
                                             CREATE ASSET
+                                        </Button>   
+                                        {" "}
+                                        <Button className='new-item-card-button'
+                                                onClick={() => this.setState({
+                                                    onSale: !this.state.onSale
+                                                })}
+                                        >
+                                            ALLOW SALE
                                         </Button>      
                                     </div>
                                 </Form>

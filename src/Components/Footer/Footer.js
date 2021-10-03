@@ -8,6 +8,8 @@ function Footer(props) {
       style={{
         color: '#ffffffad',
         backgroundColor: 'rgb(34, 34, 66)',
+        paddingTop: 50,
+        paddingBottom: 50
       }}
     >
       <div
@@ -27,7 +29,7 @@ function Footer(props) {
                   </div>
                   <ul
                     className="social-links"
-                    style={{ listStyle: 'none', display: 'flex' }}
+                    style={{ listStyle: 'none', display: 'flex'}}
                   >
                     <li style={{ marginRight: '12px' }}>
                       <a href="#">
