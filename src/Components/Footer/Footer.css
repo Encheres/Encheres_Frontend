@@ -1,6 +1,6 @@
 .main-footer {
     position: relative;
-    background: #020c31;
+    color: #ffffffad !important;
 }
 
 .main-footer .has-line-center:after {
@@ -24,7 +24,7 @@
     position: relative;
     color: #bbb;
     padding: 50px 0 80px;
-    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+    border-bottom: 1px solid hsla(0, 100%, 50%, 0.87);
 }
 
 .main-footer .footer-widget {
@@ -39,9 +39,15 @@
     line-height: 1.9em;
 }
 
+
 .social-links,
 .social-links li {
+    display: flex;
+    list-style: none;
     position: relative;
+}
+.social-links{
+    display: flex;
 }
 
 .social-links li {
@@ -58,8 +64,6 @@
     height: 38px;
     text-align: center;
     font-size: 13px;
-    background: hsla(0, 0%, 100%, 0.05);
-    color: #bbb;
     transition: all 0.5s ease;
 }
 

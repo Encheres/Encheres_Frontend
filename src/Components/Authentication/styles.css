@@ -1,0 +1,32 @@
+/*Section and Headings*/
+
+.heading_section_row{
+    margin-top:9rem !important;
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section_heading--secondary{
+    text-align: center;
+    color: #ffff !important;
+    font-size: 2.5rem;
+
+}
+#singup_form_card{
+    border-radius: 2rem ;
+    background-color: #0B1126;
+    padding: 3rem;
+    padding-top: 2.5rem;
+}
+.form_input_row{
+    margin-bottom: 1rem;
+}
+
+.form_input_label{
+    color: #ffff;
+}
+
+.form_input_field, .select__control, .select__menu, .select__single-value{
+    background-color: #03091F !important;
+    color: #fff !important;
+}
