@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import "./contactus.css";
+import React, { Component } from 'react'
+import './contactus.css'
 
 class Contactus extends Component {
   render = () => {
@@ -19,76 +19,159 @@ class Contactus extends Component {
                 >
                   Contact With Us
                 </h2>
-                <p data-aos="fade-up" data-aos-delay={400} className="aos-init">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  quis accumsan nisi Ut ut felis congue nisl hendrerit commodo.
-                </p>
               </div>
             </div>
-          </div>
-          <div
-            className="row justify-content-center"
-            style={{ backgroundColor: "black" }}
-          >
-            <div className="col-12 col-md-10 col-lg-8">
-              <div className="contact_form">
-                <form action="#" method="post">
-                  <div className="row">
-                    <div className="col-12">
-                      <div id="success_fail_info" />
-                    </div>
-                    <div className="col-12 col-md-6">
-                      <div className="group aos-init">
-                        <input type="text" name="name" id="name" required />
-                        <span className="highlight" />
-                        <span className="bar" />
-                        <label>Name</label>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6">
-                      <div className="group aos-init">
-                        <input type="text" name="email" id="name" required />
-                        <span className="highlight" />
-                        <span className="bar" />
-                        <label>Email</label>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="group aos-init">
-                        <input type="text" name="subject" id="name" required />
-                        <span className="highlight" />
-                        <span className="bar" />
-                        <label>Subject</label>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="group aos-init">
-                        <textarea
-                          name="message"
-                          id="message"
-                          required
-                          defaultValue={""}
-                        />
-                        <span className="highlight" />
-                        <span className="bar" />
-                        <label>Message</label>
-                      </div>
-                    </div>
-                    <div
-                      className="col-12 text-center aos-init"
-                      data-aos-delay={700}
-                      data-aos="fade-in"
-                    >
-                      <button class="btn-hover color-7">end Messagege</button>
-                    </div>
+            <div className="contactus_main">
+              <div className="left">
+                <h2> We are here to help you</h2>
+                <div className="contact_left_small">
+                  <i
+                    className="fa fa-home fa-3x"
+                    style={{ padding: '5px' }}
+                  ></i>
+                  <div style={{ marginLeft: '8px' }}>
+                    <h5>Company Address</h5>
+                    <p>10, Mc Donald Avenue, Sunset Park, Newyork</p>
                   </div>
-                </form>
+                </div>
+                <div className="contact_left_small">
+                  <i
+                    className="fa fa-envelope fa-3x"
+                    style={{ padding: '5px' }}
+                  ></i>
+                  <div style={{ marginLeft: '5px' }}>
+                    <h5>Email Address</h5>
+                    <p>info@yourdomain.com</p>
+                  </div>
+                </div>
+                <div className="contact_left_small">
+                  <i
+                    className="fa fa-phone fa-3x"
+                    style={{ padding: '5px' }}
+                  ></i>
+                  <div style={{ marginLeft: '13px' }}>
+                    <h5>Contact</h5>
+                    <p>+99 999 9999</p>
+                  </div>
+                </div>
+                <div className="sociallinks">
+                  <ul
+                    className="social-links"
+                    style={{ listStyle: 'none', display: 'flex' }}
+                  >
+                    <li style={{ marginRight: '12px' }}>
+                      <a href="#">
+                        <span className="fa fa-facebook-f" />
+                      </a>
+                    </li>
+                    <li style={{ marginRight: '12px' }}>
+                      <a href="#">
+                        <span className="fa fa-twitter" />
+                      </a>
+                    </li>
+                    <li style={{ marginRight: '12px' }}>
+                      <a href="#">
+                        <span className="fa fa-google-plus" />
+                      </a>
+                    </li>
+                    <li style={{ marginRight: '12px' }}>
+                      <a href="#">
+                        <span className="fa fa-linkedin" />
+                      </a>
+                    </li>
+                    <li style={{ marginRight: '12px' }}>
+                      <a href="#">
+                        <span className="fa fa-instagram" />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="right">
+                <h1>Send Us Message</h1>
+                <div  className="input-flex">
+                  <div
+                    className="group aos-init"
+                    style={{ marginRight: '10px' }}
+                  >
+                    <input
+                      type="text"
+                      name="email"
+                      id="name"
+                      required
+                      placeholder="Name"
+                    />
+                    <span className="highlight" />
+                    <span className="bar" />
+                  </div>
+                  <div
+                    className="group aos-init"
+                    style={{ marginRight: '10px' }}
+                  >
+                    <input
+                      type="text"
+                      name="email"
+                      id="name"
+                      required
+                      placeholder="Name"
+                    />
+                    <span className="highlight" />
+                    <span className="bar" />
+                  </div>
+                </div>
+                <div  className="input-flex">
+                  <div
+                    className="group aos-init"
+                    style={{ marginRight: '10px' }}
+                  >
+                    <input
+                      type="text"
+                      name="email"
+                      id="name"
+                      required
+                      placeholder="Name"
+                    />
+                    <span className="highlight" />
+                    <span className="bar" />
+                  </div>
+                  <div className="group aos-init">
+                    <input
+                      type="text"
+                      name="email"
+                      id="name"
+                      required
+                      placeholder="Name"
+                    />
+                    <span className="highlight" />
+                    <span className="bar" />
+                  </div>
+                </div>
+                <div>
+                  <div className="group aos-init">
+                    <textarea
+                      name="message"
+                      id="message"
+                      required
+                      placeholder="Feedback"
+                      defaultValue={''}
+                    />
+                    <span className="highlight" />
+                    <span className="bar" />
+                  </div>
+                </div>
+                <div
+                  className="col-12 text-center aos-init"
+                  data-aos-delay={700}
+                  data-aos="fade-in"
+                >
+                  <button class="btn-hover color-7">Send</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-    );
-  };
+    )
+  }
 }
-export default Contactus;
+export default Contactus
