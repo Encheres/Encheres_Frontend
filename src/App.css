@@ -1,0 +1,44 @@
+/* Text Beautification*/
+.rainbow-lr {
+    background: linear-gradient(to right, #A44BC7, cyan, blue, violet);
+    color:transparent;
+    background-clip: text;
+}
+
+.rainbow-td {
+    background: linear-gradient(to bottom, red, orange , yellow, green, cyan, blue, violet);
+    color:transparent;
+    background-clip: text;
+}
+
+
+/**************************************************/
+/*Section and Headings*/
+
+.heading_section_row{
+    margin-top:9rem !important;
+    text-align: center;
+}
+
+.section_heading{
+    text-align: center;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+.section_content{
+    padding-bottom: 7rem;
+    padding-top:3rem;
+
+}
+
+
+/**********************************************/
+/*Buttons*/
+.form__button{
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px !important;
+}
+.pink_blue_gradiend_btn{
+    background-image:linear-gradient(to right, violet, #A44BC7, blue, rgb(41, 41, 136)) ;
+}
