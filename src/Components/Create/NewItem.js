@@ -48,9 +48,6 @@ class NewItem extends Component {
         })
     }
 
-    componentDidMount() {
-        document.body.style.backgroundColor = "#03091F"
-    }
 
     render(){        
         return(
