@@ -26,7 +26,7 @@ class Home extends Component{
 
                             <br/><br/>
                             <h4 className="title_heading--helper">
-                                Now trading with NFT's, and  physical goods become much more easier and secure.
+                                Now trading with NFT's, and  physical assets become much more easier and secure.
                                 <br/>
                                 Now sell and buy assets, conduct auctions, from the comfort of your home.
                                 <br/><br/>
