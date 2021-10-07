@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import * as ipfsClient  from 'ipfs-http-client';
 import moment from 'moment';
 import Switch from "react-switch";
 import Datetime from 'react-datetime';
@@ -13,8 +14,12 @@ import {FaPalette, FaMusic, FaFootballBall,
 import {GrDomain } from 'react-icons/gr';
 import {GiCardRandom, GiBearFace} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
-import preview from "../../assets/images/preview-piece.jfif";
+import preview from "../../assets/images/auction.jpg";
 import "../Create/NewItem.css";
+
+//Declare IPFS
+const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+
 
 class NewItem extends Component {
 
@@ -22,11 +27,14 @@ class NewItem extends Component {
         super(props);
         this.state={
 
+            assetFileHash: "",
+            assetFileSize: 0,
             name: "",
             description: "",
             price: 0.0000,
             royality: 0,
             categories: [],
+            createrUsername: "john_bill123",
 
             errors: {
                 name: "",
@@ -43,8 +51,9 @@ class NewItem extends Component {
             startDateTime: "",
             endDateTime: "",
 
+            assetFileUploading: false,
             success: false,
-            fail: false
+            fail: false,
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -62,11 +71,12 @@ class NewItem extends Component {
         })
     }
 
-    createItem() {
+    async createItem() {
         
         if(this.formValidattion()){
             console.log(this.state);
 
+            await this.uploadAssetFile()
             this.onSuccessDismiss()
 
             setTimeout(() => {
@@ -149,11 +159,48 @@ class NewItem extends Component {
         console.log(this.state.categories);
     }
 
-    onFileChange = e => {
-        e.preventDefault();
-        console.log(e.target.files[0]);
-        alert(e.target.files[0].size)
+    onFileChange = (e) => {
+
+        e.preventDefault()
+        const file = e.target.files[0]
+        const reader = new window.FileReader()
+        reader.readAsArrayBuffer(file)
+
+        reader.onloadend = () => {
+        this.setState({ buffer: Buffer(reader.result) })
+        console.log('buffer', this.state.buffer)
+        }
+
+        console.log("Submitting file to ipfs...")
     };
+
+    async uploadAssetFile(){
+        try {
+            
+            this.setState({
+                assetFileUploading: true
+            })
+
+            const file = await ipfs.add(this.state.buffer)
+            this.setState({
+                assetFileHash: file.path,
+                assetFileSize: (file.size/1000),
+                assetFileUploading: false
+            })
+
+            console.log(file.path)
+
+        } catch (error) {
+
+            this.onFailDismiss();
+            setTimeout(() => {
+                this.onFailDismiss()
+            }, 10000);
+
+        }
+
+        //https://ipfs.infura.io/ipfs/<hash>
+    }
     
     handleCheckChange() {
         this.setState({
@@ -357,12 +404,12 @@ class NewItem extends Component {
                                             />
                                         <p className='mt-4' id='new-item-form-error'>
                                             {
-                                                this.state.startDateTime !== "" ? "Start: "+moment(this.state.startDateTime).format('MMMM Do YYYY, h:mm A') : ""
+                                                this.state.onSale && this.state.startDateTime !== "" ? "Start: "+moment(this.state.startDateTime).format('MMMM Do YYYY, h:mm A') : ""
                                             }
                                         </p>
                                         <p id='new-item-form-error'>
                                             {
-                                                this.state.endDateTime !== "" ? "End: "+moment(this.state.endDateTime).format('MMMM Do YYYY, h:mm A') : ""
+                                                this.state.onSale && this.state.endDateTime !== "" ? "End: "+moment(this.state.endDateTime).format('MMMM Do YYYY, h:mm A') : ""
                                             }
                                         </p>
                                     </div>
@@ -421,8 +468,15 @@ class NewItem extends Component {
                                                         <Button 
                                                             className='fa fa-lg fa-telegram'
                                                             onClick={() => {
+                                                                if(moment(this.state.startDateTime).format('MMMM Do YYYY, h:mm A')=='Invalid date'||moment(this.state.endDateTime).format('MMMM Do YYYY, h:mm A')=='Invalid date'){
+                                                                    var er = this.state.errors;
+                                                                    er.dateTime = "Invalid Date-Time"
 
-                                                                if(this.state.startDateTime >= this.state.endDateTime){
+                                                                    this.setState({
+                                                                        errors: er
+                                                                    })
+                                                                }
+                                                                else if(this.state.startDateTime >= this.state.endDateTime){
 
                                                                     var er = this.state.errors;
                                                                     er.dateTime = "End Date-time must be greater than Start Date-time"
@@ -459,10 +513,12 @@ class NewItem extends Component {
                                         <div></div>
                                     }
                                     <div className='mt-4 new-item-card-button-div'>
-                                        <Button className='new-item-card-button'>
-                                            PREVIEW
-                                        </Button>
-                                        {" "}
+                                        <Button className='new-item-card-button'
+                                            disabled={this.state.assetFileUploading}
+                                            onClick={() => this.uploadAssetFile()}
+                                        >
+                                            PREVIEW ASSET FILE
+                                        </Button>  
                                         <Button className='new-item-card-button'
                                             onClick={() => this.createItem()}
                                         >
@@ -481,71 +537,81 @@ class NewItem extends Component {
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
                             <Card id="new-item-card">
-                            <span className="mb-3" style={{ marginLeft: 25, color: "cyan" }}>
-                                10Ds 08Hs 37Ms 05Ss
-                            </span>
-                            <Image className="new-item-image" src={preview} rounded />
+                                <Image className="new-item-image" rounded
+                                    src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
+                                />
                             <CardBody>
                                 <CardSubtitle
                                 tag="h5"
                                 className="mt-3 mb-3 new-item-card-subtitle"
                                 id="new-item-card-username"
                                 >
-                                Deslajd ed d
+                                    {this.state.name === "" ? 'Deslajd ed d' : this.state.name}
                                 </CardSubtitle>
                                 <CardText id="new-item-card-info" className="mb-4">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                    {   
+                                        this.state.description === "" ? 
+                                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit.' :
+                                        this.state.description
+                                    }
                                 </CardText>
-                                <div>
-                                <Badge className="new-item-badge" pill bg="light" text="dark">
-                                    <span>
-                                    <FaPalette />
-                                    </span>{" "}
-                                    Art
-                                </Badge>
-                                <Badge className="new-item-badge" pill bg="light" text="dark">
-                                    <span>
-                                    <GiBearFace />
-                                    </span>{" "}
-                                    Collectibles
-                                </Badge>
-                                </div>
+                                {
+                                    this.state.categories.length === 0 
+                                    ?
+                                    <div>
+                                        <Badge className="new-item-badge" pill bg="light" text="dark">
+                                            <span>
+                                            <FaPalette />
+                                            </span>{" "}
+                                            Art
+                                        </Badge>
+                                        <Badge className="new-item-badge" pill bg="light" text="dark">
+                                            <span>
+                                            <GiBearFace />
+                                            </span>{" "}
+                                            Collectibles
+                                        </Badge>
+                                    </div>
+                                    :
+                                    <div>
+                                        {
+                                            this.state.categories.map((c) => {
+                                                return(
+                                                        <Badge className='new-item-badge' pill bg="light" text="dark">
+                                                            {c}
+                                                        </Badge>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                }
                                 <div>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
                                     Price{"  "}
                                     <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    10 ETH
+                                        {(!this.state.price || this.state.price === 0.0000) ? '0.0000 ETH' : this.state.price+' ETH'}
                                     </span>
                                 </CardSubtitle>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
                                     Royality{"  "}
-                                    <span style={{ marginLeft: 10, color: "cyan" }}>5%</span>
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {(!this.state.royality || this.state.royality === 0) ? '0%' : this.state.royality+'%'}
+                                    </span>
                                 </CardSubtitle>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
                                     Size{"  "}
-                                    <span style={{ marginLeft: 10, color: "cyan" }}>10 Mb</span>
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {
+                                            (!this.state.assetFileSize || this.state.assetFileSize === 0) ? 
+                                            '0 KB' : this.state.assetFileSize+' KB'
+                                        }
+                                    </span>
                                 </CardSubtitle>
                                 </div>
                                 <div className="new-item-accountbox">
                                 <CardText id="new-item-card-account">
-                                    @{this.state.username}
+                                    @{this.state.createrUsername}
                                 </CardText>
-                                </div>
-                                <div className="row justify-content-center mt-4">
-                                <ButtonGroup size="md">
-                                    <Button className="new-item-card-social">
-                                    <FaLinkedin />
-                                    </Button>
-                                    <Button className="new-item-card-social">
-                                    <FaFacebook />
-                                    </Button>
-                                    <Button className="new-item-card-social">
-                                    <FaTwitter />
-                                    </Button>
-                                    <Button className="new-item-card-social">
-                                    <FaInstagram />
-                                    </Button>
-                                </ButtonGroup>
                                 </div>
                             </CardBody>
                             </Card>
