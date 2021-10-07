@@ -1,26 +1,13 @@
-/*Section and Headings*/
-
-.heading_section_row{
-    margin-top:9rem !important;
-    text-align: center;
-    margin-bottom: 4rem;
-}
-
-.section_heading--secondary{
-    text-align: center;
-    color: #ffff !important;
-    font-size: 2.5rem;
-
-}
 #singup_form_card{
     border-radius: 2rem ;
     background-color: #0B1126;
     padding: 3rem;
     padding-top: 2.5rem;
 }
-.form_input_row{
-    margin-bottom: 1rem;
+.form_grp{
+    margin-bottom: 1.5rem;
 }
+
 
 .form_input_label{
     color: #ffff;
@@ -29,4 +16,29 @@
 .form_input_field, .select__control, .select__menu, .select__single-value{
     background-color: #03091F !important;
     color: #fff !important;
+    border-width: 0px !important;
+
+}
+
+.login_image{
+   height: 20rem;
+   width: auto;
+   border-radius: 1rem;
+   margin-left: auto;
+   margin-right: auto;
+   display: inherit;
+   overflow: hidden;
+}
+.login_form{
+    margin-top: 0.4rem;
+}
+.main_heading__form{
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 0.8rem;
+}
+.main_heading_secondary{
+    font-size: 1.5rem;
+    color:#f76e43;
+    margin-bottom: 1.4rem;
 }
