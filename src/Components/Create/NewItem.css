@@ -16,6 +16,11 @@
 
 /* General Card CSS */
 
+#new-item-form-error{
+    color: cyan;
+    font-size: smaller;
+}
+
 #new-item-card{
     border-radius: 25px ;
     background-color: #0B1126;
