@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
 import Form from 'react-bootstrap/Form';
-// import AddressForm from './AddressForm'
+import AddressForm from './AddressForm'
 import './styles.css'
 
 class SignUp extends Component {
@@ -9,7 +9,7 @@ class SignUp extends Component {
         super(props);
         this.state = {
             name:"",
-            username:"",
+            anonymous_name:"",
             email:"",
             password:"",
             address:{
@@ -24,7 +24,7 @@ class SignUp extends Component {
             cityList:[],
             errors:{
                 name:"",
-                username:"",
+                anonymous_name:"",
                 email:"",
                 password:"",
                 address:{
@@ -38,9 +38,7 @@ class SignUp extends Component {
             }
         }
     }
-    componentDidMount() {
-        document.body.style.backgroundColor = "#03091F"
-    }
+    
     handleInputChange=(event)=>{
         const target = event.target;
         const name = target.name;
@@ -63,35 +61,38 @@ class SignUp extends Component {
         return (
             <Container>
                 <Row className="heading_section_row">
-                    <h3 className='rainbow-lr section_heading'>
+                    {/* <h3 className='rainbow-lr section_heading'>
                         SIGNUP
-                    </h3>
-                    <h3 className='section_heading--secondary'>
+                    </h3> */}
+                    <h3 className='section_heading rainbow-lr '>
                         Create a new account
                     </h3>
                 </Row>
 
 
-                <Row>
+                <Row className="section_content">
                     <Col md={12}>
                         <Card id="singup_form_card">
                             <CardBody>
                                 <CardText>
                                     <Form>
                                         <Row className="form_input_row">
-                                            <Col md={6}>
+                                            <Col md={6} className="form_grp">
                                             <Form.Group controlId="formBasicName">
-                                                <Form.Label className="form_input_label">Name</Form.Label>
-                                                <input name="name" className="form_input_field form-control" type="text" value={this.state.name} placeholder="Enter Name" onChange={this.handleInputChange} />
+                                                {/* <Form.Label className="form_input_label">Name</Form.Label> */}
+                                                <input name="name" className="form_input_field form-control" type="text" value={this.state.name} placeholder="Name" onChange={this.handleInputChange} />
                                                 <div className="invalid__feedback">{}</div>
                                             </Form.Group>  
                                             </Col>
                                             
                                             
-                                            <Col md={6}>
-                                            <Form.Group controlId="formBasicUserName">
-                                                <Form.Label className="form_input_label">UserName</Form.Label>
-                                                <input name="username" className="form_input_field form-control" type="text" value={this.state.username} placeholder="Enter Username" onChange={this.handleInputChange} />
+                                            <Col md={6} className="form_grp">
+                                            <Form.Group controlId="formBasicAnonymousName">
+                                                {/* <Form.Label className="form_input_label">Anonymous Name</Form.Label> */}
+                                                <input name="anonymous_name" className="form_input_field form-control" type="text" value={this.state.anonymous_name} placeholder="Anonymous Name" onChange={this.handleInputChange} />
+                                                <Form.Text className="text-muted">
+                                                   Your this  name will be displayed to other users, while participating in auction.
+                                                </Form.Text>
                                                 <div className="invalid__feedback">{}</div>
                                             </Form.Group>
                                             </Col>
@@ -99,10 +100,10 @@ class SignUp extends Component {
                                         </Row>
                                         
                                         <Row className="form_input_row">
-                                            <Col md={6}>
+                                            <Col md={6} className="form_grp">
                                             <Form.Group controlId="formBasicEmail">
-                                                <Form.Label className="form_input_label">Email address</Form.Label>
-                                                <input name="email" className="form_input_field form-control" type="email" value={this.state.email} placeholder="Enter email" onChange={this.handleInputChange} />
+                                                {/* <Form.Label className="form_input_label">Email address</Form.Label> */}
+                                                <input name="email" className="form_input_field form-control" type="email" value={this.state.email} placeholder="Email" onChange={this.handleInputChange} />
                                                 <div className="invalid__feedback">{}</div>
                                                 <Form.Text className="text-muted">
                                                     We'll never share your email with anyone else.
@@ -110,22 +111,22 @@ class SignUp extends Component {
                                             </Form.Group>
                                             </Col>
 
-                                            <Col md={6}>
+                                            <Col md={6} className="form_grp">
                                             <Form.Group controlId="formBasicPassword">
-                                                <Form.Label className="form_input_label">Password</Form.Label>
-                                                <input name="password" className="form_input_field form-control" type="password" value={this.state.password} placeholder="Password must be at least 6 characters" onChange={this.handleInputChange} />
+                                                {/* <Form.Label className="form_input_label">Password</Form.Label> */}
+                                                <input name="password" className="form_input_field form-control" type="password" value={this.state.password} placeholder="Password" onChange={this.handleInputChange} />
                                                 <div className="invalid__feedback">{}</div>
                                                 <Form.Text className="text-muted">
-                                                    Password must be at least 6 characters
+                                                    Password must be at least 6 characters long.
                                                 </Form.Text>
                                             </Form.Group>  
                                             </Col>
                                         </Row>
 
-                                        {/* <AddressForm address={this.state.address} handleAddressChange = {this.handleAddressChange} errors = {this.state.errors.address}/> */}
+                                        <AddressForm address={this.state.address} handleAddressChange = {this.handleAddressChange} errors = {this.state.errors.address}/>
 
                                         
-                                        <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+                                        <Button className="form__button pink_blue_gradiend_btn" type="submit" onClick={this.handleSubmit}>
                                             Submit
                                         </Button>
                                         
