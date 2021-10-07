@@ -7,7 +7,7 @@ import NewItem from './Create/NewItem';
 import ContactUs from './Contactus/Contactus';
 import SignUp from './Authentication/SignUp';
 import Login from './Authentication/Login';
-// import Home from './Home/Home'
+import Home from './Home/Home'
 class Main extends Component {
   componentDidMount(){
     document.body.style.backgroundColor = "#03091F"
@@ -22,12 +22,12 @@ class Main extends Component {
         <Switch>
           <Route exact path='/signup' component={SignUp} />
           <Route exact path='/login' component={Login} />
-          {/* <Route exact path='/' component={Home} /> */}
+          <Route exact path='/' component={Home} />
 
           {/*Contact us page*/}
           <Route exact path='/contact-us' component={() => <ContactUs />} />
           <Route exact path='/create/Independent-Item' component={() => <NewItem />} />
-          <Redirect to='/create/Independent-Item' />
+          {/* <Redirect to='/create/Independent-Item' /> */}
 
         </Switch>
         <Footer />
