@@ -7,7 +7,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import reduxThunk from 'redux-thunk';
 
 //manual imports
-import reducers from './reducers/index';
+import reducers from './apis_redux/reducers/index';
 import App from './App';
 
 //css imports
