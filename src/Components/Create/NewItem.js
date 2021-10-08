@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {renderAssetCategories} from '../FrequentComponents/Asset'
 import * as ipfsClient  from 'ipfs-http-client';
 import moment from 'moment';
 import Switch from "react-switch";
@@ -9,12 +10,11 @@ import {Card, CardText, CardBody,
     Modal, ModalHeader, ModalBody, ModalFooter, Alert} from "reactstrap";
 import Form from 'react-bootstrap/Form';
 import {FaPalette, FaMusic, FaFootballBall, 
-    FaWallet, FaLinkedin, 
-    FaFacebook, FaTwitter, FaInstagram} from 'react-icons/fa';
+    FaWallet} from 'react-icons/fa';
 import {GrDomain } from 'react-icons/gr';
 import {GiCardRandom, GiBearFace} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
-import preview from "../../assets/images/auction.jpg";
+import preview from "../../assets/images/nft.jpg";
 import "../Create/NewItem.css";
 
 //Declare IPFS
@@ -249,12 +249,11 @@ class NewItem extends Component {
                                     PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb
                                 </CardText>
                                 <div className='new-item-card-button-div'>
-                                    <Button className='new-item-card-button'>
-                                        <input 
-                                            type="file"
-                                            onChange={this.onFileChange}
-                                        />
-                                    </Button>
+                                    <input 
+                                        type="file"
+                                        onChange={this.onFileChange}
+                                        className='new-item-card-button'
+                                    />
                                 </div>
                             </div> 
                             </CardBody>
@@ -513,13 +512,13 @@ class NewItem extends Component {
                                         <div></div>
                                     }
                                     <div className='mt-4 new-item-card-button-div'>
-                                        <Button className='new-item-card-button'
+                                        <Button className='mt-2 new-item-card-button'
                                             disabled={this.state.assetFileUploading}
                                             onClick={() => this.uploadAssetFile()}
                                         >
                                             PREVIEW ASSET FILE
                                         </Button>  
-                                        <Button className='new-item-card-button'
+                                        <Button className='mt-2 new-item-card-button'
                                             onClick={() => this.createItem()}
                                         >
                                             CREATE ASSET
@@ -575,13 +574,7 @@ class NewItem extends Component {
                                     :
                                     <div>
                                         {
-                                            this.state.categories.map((c) => {
-                                                return(
-                                                        <Badge className='new-item-badge' pill bg="light" text="dark">
-                                                            {c}
-                                                        </Badge>
-                                                )
-                                            })
+                                            renderAssetCategories(this.state.categories)
                                         }
                                     </div>
                                 }
