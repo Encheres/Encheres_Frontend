@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
 import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
@@ -6,6 +7,8 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import AddressForm from './AddressForm';
 import {addressValidation} from './AddressForm'
 import './styles.css';
+
+import {handleSignUp} from '../../apis_redux/actions/auth.js'
 
 class SignUp extends Component {
     
@@ -140,10 +143,27 @@ class SignUp extends Component {
         }
     }
 
-    handleSubmit = e =>{
+    handleSubmit = async(e) =>{
         e.preventDefault();
         if(this.state.account_integrated && this.state.accept_conditions){
-            console.log(this.state);    
+            const {name, anonymous_name, email, password, address, accounts} = this.state;
+            const data = {
+                name:name,
+                anonymous_name:anonymous_name,
+                email:email,
+                password:password,
+                address:address,
+                accounts:accounts
+            }
+            await this.props.handleSignUp(data);
+            if(this.props.auth.isSignedIn){
+                console.log("SignUp Successful");
+                this.props.history.push('/');
+            }else{
+                console.log("SignUp Failed");
+            }
+
+
         }else{
             alert("Please integrate your account and accept the terms and conditions");
         }
@@ -301,5 +321,13 @@ class SignUp extends Component {
     }
 }
 
+const mapStateToProps = (state, ownProps)=>{
+    return({
+        ...ownProps,
+        auth:state.auth
+    })
 
-export default SignUp
+}
+
+
+export default connect(mapStateToProps, {handleSignUp})(SignUp);
