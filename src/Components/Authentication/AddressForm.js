@@ -6,7 +6,45 @@ import { State, City }  from 'country-state-city';
 import { countryList, customSelectStyles} from '../../variables';
 import './styles.css'
 
+export const addressValidation = (prop)=>{
+    const {addressLine1, city, addressState, country, postalCode} = prop;
+    let a1error="", cityerror="", stateerror="", countryerror="", postcodeerror="";
+    let error = false;
+    
+    if(!addressLine1 ||addressLine1.trim().length === 0){
+        a1error = "Address Line 1 is required";
+        error = true;
+    }
+    
+    if(!city ||city.trim().length === 0){
+        cityerror = "City is required";
+        error = true;
+    }
+    
+    if(!addressState ||addressState.trim().length === 0){
+        stateerror = "State is required";
+        error = true;
+    }
+    
+    if(!country || country.trim().length === 0){
+        countryerror = "Country is required";
+        error = true;
+    }
 
+    if(!postalCode || postalCode.trim().length === 0){
+        postcodeerror = "Postal Code is required";
+        error = true;
+    }
+
+    let address_error = {
+        addressLine1:a1error,
+        city:cityerror,
+        addressState:stateerror,
+        country:countryerror,
+        postalCode:postcodeerror
+    }
+    return {error, address_error};
+}
 
 class AddressForm extends Component{
     constructor(props){
@@ -18,14 +56,17 @@ class AddressForm extends Component{
             selectedCountry:"",
             selectedCity:"",
             address: {
-                addressLine1:"",
-                addressLine2:"",
+                addressLine1:this.props.address.addressLine1,
+                addressLine2:this.props.address.addressLine2,
                 city:"",
                 state: "",
                 country:"",
-                postalCode:""
+                postalCode:this.props.address.postalCode,
             }
         }
+    }
+    componentDidMount(){
+        this.props.handleAddressChange(this.state.address);
     }
 
     handleInputChange = (event) => {
@@ -108,7 +149,7 @@ class AddressForm extends Component{
                     <Form.Group controlId="formBasicAddress1">
                         {/* <Form.Label className="form_input_label">AddrerssLine1</Form.Label> */}
                         <input name="addressLine1" className="form_input_field form-control" type="text" value={this.state.address.addressLine1} placeholder="AddressLine 1" onChange={this.handleInputChange} />
-                        <div className="invalid__feedback">{}</div>
+                        <div className="invalid__feedback">{this.props.errors.addressLine1}</div>
                     </Form.Group>  
                     </Col>
                                             
@@ -117,7 +158,7 @@ class AddressForm extends Component{
                     <Form.Group controlId="formBasicAddress2">
                         {/* <Form.Label className="form_input_label">AddrerssLine2</Form.Label> */}
                         <input name="addressLine2" className="form_input_field form-control" type="text" value={this.state.address.addressLine2} placeholder="AddressLine 2" onChange={this.handleInputChange} />
-                        <div className="invalid__feedback">{}</div>
+                        <div className="invalid__feedback">{this.props.errors.addressLine2}</div>
                     </Form.Group>
                     </Col>                  
                 </Row>
@@ -127,7 +168,7 @@ class AddressForm extends Component{
                         <Form.Group controlId="user__country">
                             {/* <Form.Label className="form_input_label">Country</Form.Label> */}
                             <Select styles={customSelectStyles}  name="country" options={countryList} className="basic-multi-select form_input_field" value={this.state.selectedCountry} onChange={this.handleCountryChange} classNamePrefix="select" placeholder="Country"/>
-                            <div className="invalid__feedback">{}</div>
+                            <div className="invalid__feedback">{this.props.errors.country}</div>
                         </Form.Group>        
                     </Col>
                     
@@ -135,7 +176,7 @@ class AddressForm extends Component{
                         <Form.Group controlId="user__state">
                             {/* <Form.Label className="form_input_label"> State</Form.Label> */}
                             <Select styles={customSelectStyles} name="addressState" options={this.state.stateList} className="basic-multi-select" value={this.state.selectedState} onChange={this.handleAddressStateChange} classNamePrefix="select" placeholder="State"/>
-                            <div className="invalid__feedback">{}</div>
+                            <div className="invalid__feedback">{this.props.errors.addressState}</div>
                         </Form.Group>        
                     </Col>
                 </Row>
@@ -145,7 +186,7 @@ class AddressForm extends Component{
                         <Form.Group controlId="user__city">
                             {/* <Form.Label className="form_input_label"> City</Form.Label> */}
                             <Select isClearable styles={customSelectStyles} name="city" options={this.state.cityList} className="basic-multi-select" value={this.state.selectedCity} onChange={this.handleCityChange} classNamePrefix="select" placeholder="City"/>
-                            <div className="invalid__feedback">{}</div>
+                            <div className="invalid__feedback">{this.props.errors.city}</div>
                         </Form.Group>
                     </Col>
 
@@ -153,7 +194,7 @@ class AddressForm extends Component{
                         <Form.Group controlId="user__zip">
                             {/* <Form.Label className="form_input_label"> Postal Code</Form.Label> */}
                             <input name="postalCode" className="form_input_field form-control" type="text" value={this.state.address.postalCode} placeholder="Postal Code" onChange={this.handleInputChange} />
-                            <div className="invalid__feedback">{}</div>
+                            <div className="invalid__feedback">{this.props.errors.postalCode}</div>
                         </Form.Group>
                     </Col>
                 </Row>
