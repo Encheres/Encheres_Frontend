@@ -3,6 +3,7 @@ import "./contactus.css";
 //redux stuff
 import { connect } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
+import { contactusform } from "../../apis_redux/actions/contactus";
 class Contactus extends Component {
   constructor(props) {
     super(props);
@@ -84,7 +85,7 @@ class Contactus extends Component {
     if (this.state.validated) {
       try {
         const { email, message, name, type } = this.state;
-        this.props.contactUs({ email, message, name, type });
+        this.props.contactusform({ email, message, name, type });
         this.notifyS("Your response has been recorded successfully.");
       } catch (e) {
         this.notifyF("Some error occured.");
@@ -308,4 +309,4 @@ const mapStateToProps = (state) => {
   return { auth: state.auth.user };
 };
 // export default connect(mapStateToProps, {})(Contact);
-export default connect(mapStateToProps, {})(Contactus);
+export default connect(mapStateToProps, { contactusform })(Contactus);

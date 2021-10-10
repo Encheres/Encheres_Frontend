@@ -24,4 +24,5 @@ yarn-error.log*
 
 #for no more errors in package (just till no new dependency is added)
 package*
-./package-lock.json
+./package-lock.
+.vscode/*
