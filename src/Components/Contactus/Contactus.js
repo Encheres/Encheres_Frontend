@@ -1,7 +1,105 @@
 import React, { Component } from "react";
 import "./contactus.css";
-
+//redux stuff
+import { connect } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 class Contactus extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      message: "",
+      name: "",
+      type: "",
+      errors: {
+        email: "",
+        message: "",
+        name: "",
+        type: "",
+        submissionError: null,
+      },
+      validated: false,
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleInputChange(event) {
+    const target = event.target;
+    const name = target.name;
+    this.setState({
+      [name]: event.target.value,
+    });
+  }
+  notifyS = (message) => toast.success(message);
+  notifyF = (message) => toast.error(message);
+
+  formValidation = () => {
+    const { email, message, name, type } = this.state;
+    let emailError = "",
+      messageError = "",
+      nameError = "",
+      typeError = "",
+      error;
+    if (!email) {
+      emailError = "Email is required";
+      error = true;
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+      emailError = "Email address is Invalid";
+      error = true;
+    }
+    if (!message.trim()) {
+      messageError = "Message is required";
+      error = true;
+    }
+
+    if (!type) {
+      typeError = "A type is required";
+      error = true;
+    }
+
+    if (!name) {
+      nameError = "A Name is required ";
+      error = true;
+    }
+
+    this.setState((prevState) => ({
+      errors: {
+        email: emailError,
+        message: messageError,
+        type: typeError,
+        name: nameError,
+      },
+    }));
+    if (error) {
+      this.setState({
+        validated: false,
+      });
+    } else {
+      this.setState({ validated: true });
+    }
+  };
+  handleSubmit(e) {
+    //e.preventDefault();
+    this.formValidation();
+    if (this.state.validated) {
+      try {
+        const { email, message, name, type } = this.state;
+        this.props.contactUs({ email, message, name, type });
+        this.notifyS("Your response has been recorded successfully.");
+      } catch (e) {
+        this.notifyF("Some error occured.");
+      }
+    }
+    console.log(this.state);
+  }
+  componentDidMount() {
+    if (this.props.auth) {
+      this.setState({
+        email: this.props.auth.email,
+      });
+    }
+  }
+
   render = () => {
     return (
       <section className="section-padding-100">
@@ -99,10 +197,16 @@ class Contactus extends Component {
                       name="email"
                       id="email"
                       required
+                      value={this.state.email}
                       placeholder="Email"
+                      onChange={this.handleInputChange}
                     />
                     <span className="highlight" />
                     <span className="bar" />
+
+                    <div className="invalid__feedback">
+                      {this.state.errors.email}
+                    </div>
                   </div>
                   <div
                     className="group aos-init"
@@ -113,10 +217,16 @@ class Contactus extends Component {
                       name="name"
                       id="name"
                       required
+                      value={this.state.name}
                       placeholder="Name"
+                      onChange={this.handleInputChange}
                     />
                     <span className="highlight" />
                     <span className="bar" />
+
+                    <div className="invalid__feedback">
+                      {this.state.errors.name}
+                    </div>
                   </div>
                 </div>
                 <div
@@ -131,22 +241,35 @@ class Contactus extends Component {
                     style={{ marginRight: "10px" }}
                   >
                     <select
-                      name="plan"
-                      id="plan"
+                      name="type"
+                      id="type"
                       required
                       style={{
                         backgroundColor: "rgb(34, 34, 66)",
                         color: "white",
                       }}
+                      onChange={async (e) => {
+                        console.log(e.target[e.target.selectedIndex].text);
+                        this.setState({
+                          type: e.target[e.target.selectedIndex].text,
+                        });
+                      }}
                     >
+                      <option value="">--Please choose an option--</option>
                       <option value="complaint">Complaint</option>
                       <option value="feedback">Feedback</option>
                       <option value="help">Help</option>
                     </select>
+
+                    <div className="invalid__feedback">
+                      {this.state.errors.type}
+                    </div>
                     <span className="highlight" />
                     <span className="bar" />
+                    <br />
                   </div>
                 </div>
+
                 <div>
                   <div className="group aos-init">
                     <textarea
@@ -154,10 +277,14 @@ class Contactus extends Component {
                       id="message"
                       required
                       placeholder="Feedback"
-                      defaultValue={""}
+                      onChange={this.handleInputChange}
                     />
                     <span className="highlight" />
                     <span className="bar" />
+
+                    <div className="invalid__feedback">
+                      {this.state.errors.message}
+                    </div>
                   </div>
                 </div>
                 <div
@@ -165,7 +292,9 @@ class Contactus extends Component {
                   data-aos-delay={700}
                   data-aos="fade-in"
                 >
-                  <button class="btn-hover color-7">Send</button>
+                  <button class="btn-hover color-7" onClick={this.handleSubmit}>
+                    Send
+                  </button>
                 </div>
               </div>
             </div>
@@ -175,4 +304,8 @@ class Contactus extends Component {
     );
   };
 }
-export default Contactus;
+const mapStateToProps = (state) => {
+  return { auth: state.auth.user };
+};
+// export default connect(mapStateToProps, {})(Contact);
+export default connect(mapStateToProps, {})(Contactus);

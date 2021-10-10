@@ -1025,3 +1025,7 @@ input[type="radio"] {
   border-radius: 4px;
   box-shadow: 0 10px 20px -5px rgba(20, 50, 64, 0.76);
 }
+.invalid__feedback {
+  font-size: 80%;
+  color: #dc3545;
+}
