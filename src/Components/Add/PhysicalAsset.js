@@ -451,7 +451,7 @@ class PhysicalAsset extends Component {
                                         <span style={{marginLeft: 4}} className='mb-4 new-item-switch-label'>
                                             Pickup Point Address
                                         </span>
-                                        <AddressForm />
+                                        {/* <AddressForm /> */}
                                     </div>
                                     <div className='mt-4'>
                                         <span className='new-item-switch-label'>

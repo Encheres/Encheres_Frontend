@@ -8,6 +8,12 @@
     margin-bottom: 1.5rem;
 }
 
+.form_heading_row{
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #fff;
+    font-weight: 450;
+}
 
 .form_input_label{
     color: #ffff;
@@ -41,4 +47,24 @@
     font-size: 1.5rem;
     color:#f76e43;
     margin-bottom: 1.4rem;
+}
+
+.form__text--para{
+    color: #fff;
+}
+.input_checkbox{
+    margin-right: .5rem;
+    margin-top:0.5rem;
+}
+.muted_text{
+    color:#6c757d;
+}
+.success_text{
+    color: #28a745;
+}
+.invalid__feedback{
+    color: #dc3545;
+}
+.light__blue{
+    color: cornflowerblue;
 }
