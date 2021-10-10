@@ -3,7 +3,7 @@ const INITIAL_STATE = {
   message: null,
   err: null,
 };
-export const contact = (state = INITIAL_STATE, action) => {
+const contact = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CONTACT_US:
       return { ...state, message: action.payload, err: null };
@@ -19,3 +19,5 @@ export const contact = (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+export default contact

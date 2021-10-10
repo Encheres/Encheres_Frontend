@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
+import AddressForm from '../FrequentComponents/AddressForm';
 import {Link} from 'react-router-dom';
-import {renderAssetCategories} from '../FrequentComponents/Asset'
+import {renderPhysicalAssetCategories} from '../FrequentComponents/Asset'
 import * as ipfsClient  from 'ipfs-http-client';
 import moment from 'moment';
 import Switch from "react-switch";
@@ -10,13 +11,13 @@ import {Card, CardText, CardBody,
     CardSubtitle, Button, ButtonGroup,
     Modal, ModalHeader, ModalBody, ModalFooter, Alert} from "reactstrap";
 import Form from 'react-bootstrap/Form';
-import {FaPalette, FaMusic, FaFootballBall, 
-    FaWallet} from 'react-icons/fa';
-import {GrDomain } from 'react-icons/gr';
-import {GiCardRandom, GiBearFace} from 'react-icons/gi';
-import { BiWorld } from "react-icons/bi";
+import {FaPalette, FaFootballBall, FaCarSide,
+    FaWallet, FaBuilding} from 'react-icons/fa';
+import {GiBearFace, GiClockwork, 
+    GiVendingMachine, GiSofa, GiClothes, GiWatch} from 'react-icons/gi';
 import preview from "../../assets/images/nft.jpg";
 import "./Add.css";
+import "../Authentication/styles.css"
 
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
@@ -28,26 +29,29 @@ class PhysicalAsset extends Component {
         super(props);
         this.state={
 
-            assetFileHash: "",
-            assetFileSize: 0,
+            assetImagesHash: [],
+            assetVideoHash: "",
             name: "",
+            quantity: 1,
             description: "",
             price: 0.0000,
-            royality: 0,
+            contact: 0,
             categories: [],
             createrUsername: "john_bill123",
 
             errors: {
                 name: "",
+                quantity: "",
                 description: "",
                 price: "",
-                royality: "",
+                contact: "",
                 categories: "",
-                dateTime: ""
+                dateTime: "",
+                onSale: ""
             },
 
-            onSale: false,
             dateTimeModal: false,
+            onSale: false,
             bids: false,
             startDateTime: "",
             endDateTime: "",
@@ -77,23 +81,33 @@ class PhysicalAsset extends Component {
         if(this.formValidattion()){
             console.log(this.state);
 
-            await this.uploadAssetFile()
-            this.onSuccessDismiss()
+            // await this.uploadAssetFile()
+            // this.onSuccessDismiss()
 
-            setTimeout(() => {
-                this.onSuccessDismiss()
-            }, 10000);
+            // setTimeout(() => {
+            //     this.onSuccessDismiss()
+            // }, 10000);
         }
     }
 
     formValidattion() {
 
-        const {name, description, price, royality, categories} = this.state;
-        let nameError = "", descriptionError = "", priceError = "", royalityError = "",
-        categoriesError = "", error;
+        const {name, quantity, description, price, contact, categories, onSale} = this.state;
+        let nameError = "", quantityError = "", descriptionError = "", priceError = "", royalityError = "",
+        contactError = "", categoriesError = "", saleError = "", error;
+
+        if(!onSale){
+            saleError="Date Time is Required for sale";
+            error = true;
+        }
 
         if(!name.trim()){
             nameError='Name is required';
+            error = true;
+        }
+
+        if(quantity <= 0){
+            quantityError="Quantity Should be 1 or more";
             error = true;
         }
 
@@ -107,9 +121,11 @@ class PhysicalAsset extends Component {
             error = true;
         }
 
-        if(royality && isNaN(royality) || royality < 0){
-            royalityError = "Royality must be a positive Number";
-            error = true
+        var temp = contact.toString();
+
+        if(!temp.trim() || temp.length != 10){
+            contactError="Invalid Contact Number";
+            error = true;
         }
 
         if(!categories.length){
@@ -123,7 +139,10 @@ class PhysicalAsset extends Component {
                 description: descriptionError,
                 categories:categoriesError,
                 price: priceError,
-                royality: royalityError
+                quantity: quantityError,
+                contactNumber: contactError,
+                royality: royalityError,
+                onSale: saleError
             }
         }))
         
@@ -247,11 +266,28 @@ class PhysicalAsset extends Component {
                         <Card id='new-item-card'>
                             <CardBody>
                             <CardSubtitle tag="h6" className="new-item-card-subtitle">
-                                UPLOAD ASSET FILE
+                                UPLOAD ASSET SHOWCASE IMAGES (MULTIPLE)
                             </CardSubtitle>
                             <div className='new-item-dropbox'>
                                 <CardText className='new-item-card-text'>
-                                    PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb
+                                    PNG, JPEG, WEBP, MP4 or MP3. Max 5mb
+                                </CardText>
+                                <div className='new-item-card-button-div'>
+                                    <input 
+                                        type="file"
+                                        onChange={this.onFileChange}
+                                        className='new-item-card-button'
+                                    />
+                                </div>
+                            </div> 
+                            </CardBody>
+                            <CardBody>
+                            <CardSubtitle tag="h6" className="new-item-card-subtitle">
+                                UPLOAD ASSET SHOWCASE VIDEO (SINGLE)
+                            </CardSubtitle>
+                            <div className='new-item-dropbox'>
+                                <CardText className='new-item-card-text'>
+                                    MP4 or MP3. Max 20mb
                                 </CardText>
                                 <div className='new-item-card-button-div'>
                                     <input 
@@ -274,28 +310,28 @@ class PhysicalAsset extends Component {
                                         <span><FaPalette/></span> Art
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Music")}
-                                        bg={this.state.categories.indexOf("Music")>=0 ? "secondary": "light"}
+                                        onClick={() => this.addCategory("Antiques")}
+                                        bg={this.state.categories.indexOf("Antiques")>=0 ? "secondary": "light"}
                                     >
-                                        <span><FaMusic/></span> Music
+                                        <span><GiClockwork/></span> Antiques
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Domain Names")}
-                                        bg={this.state.categories.indexOf("Domain Names")>=0 ? "secondary": "light"}
+                                        onClick={() => this.addCategory("Electronics")}
+                                        bg={this.state.categories.indexOf("Electronics")>=0 ? "secondary": "light"}
                                     >
-                                        <span><GrDomain/></span> Domain Names
+                                        <span><GiVendingMachine/></span> Electronics
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Virtual Worlds")} 
-                                        bg={this.state.categories.indexOf("Virtual Worlds")>=0 ? "secondary": "light"}                             
+                                        onClick={() => this.addCategory("Vehicles")} 
+                                        bg={this.state.categories.indexOf("Vehicles")>=0 ? "secondary": "light"}                             
                                     >
-                                        <span><BiWorld/></span> Virtual Worlds
+                                        <span><FaCarSide/></span> Vehicles
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Trading Cards")}  
-                                        bg={this.state.categories.indexOf("Trading Cards")>=0 ? "secondary": "light"}                                                      
+                                        onClick={() => this.addCategory("Households")}  
+                                        bg={this.state.categories.indexOf("Households")>=0 ? "secondary": "light"}                                                      
                                     >
-                                        <span><GiCardRandom/></span> Trading Cards
+                                        <span><GiSofa/></span> Households
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Collectibles")} 
@@ -310,32 +346,59 @@ class PhysicalAsset extends Component {
                                         <span><FaFootballBall/></span> Sports
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Documents")}  
-                                        bg={this.state.categories.indexOf("Documents")>=0 ? "secondary": "light"}                                                      
+                                        onClick={() => this.addCategory("Fashion")}  
+                                        bg={this.state.categories.indexOf("Fashion")>=0 ? "secondary": "light"}                                                      
                                     >
-                                        <span className='fa fa-file'/> Documents
+                                        <span><GiClothes/></span> Fashion
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Utility")}    
-                                        bg={this.state.categories.indexOf("Utility")>=0 ? "secondary": "light"}                                                    
+                                        onClick={() => this.addCategory("Mini Items")}    
+                                        bg={this.state.categories.indexOf("Mini Items")>=0 ? "secondary": "light"}                                                    
                                     >
-                                        <span><FaWallet/></span> Utility
+                                        <span><GiWatch/></span> Mini Items
+                                    </Badge>
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Real Estate")}    
+                                        bg={this.state.categories.indexOf("Real Estate")>=0 ? "secondary": "light"}                                                    
+                                    >
+                                        <span><FaBuilding/></span> Real Estate
+                                    </Badge>
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Miscellaneous")}    
+                                        bg={this.state.categories.indexOf("Miscellaneous")>=0 ? "secondary": "light"}                                                    
+                                    >
+                                        <span><FaWallet/></span> Miscellaneous
                                     </Badge>
                                     <div className='mb-4' id='new-item-form-error'>{this.state.errors.categories}</div>
                                 </div>
                                 <Form className='mt-3'>
-                                    <Form.Group className="mb-3" controlId="itemName">
+                                    <div className='row'>
+                                        <Form.Group className="col-5 mb-3" controlId="itemName">
+                                            <Form.Control
+                                                name='name'
+                                                onChange={this.handleInputChange}
+                                                className='new-item-form-field' 
+                                                style={{backgroundColor: '#03091F', 
+                                                    borderWidth: 0,
+                                                    color: 'white'
+                                                    }}
+                                                placeholder="Item Name" />
+                                            <div className='mb-4' id='new-item-form-error'>{this.state.errors.name}</div>
+                                        </Form.Group>
+                                        <Form.Group className="col-7 mb-3" controlId="itemName">
                                         <Form.Control
-                                            name='name'
+                                            type="number"
+                                            name='quantity'
                                             onChange={this.handleInputChange}
                                             className='new-item-form-field' 
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
                                                 color: 'white'
                                                 }}
-                                            placeholder="Item Name" />
-                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.name}</div>
+                                            placeholder="Item Quantity (Count)" />
+                                            <div className='mb-4' id='new-item-form-error'>{this.state.errors.quantity}</div>
                                     </Form.Group>
+                                    </div>
                                     <Form.Group className="mb-3" controlId="itemDescription">
                                         <Form.Control 
                                             name='description'
@@ -351,7 +414,7 @@ class PhysicalAsset extends Component {
                                         <div className='mb-4' id='new-item-form-error'>{this.state.errors.description}</div>
                                     </Form.Group>
                                     <div className='row'>
-                                    <div className='col-6'>
+                                    <div className='col-12'>
                                     <Form.Group className="mb-3" controlId="itemPrice">
                                         <Form.Control
                                             type='number'
@@ -362,30 +425,37 @@ class PhysicalAsset extends Component {
                                                 borderWidth: 0,
                                                 color: 'white'
                                                 }}
-                                            placeholder="Base/Fix Price in ETH"
+                                            placeholder="Aggregate-Base/Fix Price in ETH"
                                             />
                                         <div className='mb-4' id='new-item-form-error'>{this.state.errors.price}</div>
                                     </Form.Group>
                                     </div>
-                                    <div className='col-6'>
-                                    <Form.Group className="mb-3" controlId="itemRoyality">
+                                    <div className='col-12'>
+                                    <Form.Group className="mb-3" controlId="itemPrice">
                                         <Form.Control
                                             type='number'
-                                            name='royality'
+                                            name='contact'
                                             onChange={this.handleInputChange}
                                             className='new-item-form-field' 
                                             style={{backgroundColor: '#03091F', 
                                                 borderWidth: 0,
                                                 color: 'white'
                                                 }}
-                                            placeholder="Royality (%)" />
-                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.royality}</div>
+                                            placeholder="Contact Number"
+                                            />
+                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.contactNumber}</div>
                                     </Form.Group>
                                     </div>
                                     </div>
+                                    <div className='row'>
+                                        <span style={{marginLeft: 4}} className='mb-4 new-item-switch-label'>
+                                            Pickup Point Address
+                                        </span>
+                                        <AddressForm />
+                                    </div>
                                     <div className='mt-4'>
                                         <span className='new-item-switch-label'>
-                                            Allow Imdediate Sale
+                                            Add Date-Time
                                         </span>
                                         <Switch 
                                             onChange={() => {
@@ -406,6 +476,7 @@ class PhysicalAsset extends Component {
                                             offColor='#03091F'
                                             onColor='#00CAFF'
                                             />
+                                            <div className='mb-4' id='new-item-form-error'>{this.state.errors.onSale}</div>
                                         <p className='mt-4' id='new-item-form-error'>
                                             {
                                                 this.state.onSale && this.state.startDateTime !== "" ? "Start: "+moment(this.state.startDateTime).format('MMMM Do YYYY, h:mm A') : ""
@@ -541,9 +612,9 @@ class PhysicalAsset extends Component {
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
                             <Card id="new-item-card">
-                                <Image className="new-item-image" rounded
+                                {/* <Image className="new-item-image" rounded
                                     src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
-                                />
+                                /> */}
                             <CardBody>
                                 <CardSubtitle
                                 tag="h5"
@@ -579,7 +650,7 @@ class PhysicalAsset extends Component {
                                     :
                                     <div>
                                         {
-                                            renderAssetCategories(this.state.categories)
+                                            renderPhysicalAssetCategories(this.state.categories)
                                         }
                                     </div>
                                 }
@@ -591,18 +662,9 @@ class PhysicalAsset extends Component {
                                     </span>
                                 </CardSubtitle>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
-                                    Royality{"  "}
+                                    Quantity{"  "}
                                     <span style={{ marginLeft: 10, color: "cyan" }}>
-                                        {(!this.state.royality || this.state.royality === 0) ? '0%' : this.state.royality+'%'}
-                                    </span>
-                                </CardSubtitle>
-                                <CardSubtitle tag="h6" className="new-item-preview-price">
-                                    Size{"  "}
-                                    <span style={{ marginLeft: 10, color: "cyan" }}>
-                                        {
-                                            (!this.state.assetFileSize || this.state.assetFileSize === 0) ? 
-                                            '0 KB' : this.state.assetFileSize+' KB'
-                                        }
+                                        {(!this.state.quantity || this.state.quantity === 1) ? '1' : this.state.quantity}
                                     </span>
                                 </CardSubtitle>
                                 </div>

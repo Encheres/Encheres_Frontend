@@ -38,6 +38,7 @@ class DigitalAsset extends Component {
             createrUsername: "john_bill123",
 
             errors: {
+                assetFile: "",
                 name: "",
                 description: "",
                 price: "",
@@ -88,9 +89,14 @@ class DigitalAsset extends Component {
 
     formValidattion() {
 
-        const {name, description, price, royality, categories} = this.state;
-        let nameError = "", descriptionError = "", priceError = "", royalityError = "",
+        const {assetFileHash, name, description, price, royality, categories} = this.state;
+        let assetFileError = "", nameError = "", descriptionError = "", priceError = "", royalityError = "",
         categoriesError = "", error;
+
+        if(!assetFileHash.trim()){
+            assetFileError='Asset File is required';
+            error = true;
+        }
 
         if(!name.trim()){
             nameError='Name is required';
@@ -119,6 +125,7 @@ class DigitalAsset extends Component {
 
         this.setState(prevState => ({
             errors:{
+                assetFile: assetFileError,
                 name:nameError,
                 description: descriptionError,
                 categories:categoriesError,
@@ -244,7 +251,7 @@ class DigitalAsset extends Component {
                         </Button>
                     </div>
                     <div className='col-11 col-sm-8 col-md-7 col-lg-7'>
-                        <Card id='new-item-card' style={{border:'2px solid white'}}>
+                        <Card id='new-item-card'>
                             <CardBody>
                             <CardSubtitle tag="h6" className="new-item-card-subtitle">
                                 UPLOAD ASSET FILE
@@ -261,6 +268,7 @@ class DigitalAsset extends Component {
                                     />
                                 </div>
                             </div> 
+                                <div className='mb-4' id='new-item-form-error'>{this.state.errors.assetFile}</div>
                             </CardBody>
                             <CardBody> 
                                 <CardText className='new-item-card-text'>
@@ -540,7 +548,7 @@ class DigitalAsset extends Component {
                         </Card>
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
-                            <Card id="new-item-card" style={{border:'2px solid white'}}>
+                            <Card id="new-item-card">
                                 <Image className="new-item-image" rounded
                                     src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
                                 />

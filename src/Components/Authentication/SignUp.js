@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
 import Form from 'react-bootstrap/Form';
-import AddressForm from './AddressForm'
+import AddressForm from '../FrequentComponents/AddressForm'
 import './styles.css'
 
 class SignUp extends Component {
