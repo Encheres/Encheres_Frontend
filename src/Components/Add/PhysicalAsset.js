@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import {renderAssetCategories} from '../FrequentComponents/Asset'
 import * as ipfsClient  from 'ipfs-http-client';
 import moment from 'moment';
@@ -15,13 +16,13 @@ import {GrDomain } from 'react-icons/gr';
 import {GiCardRandom, GiBearFace} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
 import preview from "../../assets/images/nft.jpg";
-import "../Create/NewItem.css";
+import "./Add.css";
 
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
 
-class NewItem extends Component {
+class PhysicalAsset extends Component {
 
     constructor(props){
         super(props);
@@ -223,18 +224,22 @@ class NewItem extends Component {
 
     render(){        
         return(
-            
             <div className='container-fluid'>
                 <div className='row justify-content-center' id='new-item-card-row'>
                     <h3 className='col-12 rainbow-lr new-item-heading'>
                         ADD INDEPENDENT ASSET
                     </h3>
                     <div className='new-item-card-button-div mt-4'>
-                        <Button className='new-item-card-button'>
-                            DIGITAL (NFT) 
+                        <Button 
+                            className='new-item-card-button'>
+                            <Link style={{color: 'white', textDecoration: 'none'}} to='/create/independent-digital-assets'>
+                                DIGITAL (NFT) 
+                            </Link>
                         </Button>
                         {" "}
-                        <Button className='new-item-card-button'>
+                        <Button 
+                            disabled
+                            className='new-item-card-button'>
                             PHYSICAL
                         </Button>
                     </div>
@@ -615,4 +620,4 @@ class NewItem extends Component {
         }
 }
 
-export default NewItem;
+export default PhysicalAsset;
