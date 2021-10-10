@@ -15,6 +15,7 @@ import {FaPalette, FaFootballBall, FaCarSide,
     FaWallet, FaBuilding} from 'react-icons/fa';
 import {GiBearFace, GiClockwork, 
     GiVendingMachine, GiSofa, GiClothes, GiWatch} from 'react-icons/gi';
+import {addressValidation} from '../FrequentComponents/AddressForm';
 import preview from "../../assets/images/nft.jpg";
 import "./Add.css";
 import "../Authentication/styles.css"
@@ -38,6 +39,14 @@ class PhysicalAsset extends Component {
             contact: 0,
             categories: [],
             createrUsername: "john_bill123",
+            address:{
+                addressLine1:"",
+                addressLine2:"",
+                city:"",
+                addressState:"",
+                country:"",
+                postalCode:"",
+            },
 
             errors: {
                 name: "",
@@ -47,7 +56,15 @@ class PhysicalAsset extends Component {
                 contact: "",
                 categories: "",
                 dateTime: "",
-                onSale: ""
+                onSale: "",
+                address:{
+                    addressLine1:"",
+                    addressLine2:"",
+                    city:"",
+                    addressState:"",
+                    country:"",
+                    postalCode:"",
+                }
             },
 
             dateTimeModal: false,
@@ -62,6 +79,12 @@ class PhysicalAsset extends Component {
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+    handleAddressChange = (address)=>{
+        this.setState({
+            address: address
+        })
     }
 
     onSuccessDismiss(){
@@ -92,7 +115,7 @@ class PhysicalAsset extends Component {
 
     formValidattion() {
 
-        const {name, quantity, description, price, contact, categories, onSale} = this.state;
+        const {name, quantity, description, price, contact, categories, onSale, address} = this.state;
         let nameError = "", quantityError = "", descriptionError = "", priceError = "", royalityError = "",
         contactError = "", categoriesError = "", saleError = "", error;
 
@@ -133,6 +156,11 @@ class PhysicalAsset extends Component {
             error = true;
         }
 
+        const addressStatus = addressValidation(address);
+        if(!error){
+            error = addressStatus.error;
+        }
+
         this.setState(prevState => ({
             errors:{
                 name:nameError,
@@ -142,7 +170,8 @@ class PhysicalAsset extends Component {
                 quantity: quantityError,
                 contactNumber: contactError,
                 royality: royalityError,
-                onSale: saleError
+                onSale: saleError,
+                address:addressStatus.address_error
             }
         }))
         
@@ -451,7 +480,7 @@ class PhysicalAsset extends Component {
                                         <span style={{marginLeft: 4}} className='mb-4 new-item-switch-label'>
                                             Pickup Point Address
                                         </span>
-                                        {/* <AddressForm /> */}
+                                            <AddressForm address={this.state.address} handleAddressChange = {this.handleAddressChange} errors = {this.state.errors.address}/>
                                     </div>
                                     <div className='mt-4'>
                                         <span className='new-item-switch-label'>
