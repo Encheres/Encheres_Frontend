@@ -10,6 +10,7 @@ import ViewPhysicalAsset from './View/ViewPhysicalAsset';
 import ContactUs from './Contactus/Contactus';
 import SignUp from './Authentication/SignUp';
 import Login from './Authentication/Login';
+import Logout from './Authentication/Logout';
 import Home from './Home/Home'
 class Main extends Component {
   
@@ -27,7 +28,7 @@ class Main extends Component {
           <Route exact path='/signup' component={SignUp} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/home' component={Home} />
-
+          <Route exact path='/logout' component={Logout} />
           {/*Contact us page*/}
           <Route exact path='/contact-us' component={() => <ContactUs />} />
 

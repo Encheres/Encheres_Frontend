@@ -12,13 +12,10 @@ import {
 
 export const handleSignUp = (userDetails) => async (dispatch,getState) =>{
   try{
-    console.log(userDetails);
       const response = await record.post('/users/signup', userDetails);
       localStorage.setItem('encheres_isSignedIn','true');
       localStorage.setItem('encheres_userId', response.data.user._id);
       localStorage.setItem('encheres_token',response.data.token);
-      console.log(response);
-      // history.push('/');
       dispatch({type:SIGN_UP,payload:response.data});
   }catch(e){
       let error = e;
@@ -41,11 +38,9 @@ export const handleSignIn = (userDetails) => async (dispatch,getState) =>{
       localStorage.setItem('encheres_isSignedIn','true');
       localStorage.setItem('encheres_userId', response.data.user._id);
       localStorage.setItem('encheres_token',response.data.token);
-      // history.push('/');
       dispatch({type:SIGN_IN, payload:response.data});
   }catch(e){
       let error = e;
-      console.log(e.response);
       if(e.response){
           if(e.response.data){
               error = e.response.data;
@@ -60,20 +55,19 @@ export const handleSignIn = (userDetails) => async (dispatch,getState) =>{
 
 }
 
-export const signOut = (userDetails) => async (dispatch,getState) =>{
+export const handleSignOut = (userDetails) => async (dispatch,getState) =>{
   const token = userDetails.token;
   try{
       await authRecord(token).post('/users/logout');
-      localStorage.removeItem('token')
-      localStorage.removeItem('userId')
-      localStorage.removeItem('isSignedIn')
-      // history.push('/logout');
+      localStorage.removeItem('encheres_token')
+      localStorage.removeItem('encheres_userId')
+      localStorage.removeItem('encheres_isSignedIn')
       dispatch({type:SIGN_OUT, payload:{msg:"You have been logged out successfully"}});
-      // dispatch({type:RESET_USER_PROFILE, payload:""})
   }catch(e){
       localStorage.removeItem('token')
       localStorage.removeItem('userId')
       localStorage.removeItem('isSignedIn')
+      dispatch({type:AUTH_FAILED, payload:{error:"Something went wrong"}});
   }
   
 }
