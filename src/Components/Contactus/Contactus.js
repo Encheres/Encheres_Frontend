@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import './contactus.css'
+import React, { Component } from "react";
+import "./contactus.css";
 
 class Contactus extends Component {
   render = () => {
@@ -27,9 +27,9 @@ class Contactus extends Component {
                 <div className="contact_left_small">
                   <i
                     className="fa fa-home fa-3x"
-                    style={{ padding: '5px' }}
+                    style={{ padding: "5px" }}
                   ></i>
-                  <div style={{ marginLeft: '8px' }}>
+                  <div style={{ marginLeft: "8px" }}>
                     <h5>Company Address</h5>
                     <p>10, Mc Donald Avenue, Sunset Park, Newyork</p>
                   </div>
@@ -37,9 +37,9 @@ class Contactus extends Component {
                 <div className="contact_left_small">
                   <i
                     className="fa fa-envelope fa-3x"
-                    style={{ padding: '5px' }}
+                    style={{ padding: "5px" }}
                   ></i>
-                  <div style={{ marginLeft: '5px' }}>
+                  <div style={{ marginLeft: "5px" }}>
                     <h5>Email Address</h5>
                     <p>info@yourdomain.com</p>
                   </div>
@@ -47,9 +47,9 @@ class Contactus extends Component {
                 <div className="contact_left_small">
                   <i
                     className="fa fa-phone fa-3x"
-                    style={{ padding: '5px' }}
+                    style={{ padding: "5px" }}
                   ></i>
-                  <div style={{ marginLeft: '13px' }}>
+                  <div style={{ marginLeft: "13px" }}>
                     <h5>Contact</h5>
                     <p>+99 999 9999</p>
                   </div>
@@ -57,29 +57,29 @@ class Contactus extends Component {
                 <div className="sociallinks">
                   <ul
                     className="social-links"
-                    style={{ listStyle: 'none', display: 'flex' }}
+                    style={{ listStyle: "none", display: "flex" }}
                   >
-                    <li style={{ marginRight: '12px' }}>
+                    <li style={{ marginRight: "12px" }}>
                       <a href="#">
                         <span className="fa fa-facebook-f" />
                       </a>
                     </li>
-                    <li style={{ marginRight: '12px' }}>
+                    <li style={{ marginRight: "12px" }}>
                       <a href="#">
                         <span className="fa fa-twitter" />
                       </a>
                     </li>
-                    <li style={{ marginRight: '12px' }}>
+                    <li style={{ marginRight: "12px" }}>
                       <a href="#">
                         <span className="fa fa-google-plus" />
                       </a>
                     </li>
-                    <li style={{ marginRight: '12px' }}>
+                    <li style={{ marginRight: "12px" }}>
                       <a href="#">
                         <span className="fa fa-linkedin" />
                       </a>
                     </li>
-                    <li style={{ marginRight: '12px' }}>
+                    <li style={{ marginRight: "12px" }}>
                       <a href="#">
                         <span className="fa fa-instagram" />
                       </a>
@@ -89,28 +89,28 @@ class Contactus extends Component {
               </div>
               <div className="right">
                 <h1>Send Us Message</h1>
-                <div  className="input-flex">
+                <div className="input-flex">
                   <div
                     className="group aos-init"
-                    style={{ marginRight: '10px' }}
+                    style={{ marginRight: "10px" }}
                   >
                     <input
-                      type="text"
+                      type="email"
                       name="email"
-                      id="name"
+                      id="email"
                       required
-                      placeholder="Name"
+                      placeholder="Email"
                     />
                     <span className="highlight" />
                     <span className="bar" />
                   </div>
                   <div
                     className="group aos-init"
-                    style={{ marginRight: '10px' }}
+                    style={{ marginRight: "10px" }}
                   >
                     <input
                       type="text"
-                      name="email"
+                      name="name"
                       id="name"
                       required
                       placeholder="Name"
@@ -119,29 +119,30 @@ class Contactus extends Component {
                     <span className="bar" />
                   </div>
                 </div>
-                <div  className="input-flex">
+                <div
+                  style={{
+                    display: "flex",
+                    alignContent: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <div
                     className="group aos-init"
-                    style={{ marginRight: '10px' }}
+                    style={{ marginRight: "10px" }}
                   >
-                    <input
-                      type="text"
-                      name="email"
-                      id="name"
+                    <select
+                      name="plan"
+                      id="plan"
                       required
-                      placeholder="Name"
-                    />
-                    <span className="highlight" />
-                    <span className="bar" />
-                  </div>
-                  <div className="group aos-init">
-                    <input
-                      type="text"
-                      name="email"
-                      id="name"
-                      required
-                      placeholder="Name"
-                    />
+                      style={{
+                        backgroundColor: "rgb(34, 34, 66)",
+                        color: "white",
+                      }}
+                    >
+                      <option value="complaint">Complaint</option>
+                      <option value="feedback">Feedback</option>
+                      <option value="help">Help</option>
+                    </select>
                     <span className="highlight" />
                     <span className="bar" />
                   </div>
@@ -153,7 +154,7 @@ class Contactus extends Component {
                       id="message"
                       required
                       placeholder="Feedback"
-                      defaultValue={''}
+                      defaultValue={""}
                     />
                     <span className="highlight" />
                     <span className="bar" />
@@ -171,7 +172,7 @@ class Contactus extends Component {
           </div>
         </div>
       </section>
-    )
-  }
+    );
+  };
 }
-export default Contactus
+export default Contactus;
