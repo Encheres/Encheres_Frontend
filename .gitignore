@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#for no more errors in package (just till no new dependency is added)
+package*
+./package-lock.json

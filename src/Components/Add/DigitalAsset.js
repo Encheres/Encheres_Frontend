@@ -244,7 +244,7 @@ class DigitalAsset extends Component {
                         </Button>
                     </div>
                     <div className='col-11 col-sm-8 col-md-7 col-lg-7'>
-                        <Card id='new-item-card'>
+                        <Card id='new-item-card' style={{border:'2px solid white'}}>
                             <CardBody>
                             <CardSubtitle tag="h6" className="new-item-card-subtitle">
                                 UPLOAD ASSET FILE
@@ -540,7 +540,7 @@ class DigitalAsset extends Component {
                         </Card>
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
-                            <Card id="new-item-card">
+                            <Card id="new-item-card" style={{border:'2px solid white'}}>
                                 <Image className="new-item-image" rounded
                                     src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
                                 />
