@@ -160,7 +160,7 @@ class SignUp extends Component {
                 console.log("SignUp Successful");
                 this.props.history.push('/');
             }else{
-                console.log("SignUp Failed");
+                console.log(this.props.auth.error);
             }
 
 

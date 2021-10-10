@@ -35,7 +35,7 @@ export const handleSignUp = (userDetails) => async (dispatch,getState) =>{
   }
 }
 
-export const signIn = (userDetails) => async (dispatch,getState) =>{
+export const handleSignIn = (userDetails) => async (dispatch,getState) =>{
   try{
       const response = await record.post('/users/login', userDetails);
       localStorage.setItem('encheres_isSignedIn','true');
@@ -52,6 +52,8 @@ export const signIn = (userDetails) => async (dispatch,getState) =>{
           }else{
               error = e.response.statusText;
           }
+      }else{
+          error = "Something went wrong";
       }
       dispatch({type:AUTH_FAILED, payload:{error}})
   }
