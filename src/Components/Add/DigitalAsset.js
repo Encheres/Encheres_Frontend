@@ -267,6 +267,12 @@ class DigitalAsset extends Component {
                                         className='new-item-card-button'
                                     />
                                 </div>
+                                <div className='row justify-content-center'>
+                                    <Button 
+                                        className='mt-4' style={{height:40, width: 40, borderRadius: 20}}>
+                                    <span className='fa fa-plus-circle'/>
+                                    </Button>
+                                </div>
                             </div> 
                                 <div className='mb-4' id='new-item-form-error'>{this.state.errors.assetFile}</div>
                             </CardBody>

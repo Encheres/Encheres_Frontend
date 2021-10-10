@@ -49,6 +49,7 @@ class PhysicalAsset extends Component {
             },
 
             errors: {
+                assetImagesHash: "",
                 name: "",
                 quantity: "",
                 description: "",
@@ -115,9 +116,14 @@ class PhysicalAsset extends Component {
 
     formValidattion() {
 
-        const {name, quantity, description, price, contact, categories, onSale, address} = this.state;
+        const {assetImagesHash, name, quantity, description, price, contact, categories, onSale, address} = this.state;
         let nameError = "", quantityError = "", descriptionError = "", priceError = "", royalityError = "",
-        contactError = "", categoriesError = "", saleError = "", error;
+        contactError = "", categoriesError = "", saleError = "", assetImageHashError = "", error;
+
+        if(assetImagesHash.length === 0){
+            assetImageHashError="You must put atleast one image to showcase your asset";
+            error = true;
+        }
 
         if(!onSale){
             saleError="Date Time is Required for sale";
@@ -163,6 +169,7 @@ class PhysicalAsset extends Component {
 
         this.setState(prevState => ({
             errors:{
+                assetImagesHash: assetImageHashError,
                 name:nameError,
                 description: descriptionError,
                 categories:categoriesError,
@@ -223,7 +230,7 @@ class PhysicalAsset extends Component {
         console.log("Submitting file to ipfs...")
     };
 
-    async uploadAssetFile(){
+    async uploadAssetImageFile(){
         try {
             
             this.setState({
@@ -231,9 +238,39 @@ class PhysicalAsset extends Component {
             })
 
             const file = await ipfs.add(this.state.buffer)
+            const assetImagesHash = this.state.assetImagesHash;
+            assetImagesHash.push(file.path)
             this.setState({
-                assetFileHash: file.path,
-                assetFileSize: (file.size/1000),
+                assetImagesHash: file.path,
+                assetFileUploading: false
+            })
+
+            console.log(file.path)
+
+        } catch (error) {
+
+            this.onFailDismiss();
+            setTimeout(() => {
+                this.onFailDismiss()
+            }, 10000);
+
+        }
+
+        //https://ipfs.infura.io/ipfs/<hash>
+    }
+
+    async uploadAssetVideoFile(){
+        try {
+            
+            this.setState({
+                assetFileUploading: true
+            })
+
+            const file = await ipfs.add(this.state.buffer)
+            const assetVideoHash = this.state.assetVideoHash;
+            assetVideoHash.push(file.path)
+            this.setState({
+                assetVideoHash: file.path,
                 assetFileUploading: false
             })
 
@@ -308,7 +345,15 @@ class PhysicalAsset extends Component {
                                         className='new-item-card-button'
                                     />
                                 </div>
+                                <div className='row justify-content-center'>
+                                    <Button 
+                                        onClick={() => this.uploadAssetImageFile()}
+                                        className='mt-4' style={{height:40, width: 40, borderRadius: 20}}>
+                                    <span className='fa fa-plus-circle'/>
+                                    </Button>
+                                </div>
                             </div> 
+                                <div className='mb-4' id='new-item-form-error'>{this.state.errors.assetImagesHash}</div>
                             </CardBody>
                             <CardBody>
                             <CardSubtitle tag="h6" className="new-item-card-subtitle">
@@ -324,6 +369,13 @@ class PhysicalAsset extends Component {
                                         onChange={this.onFileChange}
                                         className='new-item-card-button'
                                     />
+                                </div>
+                                <div className='row justify-content-center'>
+                                    <Button 
+                                        onClick={() => this.uploadAssetVideoFile()}
+                                        className='mt-4' style={{height:40, width: 40, borderRadius: 20}}>
+                                    <span className='fa fa-plus-circle'/>
+                                    </Button>
                                 </div>
                             </div> 
                             </CardBody>
@@ -616,13 +668,7 @@ class PhysicalAsset extends Component {
                                         :
                                         <div></div>
                                     }
-                                    <div className='mt-4 new-item-card-button-div'>
-                                        <Button className='mt-2 new-item-card-button'
-                                            disabled={this.state.assetFileUploading}
-                                            onClick={() => this.uploadAssetFile()}
-                                        >
-                                            PREVIEW ASSET FILE
-                                        </Button>  
+                                    <div className='mt-4 new-item-card-button-div'>  
                                         <Button className='mt-2 new-item-card-button'
                                             onClick={() => this.createItem()}
                                         >
@@ -695,6 +741,14 @@ class PhysicalAsset extends Component {
                                     <span style={{ marginLeft: 10, color: "cyan" }}>
                                         {(!this.state.quantity || this.state.quantity === 1) ? '1' : this.state.quantity}
                                     </span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Pickup Point
+                                    <p style={{ marginTop: 10, color: "cyan" }}>
+                                        {!this.state.address.addressLine1 ? 'Adress-123, dummy' : 
+                                            this.state.address.addressLine1+', '+this.state.address.city+', '+
+                                            this.state.address.addressState+', '+this.state.address.country}
+                                    </p>
                                 </CardSubtitle>
                                 </div>
                                 <div className="new-item-accountbox">
