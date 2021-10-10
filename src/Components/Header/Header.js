@@ -17,6 +17,7 @@ import {
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import Logo from '../../assets/images/Encheres.png'
+import {LinkContainer} from 'react-router-bootstrap'
 import './Header.css'
 
 class Header extends Component {
@@ -50,7 +51,7 @@ class Header extends Component {
                     <Collapse isOpen={this.state.isNavOpen} navbar>
                         <Nav className='navbar-link' navbar>
                             <NavItem>
-                                <NavLink className="" href="/Home/">
+                                <NavLink className="" href="/Home">
                                     <span className='NavBarLink fa fa-home fa-lg'/> Home
                                 </NavLink>
                             </NavItem>
@@ -62,7 +63,7 @@ class Header extends Component {
                                     <DropdownItem href='/create/New-Item'>
                                         Live Auction
                                     </DropdownItem>
-                                    <DropdownItem href='/create/New-Item'>
+                                    <DropdownItem href='/create/Independent-Item'>
                                         Independent Asset
                                     </DropdownItem>
                                 </DropdownMenu>
@@ -75,7 +76,7 @@ class Header extends Component {
                                     <DropdownItem>
                                         Live Auctions
                                     </DropdownItem>
-                                    <DropdownItem>
+                                    <DropdownItem href='/view/Independent-Asset'>
                                         Independent Assets
                                     </DropdownItem>
                                 </DropdownMenu>
