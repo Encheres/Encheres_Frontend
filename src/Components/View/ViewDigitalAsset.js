@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import {renderAssetCategories} from '../FrequentComponents/Asset'
 import {Image} from 'react-bootstrap';
 import {Card, CardText, CardBody, Collapse,
@@ -8,7 +9,7 @@ import '../View/View.css'
 
 var categories = ["Art", "Collectibles", "Music"];
 
-class Asset extends Component {
+class ViewDigitalAsset extends Component {
 
     constructor(props){
         super(props);
@@ -33,10 +34,11 @@ class Asset extends Component {
 
     renderAssets(){
             return(
-                <div onClick={() => alert("Clicked!!")} className='col-10 col-sm-6 col-md-5 col-lg-3'>
+                <div className='col-10 col-sm-6 col-md-5 col-lg-3'>
                     <Card id="new-item-card">
                             <Image className="new-item-image" rounded
                                 src={preview}
+                                onClick={() => alert("Clicked!!")}
                             />
                         <CardBody>
                             <CardSubtitle
@@ -77,9 +79,9 @@ class Asset extends Component {
                             </CardSubtitle>
                             </div>
                             <div className="new-item-accountbox">
-                            <CardText id="new-item-card-account">
-                                @{"john_bill123"}
-                            </CardText>
+                                <CardText id="new-item-card-account">
+                                    @{"john_bill123"}
+                                </CardText>
                             </div>
                         </CardBody>
                     </Card>
@@ -96,14 +98,19 @@ class Asset extends Component {
                         VIEW INDEPENDENT ASSETS
                     </h3>
                     <div className='col-12 new-item-card-button-div mt-4'>
-                        <Button className='mt-2 new-item-card-button'>
+                        <Button 
+                            disabled
+                            className='mt-2 new-item-card-button'>
                             DIGITAL
                         </Button>
-                        <Button  className='mt-2 new-item-card-button' onClick={() => this.toggleFilter()}>
+                        <Button
+                            className='mt-2 new-item-card-button' onClick={() => this.toggleFilter()}>
                             FILTER
                         </Button>
                         <Button className='mt-2 new-item-card-button'>
-                            PHYSICAL
+                            <Link style={{color: 'white', textDecoration: 'none'}} to='/view/independent-physical-assets'>
+                                PHYSICAL
+                            </Link>
                         </Button>
                     </div>
                 </div>
@@ -150,4 +157,4 @@ class Asset extends Component {
     }
 }
 
-export default Asset;
+export default ViewDigitalAsset;

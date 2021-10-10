@@ -51,7 +51,7 @@ class Header extends Component {
                     <Collapse isOpen={this.state.isNavOpen} navbar>
                         <Nav className='navbar-link' navbar>
                             <NavItem>
-                                <NavLink className="" href="/Home">
+                                <NavLink className="" href="/home">
                                     <span className='NavBarLink fa fa-home fa-lg'/> Home
                                 </NavLink>
                             </NavItem>
@@ -63,7 +63,7 @@ class Header extends Component {
                                     <DropdownItem href='/create/New-Item'>
                                         Live Auction
                                     </DropdownItem>
-                                    <DropdownItem href='/create/Independent-Item'>
+                                    <DropdownItem href='/create/independent-digital-assets'>
                                         Independent Asset
                                     </DropdownItem>
                                 </DropdownMenu>
@@ -76,7 +76,7 @@ class Header extends Component {
                                     <DropdownItem>
                                         Live Auctions
                                     </DropdownItem>
-                                    <DropdownItem href='/view/Independent-Asset'>
+                                    <DropdownItem href='/view/independent-digital-assets'>
                                         Independent Assets
                                     </DropdownItem>
                                 </DropdownMenu>
