@@ -73,26 +73,27 @@ export const handleSignOut = (userDetails) => async (dispatch,getState) =>{
 }
 
 
-export const forgetPassword = (userDetails) => async (dispatch, getState) => {
+export const handleForgetPassword = (userDetails) => async (dispatch, getState) => {
   try {
     const response = await record.post("/users/forgot_password", userDetails);
     console.log(response.data.message);
     dispatch({ type: FORGOT_PASS, payload: response.data });
   } catch (e) {
     let error;
-    if (e.response) {
-      if (e.response.status === 401) {
-        error = e.response.data.message || "Unsuccessfull";
-      } else {
-        error = e.response.statusText;
-      }
+
+    if (e.response && e.response.status === 401) {
+      error = e.response.data.message || "Unsuccessfull";
+    }else if(e.response && e.response.statusText) {
+      error = e.response.statusText;
+    }else{
+      error = "Something went wrong";
     }
     console.log(error);
     dispatch({ type: FORGOT_PASS_FAILED, payload: { error } });
   }
 };
 
-export const resetPassword = (userDetails) => async (dispatch, getState) => {
+export const handleResetPassword = (userDetails) => async (dispatch, getState) => {
   try {
     const response = await record.post("/users/reset_password", userDetails);
     console.log(response.data);

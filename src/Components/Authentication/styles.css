@@ -62,9 +62,19 @@
 .success_text{
     color: #28a745;
 }
+.failed_text{
+    color: #dc3545;
+}
 .invalid__feedback{
     color: cyan;
 }
 .light__blue{
     color: cornflowerblue;
+}
+.text__small{
+    font-size: 1.2rem;
+}
+.form_direct_link{
+    margin-top: 0.8rem;
+    text-align: right;
 }

@@ -12,6 +12,9 @@ import SignUp from './Authentication/SignUp';
 import Login from './Authentication/Login';
 import Logout from './Authentication/Logout';
 import Home from './Home/Home'
+import ForgotPassword from './Authentication/ForgotPassword';
+import ResetPassword from './Authentication/ResetPassword';
+
 class Main extends Component {
   
   componentDidMount(){
@@ -29,6 +32,9 @@ class Main extends Component {
           <Route exact path='/login' component={Login} />
           <Route exact path='/home' component={Home} />
           <Route exact path='/logout' component={Logout} />
+          <Route exact path='/forgot_password' component = {ForgotPassword} />
+          <Route exact path="/reset_password/:id/:token" component={ResetPassword}/>
+          
           {/*Contact us page*/}
           <Route exact path='/contact-us' component={() => <ContactUs />} />
 
