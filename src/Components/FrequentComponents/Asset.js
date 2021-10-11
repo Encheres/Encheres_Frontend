@@ -7,7 +7,6 @@ import {GiCardRandom, GiBearFace, GiClockwork,
     GiVendingMachine, GiSofa, GiClothes} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
 
-
 export const renderAssetCategories = (categories) => {
     return(
         categories.map((c) => {
