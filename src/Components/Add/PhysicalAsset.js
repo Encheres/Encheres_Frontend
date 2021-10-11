@@ -27,6 +27,25 @@ import "../Authentication/styles.css"
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
+var demoShowcaseCarousel = [
+    {
+        src: "https://ipfs.infura.io/ipfs/QmTD5WhB9hFi8sxMyZVRuEFbdRmi3uq3dt1BSxXqcV112f",
+        altText: "Slide 1",
+        key: "1"
+    },
+    {
+        src: "https://ipfs.infura.io/ipfs/QmP9AKueSGHTDz3h8JaG62RsikHRaRBjvQNf43N7dYcQr5",
+        altText: "Slide 2",
+        key: "2"
+    },
+    ,
+    {
+        src: "https://ipfs.infura.io/ipfs/QmNMAB8Lfi13Jva6PQvF7CLo8qH6erUYrT3Z86paEBfoP6",
+        altText: "Slide 3",
+        key: "3"
+    }
+]
+
 const assetShowcaseCarousel = [
 
 ]
@@ -779,7 +798,7 @@ class PhysicalAsset extends Component {
                                 {
                                     this.state.assetImagesHash.length ? 
                                     <UncontrolledCarousel items={assetShowcaseCarousel} /> :
-                                    <div/>
+                                    <UncontrolledCarousel items={demoShowcaseCarousel} />
                                 }
                                 <CardSubtitle
                                 tag="h5"
