@@ -7,6 +7,9 @@ for(var i=0;i<countries.length;i++){
 }
 export const countryList =  newCountryList;
 
+// email verification regex
+export const valid_email = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i; 
+
 // Categories
 let nftCategories = []
 nftCategories.push("Art");

@@ -4,7 +4,7 @@ import Select from 'react-select'
 import Form from 'react-bootstrap/Form';
 import { State, City }  from 'country-state-city';
 import { countryList, customSelectStyles} from '../../variables';
-import './styles.css'
+import '../Authentication/styles.css'
 
 export const addressValidation = (prop)=>{
     const {addressLine1, city, addressState, country, postalCode} = prop;

@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
 import Form from 'react-bootstrap/Form';
+import AddressForm from '../FrequentComponents/AddressForm'
+import './styles.css'
 import { Link } from 'react-router-dom';
-import detectEthereumProvider from '@metamask/detect-provider';
-import AddressForm from './AddressForm';
-import {addressValidation} from './AddressForm'
-import './styles.css';
+import detectEthereumProvider from '@metamask/detect-provider'
+import { valid_email } from '../../variables';
+import {addressValidation} from '../FrequentComponents/AddressForm';
+
+import {handleSignUp} from '../../apis_redux/actions/auth.js'
 
 class SignUp extends Component {
     
@@ -67,7 +71,6 @@ class SignUp extends Component {
         const {name, anonymous_name, email, password, address} = this.state;
         let nameerror="", anonynameerror="" ,emailerror="", passworderror="";
         let error = false;
-        const valid_email = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
 
         if(name.trim().length === 0){
             error = true;
@@ -140,10 +143,27 @@ class SignUp extends Component {
         }
     }
 
-    handleSubmit = e =>{
+    handleSubmit = async(e) =>{
         e.preventDefault();
         if(this.state.account_integrated && this.state.accept_conditions){
-            console.log(this.state);    
+            const {name, anonymous_name, email, password, address, accounts} = this.state;
+            const data = {
+                name:name,
+                anonymous_name:anonymous_name,
+                email:email,
+                password:password,
+                address:address,
+                accounts:accounts
+            }
+            await this.props.handleSignUp(data);
+            if(this.props.auth.isSignedIn){
+                console.log("SignUp Successful");
+                this.props.history.push('/');
+            }else{
+                console.log(this.props.auth.error);
+            }
+
+
         }else{
             alert("Please integrate your account and accept the terms and conditions");
         }
@@ -213,6 +233,11 @@ class SignUp extends Component {
                     <Button className="form__button pink_blue_gradiend_btn" onClick={this.handleFormSubmit}>
                         Next
                     </Button>
+
+                    <br/>
+                    <div class="form_direct_link">
+                        <p className="text-muted ">Already have an account? <Link to="/login">Login</Link></p>
+                    </div>
                                         
                 </Form>
             </>
@@ -301,5 +326,13 @@ class SignUp extends Component {
     }
 }
 
+const mapStateToProps = (state, ownProps)=>{
+    return({
+        ...ownProps,
+        auth:state.auth
+    })
 
-export default SignUp
+}
+
+
+export default connect(mapStateToProps, {handleSignUp})(SignUp);
