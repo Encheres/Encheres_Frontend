@@ -8,13 +8,17 @@ import Switch from "react-switch";
 import Datetime from 'react-datetime';
 import {Badge, Image} from 'react-bootstrap';
 import {Card, CardText, CardBody, 
-    CardSubtitle, Button, ButtonGroup,
+    CardSubtitle, Button, ButtonGroup, UncontrolledCarousel,
     Modal, ModalHeader, ModalBody, ModalFooter, Alert} from "reactstrap";
 import Form from 'react-bootstrap/Form';
 import {FaPalette, FaFootballBall, FaCarSide,
     FaWallet, FaBuilding} from 'react-icons/fa';
 import {GiBearFace, GiClockwork, 
     GiVendingMachine, GiSofa, GiClothes, GiWatch} from 'react-icons/gi';
+
+import { connect } from "react-redux";
+import {PostPhysicalAsset} from '../../apis_redux/actions/physicalAsset';
+
 import {addressValidation} from '../FrequentComponents/AddressForm';
 import preview from "../../assets/images/nft.jpg";
 import "./Add.css";
@@ -23,6 +27,42 @@ import "../Authentication/styles.css"
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
+const itemDemoCarousel = [
+    {
+        src: 'https://hips.hearstapps.com/edc.h-cdn.co/assets/16/21/3200x2186/gallery-1464359609-antique-lead.jpg?resize=980:*',
+        altText: 'Slide 1',
+        key: '1'
+      },
+      {
+        src: 'https://www.rd.com/wp-content/uploads/2017/09/01_antiques_Secrets-from-Expert-Antiquers-on-Finding-and-Scoring-the-Real-Deals_554153533_Aris-Suwanmalee.jpg?resize=768,464',
+        altText: 'Slide 2',
+        key: '2'
+      },
+      {
+        src: 'https://www.thesprucecrafts.com/thmb/S6NfkLsK8g67In4TRqw-sfbmeJM=/960x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/henry-graves-watch-5a83732fc5542e00377fbe48.jpg',
+        altText: 'Slide 3',
+        key: '3'
+      },
+      {
+        src: 'https://upload.wikimedia.org/wikipedia/commons/5/55/Paris_-_Vintage_travel_gear_seller_at_the_marche_Dauphine_-_5212.jpg',
+        altText: 'Slide 4',
+        key: '4'
+      }
+];
+
+const  mapStateToProps = (state) => {
+    return{
+        auth: state.auth,
+        physicalAsset: state.physicalAsset
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    
+    return {
+        PostPhysicalAsset: (asset) => dispatch(PostPhysicalAsset(asset))
+    };
+}
 
 class PhysicalAsset extends Component {
 
@@ -77,6 +117,8 @@ class PhysicalAsset extends Component {
             assetFileUploading: false,
             success: false,
             fail: false,
+
+            postError: ""
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -90,27 +132,58 @@ class PhysicalAsset extends Component {
 
     onSuccessDismiss(){
         this.setState({
-            success: !this.state.success
+            success: true
         })
     }
 
     onFailDismiss(){
         this.setState({
-            fail: !this.state.fail
+            fail: true
         })
     }
 
     async createItem() {
         
+        console.log(this.state);
         if(this.formValidattion()){
             console.log(this.state);
 
-            // await this.uploadAssetFile()
-            // this.onSuccessDismiss()
+            const newAsset = {
+                categories: this.state.categories,
+                event_start_date_time: this.state.startDateTime,
+                event_end_date_time: this.state.endDateTime,
+                pickup_point: {
+                    addressLine1: this.state.address.addressLine1,
+                    addressLine2: this.state.address.addressLine2,
+                    city: this.state.address.city,
+                    state: this.state.address.addressState,
+                    country: this.state.address.country,
+                    postalCode: this.state.address.postalCode
+                },
+                sale: this.state.onSale,
+                bids: this.state.bids,
+                owner_contact: this.state.contact,
+                asset: {
+                    name: this.state.name,
+                    quantity: this.state.quantity,
+                    aggregate_base_price: this.state.price,
+                    description: this.state.description
+                }
+            }
 
-            // setTimeout(() => {
-            //     this.onSuccessDismiss()
-            // }, 10000);
+            console.log(newAsset);
+
+            await this.props.PostPhysicalAsset(newAsset);
+
+            if(this.props.physicalAsset.postFail){
+                this.setState({
+                    postError: this.props.physicalAsset.postFailMess
+                })
+                this.onFailDismiss();
+            }
+            else{
+                this.onSuccessDismiss()
+            }
         }
     }
 
@@ -120,10 +193,10 @@ class PhysicalAsset extends Component {
         let nameError = "", quantityError = "", descriptionError = "", priceError = "", royalityError = "",
         contactError = "", categoriesError = "", saleError = "", assetImageHashError = "", error;
 
-        if(assetImagesHash.length === 0){
-            assetImageHashError="You must put atleast one image to showcase your asset";
-            error = true;
-        }
+        // if(assetImagesHash.length === 0){
+        //     assetImageHashError="You must put atleast one image to showcase your asset";
+        //     error = true;
+        // }
 
         if(!onSale){
             saleError="Date Time is Required for sale";
@@ -679,9 +752,13 @@ class PhysicalAsset extends Component {
                             </CardBody>
                             <Alert color="success" isOpen={this.state.success}>
                                 Sucess!!
+                                <br/>
+                                Asset Posted successfully!!
                             </Alert>
                             <Alert color="danger" isOpen={this.state.fail}>
                                 Failed!!
+                                <br/>
+                                {this.state.postError}
                             </Alert>
                         </Card>
                         </div>
@@ -691,6 +768,7 @@ class PhysicalAsset extends Component {
                                     src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
                                 /> */}
                             <CardBody>
+                                <UncontrolledCarousel style={{width: '50%'}} items={itemDemoCarousel} />
                                 <CardSubtitle
                                 tag="h5"
                                 className="mt-3 mb-3 new-item-card-subtitle"
@@ -731,6 +809,14 @@ class PhysicalAsset extends Component {
                                 }
                                 <div>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Showcase Video{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {(!this.state.assetVideoHash) ? 
+                                            <a style={{textDecoration: 'none', color: 'cyan'}} href='https://www.youtube.com/watch?v=zBhVZzi5RdU'>Link</a> : 
+                                            <a style={{textDecoration: 'none', color: 'cyan'}} href={'https://ipfs.infura.io/ipfs/'+this.state.assetVideoHash}>Link</a>}
+                                    </span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
                                     Price{"  "}
                                     <span style={{ marginLeft: 10, color: "cyan" }}>
                                         {(!this.state.price || this.state.price === 0.0000) ? '0.0000 ETH' : this.state.price+' ETH'}
@@ -765,4 +851,4 @@ class PhysicalAsset extends Component {
         }
 }
 
-export default PhysicalAsset;
+export default connect(mapStateToProps, mapDispatchToProps)(PhysicalAsset);
