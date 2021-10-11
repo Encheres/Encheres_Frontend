@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
 import { Image } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import { valid_email } from '../../variables';
 import Lock from '../../assets/images/lock.jpg';
 import './styles.css'
 
@@ -30,7 +32,6 @@ class LoginForm extends Component{
 
     validateForm = ()=>{
         const {email, password} = this.state;
-        const valid_email = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         let emailerror="", passworderror="", error = false;
         if(!email ||email.match(valid_email)===null){
             emailerror = "* Please enter a valid email address";
@@ -111,7 +112,10 @@ class LoginForm extends Component{
                                         <Button className="form__button pink_blue_gradiend_btn" type="submit" onClick={this.handleSubmit}>
                                             Login
                                         </Button>
-                                        
+                                        <br/>
+                                        <div class="form_direct_link">
+                                            <Link to="/forgot_password">Forgot Password?</Link>
+                                        </div>
                                     </Form>
                                     </Col>
                                 </Row>

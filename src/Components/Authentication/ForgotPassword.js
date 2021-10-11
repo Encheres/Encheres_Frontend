@@ -4,6 +4,7 @@ import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap"
 import { Image } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import ForgotPassImg from '../../assets/images/forgot_password.jpg';
+import { valid_email } from '../../variables';
 import './styles.css'
 
 import {handleForgetPassword} from '../../apis_redux/actions/auth.js';
@@ -30,7 +31,6 @@ class ForgotPassword extends Component{
 
     validateForm = ()=>{
         const {email} = this.state;
-        const valid_email = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         let emailerror="", error = false;
         if(!email ||email.match(valid_email)===null){
             emailerror = "* Please enter a valid email address";

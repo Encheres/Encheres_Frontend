@@ -74,3 +74,7 @@
 .text__small{
     font-size: 1.2rem;
 }
+.form_direct_link{
+    margin-top: 0.8rem;
+    text-align: right;
+}
