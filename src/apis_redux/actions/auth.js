@@ -93,7 +93,7 @@ export const handleForgetPassword = (userDetails) => async (dispatch, getState) 
   }
 };
 
-export const resetPassword = (userDetails) => async (dispatch, getState) => {
+export const handleResetPassword = (userDetails) => async (dispatch, getState) => {
   try {
     const response = await record.post("/users/reset_password", userDetails);
     console.log(response.data);
