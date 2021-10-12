@@ -4,7 +4,7 @@ import {FaPalette, FaMusic, FaFootballBall,
     FaWallet, FaCarSide, FaBuilding} from 'react-icons/fa';
 import {GrDomain } from 'react-icons/gr';
 import {GiCardRandom, GiBearFace, GiClockwork, 
-    GiVendingMachine, GiSofa, GiClothes} from 'react-icons/gi';
+    GiVendingMachine, GiSofa, GiClothes, GiWatch} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
 
 export const renderAssetCategories = (categories) => {
@@ -67,7 +67,8 @@ export const renderPhysicalAssetCategories = (categories) => {
                 icon = <FaBuilding/>
             else if(c === "Miscellaneous")
                 icon = <FaWallet/>
-
+            else if(c === "Mini Items")
+                icon = <GiWatch />
             return(
                     <Badge className='new-item-badge' pill bg="light" text="dark">
                         <span>{icon}</span>{" "+c}

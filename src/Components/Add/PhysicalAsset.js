@@ -46,9 +46,6 @@ var demoShowcaseCarousel = [
     }
 ]
 
-const assetShowcaseCarousel = [
-
-]
 
 const  mapStateToProps = (state) => {
     return{
@@ -113,6 +110,8 @@ class PhysicalAsset extends Component {
             bids: false,
             startDateTime: "",
             endDateTime: "",
+
+            assetShowcaseCarousel: [],
 
             assetImageFileUploading: false,
             assetVideoFileUploading: false,
@@ -322,20 +321,19 @@ class PhysicalAsset extends Component {
                 assetImageFileUploading: false
             })
 
+            var tempHash = this.state.assetShowcaseCarousel;
+
             var showcaseElement = {
                 src: "https://ipfs.infura.io/ipfs/"+file.path,
                 altText: "Slide "+assetImagesHash.length.toString(),
                 key: assetImagesHash.length.toString(),
             }
 
-            console.log('$',this.state.assetImagesHash);
+            tempHash.push(showcaseElement);
 
-            assetShowcaseCarousel.push(showcaseElement);
-
-            console.log('@',showcaseElement)
-            console.log('#',assetShowcaseCarousel);
-
-            console.log(file.path)
+            this.setState({
+                assetShowcaseCarousel: tempHash
+            })
 
         } catch (error) {
 
@@ -797,7 +795,7 @@ class PhysicalAsset extends Component {
                             <CardBody>
                                 {
                                     this.state.assetImagesHash.length ? 
-                                    <UncontrolledCarousel items={assetShowcaseCarousel} /> :
+                                    <UncontrolledCarousel items={this.state.assetShowcaseCarousel} /> :
                                     <UncontrolledCarousel items={demoShowcaseCarousel} />
                                 }
                                 <CardSubtitle
