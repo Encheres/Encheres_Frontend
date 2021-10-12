@@ -14,6 +14,28 @@ import Auctionlist from "./View/Auctionlist";
 import Logout from "./Authentication/Logout";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import ResetPassword from "./Authentication/ResetPassword";
+import { connect } from "react-redux";
+
+function PrivateRoute({ userAuth, children, ...rest }) {
+  let auth = userAuth;
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        auth.isSignedIn ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
 
 class Main extends Component {
   componentDidMount() {
@@ -25,16 +47,19 @@ class Main extends Component {
       <div>
         <Header />
         <Switch>
+          {/*Authentication*/}
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/logout" component={Logout} />
           <Route exact path="/forgot_password" component={ForgotPassword} />
           <Route
             exact
             path="/reset_password/:id/:token"
             component={ResetPassword}
           />
+          <PrivateRoute userAuth={this.props.auth} exact path="/logout"><Logout/></PrivateRoute> 
+
+          {/*Home Page*/}
+          <Route exact path="/home" component={Home} />
 
           {/*Contact us page*/}
           <Route exact path="/contact-us" component={() => <ContactUs />} />
@@ -80,5 +105,10 @@ class Main extends Component {
     );
   }
 }
+const mapStateToProps = (state, ownprops)=>{
+  return{
+    auth:state.auth
+  }
+}
 
-export default Main;
+export default connect(mapStateToProps,{})(Main);

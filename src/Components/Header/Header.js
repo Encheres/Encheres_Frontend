@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
   Collapse,
   Navbar,
@@ -98,9 +99,13 @@ class Header extends Component {
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink href="">
+                  {this.props.signedIn? <NavLink href="">
                     <span className="NavBarLink fa fa-user-circle fa-lg" />
+                  </NavLink>: <NavLink href="/login">
+                    <span className="NavBarLink fa fa-sign-in fa-lg" />
                   </NavLink>
+
+                  }
                 </NavItem>
                 <NavItem>
                   <NavLink className="" href="/contact-us">
@@ -115,5 +120,10 @@ class Header extends Component {
     );
   }
 }
+const mapStateToProps = (state, ownprops)=>{
+  return{
+    signedIn:state.auth.isSignedIn,
+  }
+}
 
-export default Header;
+export default connect(mapStateToProps,{})(Header);
