@@ -116,6 +116,9 @@ class LoginForm extends Component{
                                         <div class="form_direct_link">
                                             <Link to="/forgot_password">Forgot Password?</Link>
                                         </div>
+                                        <div class="form_direct_link">
+                                            <p className="text-muted ">Don't have an account? <Link to="/signup">Sign Up</Link></p>
+                                        </div>
                                     </Form>
                                     </Col>
                                 </Row>

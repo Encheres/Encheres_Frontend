@@ -185,7 +185,7 @@ class AddressForm extends Component{
                     <Col md={6} className="form_grp">
                         <Form.Group controlId="user__city">
                             {/* <Form.Label className="form_input_label"> City</Form.Label> */}
-                            <Select isClearable styles={customSelectStyles} name="city" options={this.state.cityList} className="basic-multi-select" value={this.state.selectedCity} onChange={this.handleCityChange} classNamePrefix="select" placeholder="City"/>
+                            <Select styles={customSelectStyles} name="city" options={this.state.cityList} className="basic-multi-select" value={this.state.selectedCity} onChange={this.handleCityChange} classNamePrefix="select" placeholder="City"/>
                             <div className="invalid__feedback">{this.props.errors.city}</div>
                         </Form.Group>
                     </Col>

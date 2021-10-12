@@ -15,8 +15,8 @@
     font-weight: 450;
 }
 
-.form_input_label{
-    color: #ffff;
+.select__input-container, .form_input_label{
+    color: #ffff !important; 
 }
 
 .form_input_field, .select__control, .select__menu, .select__single-value{
