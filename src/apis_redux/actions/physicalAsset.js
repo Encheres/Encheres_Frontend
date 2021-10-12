@@ -16,10 +16,42 @@ export const addAssets = (assets) => ({
 	payload: assets,
 });
 
-export const FetchPhysicalAssets = (page) => (dispatch) => {
+export const FetchPhysicalAssets = (page, bids) => (dispatch) => {
+
+		dispatch(assetsLoading(true))
+		return fetch(devURL+`/items?page=${page}`)
+		.then(
+			(response) => {
+				if (response.ok) {
+					return response;
+				} else {
+					var error = new Error(
+						"Error " + response.status + ": " + response.statusText
+					);
+					error.response = response;
+					throw error;
+				}
+			},
+			(error) => {
+				var errmess = new Error(error.message);
+				throw errmess;
+			}
+		)
+		.then((response) => response.json())
+		.then((assets) => dispatch(addAssets(assets)))
+		.catch((error) => dispatch(assetsFailed(error.message)));
+}
+
+export const FetchFilteredPhysicalAssets = (page, categories) => (dispatch) => {
+
+	var tags = '&tags=';
+	
+	for(var i=0;i<categories.length;i++){
+		tags = tags + categories[i].value + ',';
+	}
 
 	dispatch(assetsLoading(true))
-	return fetch(devURL+`/items?page=${page}`)
+	return fetch(devURL+`/filtered-items?page=${page+tags}`)
 	.then(
 		(response) => {
 			if (response.ok) {

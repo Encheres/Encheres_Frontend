@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import Loading from '../loading';
 import { connect } from 'react-redux';
-import { FetchPhysicalAssets } from '../../apis_redux/actions/physicalAsset';
+import { FetchPhysicalAssets, FetchFilteredPhysicalAssets } from '../../apis_redux/actions/physicalAsset';
 import { categoryList, customSelectStyles } from '../../variables';
 import Select from 'react-select'
 import InfiniteScroll from "react-infinite-scroll-component";
 import {renderPhysicalAssetCategories} from '../FrequentComponents/Asset'
-import {Card, CardText, CardBody, Collapse, UncontrolledCarousel,
-    CardSubtitle, Button, ListGroup, ListGroupItem} from "reactstrap";
+import {Card, CardText, CardBody, UncontrolledCarousel,
+    CardSubtitle, Button } from "reactstrap";
 import '../View/View.css'
 
 
@@ -19,9 +19,10 @@ class ViewPhysicalAsset extends Component {
 
         this.state={
             page: 0,
+            bids: true,
             assets: [],
-            categoryFilter: '',
-            isFilterOpen: false,
+            filter: false,
+            dropDownOpen: false,
             category: []
         }
 
@@ -29,7 +30,7 @@ class ViewPhysicalAsset extends Component {
     }
 
     async componentDidMount(){
-        await this.props.FetchPhysicalAssets(this.state.page)
+        await this.props.FetchPhysicalAssets(0)
 
         if(this.props.physicalAsset.assets.length){
             this.setState({
@@ -43,7 +44,12 @@ class ViewPhysicalAsset extends Component {
             page: this.state.page+1
         })
 
-        await this.props.FetchPhysicalAssets(this.state.page);
+        if(this.state.filter){
+            await this.props.FetchFilteredPhysicalAssets(this.state.page, this.state.category)
+        }
+        else{
+            await this.props.FetchPhysicalAssets(this.state.page);
+        }
 
         if(this.props.physicalAsset.assets.length){
             var tempAssets = this.state.assets;
@@ -57,15 +63,48 @@ class ViewPhysicalAsset extends Component {
         }
     }
 
-    toggleFilter(){
-        this.setState({
-            isFilterOpen: !this.state.isFilterOpen
-        })
-    }
+    handleMultiSelectChange = async category => {
 
-    handleMultiSelectChange = category => {
+        this.setState({
+            page: 0
+        })
+
+        if(category.length === 0){
+            this.setState({
+                assets: [],
+                filter: false,
+                page: 0,
+                isFilterOpen: false
+            })
+    
+            await this.props.FetchPhysicalAssets(0)
+    
+            if(this.props.physicalAsset.assets.length){
+                this.setState({
+                    assets: this.props.physicalAsset.assets
+                })
+            }
+        }
+
         this.setState({ category:category })
         console.log(category)
+    }
+
+    onFilterSubmit = async () => {
+
+        this.setState({
+            assets: [],
+            page:0,
+            filter: true
+        })
+
+        await this.props.FetchFilteredPhysicalAssets(0, this.state.category)
+
+        if(this.props.physicalAsset.assets.length){
+            this.setState({
+                assets: this.props.physicalAsset.assets
+            })
+        }
     }
 
     renderAssets(asset){
@@ -164,7 +203,8 @@ class ViewPhysicalAsset extends Component {
             );
         }
         else {
-            var cardContainerStyle = this.state.isFilterOpen ? "asset-card-container" : "";
+            
+            var cardContainerStyle = this.state.dropDownOpen ? "asset-card-container" : "";
             return(
                 <div className='container-fluid asset-container'>
                     <div className='row justify-content-center mt-4 mb-4'>
@@ -179,7 +219,7 @@ class ViewPhysicalAsset extends Component {
                                 </Link>
                             </Button>
                             <Button
-                                className='mt-2 new-item-card-button' onClick={() => this.toggleFilter()}>
+                                className='mt-2 new-item-card-button' onClick={() => this.onFilterSubmit()}>
                                 FILTER
                             </Button>
                             <Button 
@@ -188,17 +228,20 @@ class ViewPhysicalAsset extends Component {
                                 PHYSICAL
                             </Button>
                         </div>
-                        <div className='mt-4 mb-4 col-10 col-sm-8 col-md-7 col-lg-4 asset-filter'>
-                            {
-                                this.state.isFilterOpen ?
-                                <Select isMulti name="category" 
-                                    styles={customSelectStyles}
-                                    options={categoryList} className="basic-multi-select" 
-                                    value={this.state.category} 
-                                    onChange={this.handleMultiSelectChange} 
-                                    classNamePrefix="select"/> :
-                                <div/>
-                            }
+                        <div className='mt-4 mb-3 col-10 col-sm-8 col-md-7 col-lg-4 asset-filter'>
+                            <Select isMulti name="category" 
+                                onMenuOpen={() => this.setState({
+                                    dropDownOpen: true
+                                })}
+                                onMenuClose={() => this.setState({
+                                    dropDownOpen: false
+                                })}
+                                styles={customSelectStyles}
+                                options={categoryList} className="basic-multi-select" 
+                                value={this.state.category} 
+                                onChange={this.handleMultiSelectChange} 
+                                classNamePrefix="select"
+                            />
                         </div>
                     </div>
                     <div 
@@ -249,7 +292,8 @@ const  mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     
     return {
-        FetchPhysicalAssets : (page) => dispatch(FetchPhysicalAssets(page))
+        FetchPhysicalAssets : (page) => dispatch(FetchPhysicalAssets(page)),
+        FetchFilteredPhysicalAssets: (page, categories) => dispatch(FetchFilteredPhysicalAssets(page, categories))
     };
 }
 

@@ -34,9 +34,7 @@ export const categoryList = [
     {value:"Fashion", label:"Fashion"},
     {value:"Mini Items", label:"Mini Items"},
     {value:"Real Estate", label:"Real Estate"},
-    {value:"Miscellaneous", label:"Miscellaneous"},
-    {value:"On Auction", label:"On Auction"},
-    {value:"Fixed Price", label:"Fixed Price"}
+    {value:"Miscellaneous", label:"Miscellaneous"}
 ]
 
 // SELECT Styles
