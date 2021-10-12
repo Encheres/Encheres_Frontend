@@ -75,7 +75,7 @@ class Contactus extends Component {
     return !error;
   };
   handleSubmit(e) {
-    //e.preventDefault();
+    e.preventDefault();
     const resp = this.formValidation();
     if (resp) {
       try {
@@ -92,7 +92,6 @@ class Contactus extends Component {
         this.notifyF("Some error occured.");
       }
     }
-    console.log(this.state);
   }
   componentDidMount() {
     if (this.props.auth) {
@@ -309,10 +308,5 @@ class Contactus extends Component {
 const mapStateToProps = (state) => {
   return { auth: state.auth.user };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    contactusform: () => contactusform,
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Contactus);
+export default connect(mapStateToProps, {contactusform})(Contactus);
