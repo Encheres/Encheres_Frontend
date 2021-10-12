@@ -5,19 +5,27 @@ import { GiCardRandom, GiBearFace } from "react-icons/gi";
 import { Badge } from "react-bootstrap";
 import { BiWorld } from "react-icons/bi";
 import { Accordion, Button } from "react-bootstrap";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./auctionlist.css";
 class SingleAuctionComponent extends Component {
+  constructor(props) {
+    super();
+  }
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   render = () => {
     return (
       <Accordion.Item
-        eventKey="1"
+        eventKey={this.props.eventKey}
         style={{
-          background: "#0B1126",
           color: "white",
           marginBottom: "25px",
-          borderRadius: "20px",
         }}
       >
-        <Accordion.Header style={{ backgroundColor: "#0B1126" }}>
+        <Accordion.Header>
           <div
             style={{
               display: "flex",
@@ -30,85 +38,109 @@ class SingleAuctionComponent extends Component {
                 display: "flex",
                 justifyContent: "space-between",
               }}
+              className="responsive-flex"
             >
-              <div>auctionName</div>
-              <div>time</div>
               <div
-                style={{
-                  width: "30%",
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                }}
+                className="responsive-names"
+                style={{ display: "flex", width: "70%" }}
               >
-                <Button variant="outline-primary">Enter</Button>
-                <Button variant="outline-danger">Edit</Button>
+                <div className="responsive-margin">
+                  {this.props.auctionName}
+                </div>
+                <div className="responsive-margin">{this.props.time}</div>
+              </div>
+              <div className="responsive-buttons">
+                <Button
+                  variant="outline-primary"
+                  style={{ marginRight: "10px" }}
+                >
+                  Enter
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  style={{ marginRight: "15px" }}
+                >
+                  Edit
+                </Button>
               </div>
             </div>
-            <div style={{ marginTop: "1px" }}>Organizer Name</div>
+            <div style={{ marginTop: "1px" }} className="responsive-margin hi">
+              {this.props.organizerName}
+            </div>
           </div>
         </Accordion.Header>
-        <Accordion.Body>
+        <Accordion.Body style={{ backgroundColor: "white", color: "black" }}>
           <div>
-            <div>
-              <div>
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <FaPalette />
-                  </span>
-                  Art
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <FaMusic />
-                  </span>
-                  Music
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark">
-                  <span>
-                    <GrDomain />
-                  </span>{" "}
-                  Domain Names
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark">
-                  <span>
-                    <BiWorld />
-                  </span>
-                  Virtual Worlds
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark">
-                  <span>
-                    <GiCardRandom />
-                  </span>
-                  Trading Cards
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark">
-                  <span>
-                    <GiBearFace />
-                  </span>
-                  Collectibles
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark">
-                  <span>
-                    <FaFootballBall />
-                  </span>
-                  Sports
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark">
-                  <span className="fa fa-file" /> Documents
-                </Badge>
-                <Badge className="new-item-badge" pill text="dark">
-                  <span>
-                    <FaWallet />
-                  </span>
-                  Utility
-                </Badge>
-                <div className="mb-4" id="new-item-form-error">
-                  {this.state.errors.categories}
-                </div>
-              </div>
+            <div
+              style={{
+                border: "2px solid blue",
+                borderRadius: "20px",
+                backgroundColor: "#0B1126",
+                padding: "9px",
+                marginBottom: "15px",
+              }}
+            >
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <FaPalette />
+                </span>
+                Art
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <FaMusic />
+                </span>
+                Music
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <GrDomain />
+                </span>{" "}
+                Domain Names
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <BiWorld />
+                </span>
+                Virtual Worlds
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <GiCardRandom />
+                </span>
+                Trading Cards
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <GiBearFace />
+                </span>
+                Collectibles
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <FaFootballBall />
+                </span>
+                Sports
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span className="fa fa-file" /> Documents
+              </Badge>
+              <Badge className="new-item-badge" pill text="dark" bg="light">
+                <span>
+                  <FaWallet />
+                </span>
+                Utility
+              </Badge>
             </div>
-            <div> this.props.description </div>
-            <div>this.props.addres</div>
+
+            <div>
+              <h6>Description : </h6>
+              {this.props.description}
+            </div>
+            <div style={{ marginTop: "5px" }}>
+              <h6>Address : </h6>
+              {this.props.address}
+            </div>
           </div>
         </Accordion.Body>
       </Accordion.Item>

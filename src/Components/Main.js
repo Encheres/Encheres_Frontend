@@ -11,19 +11,7 @@ import SignUp from "./Authentication/SignUp";
 import Login from "./Authentication/Login";
 import Home from "./Home/Home";
 import Auctionlist from "./View/Auctionlist";
-import React, { Component } from "react";
-import { Route, Redirect, Switch } from "react-router-dom";
-import Header from "./Header/Header";
-import Footer from "./Footer/Footer";
-import DigitalAsset from "./Add/DigitalAsset";
-import PhysicalAsset from "./Add/PhysicalAsset";
-import ViewDigitalAsset from "./View/ViewDigitalAsset";
-import ViewPhysicalAsset from "./View/ViewPhysicalAsset";
-import ContactUs from "./Contactus/Contactus";
-import SignUp from "./Authentication/SignUp";
-import Login from "./Authentication/Login";
 import Logout from "./Authentication/Logout";
-import Home from "./Home/Home";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import ResetPassword from "./Authentication/ResetPassword";
 
@@ -37,9 +25,6 @@ class Main extends Component {
       <div>
         <Header />
         <Switch>
-          <Route exact path="/signup" component={SignUp} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/home" component={Home} />
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/home" component={Home} />
