@@ -14,6 +14,7 @@ import Auctionlist from "./View/Auctionlist";
 import Logout from "./Authentication/Logout";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import ResetPassword from "./Authentication/ResetPassword";
+import TermsConditions from "./TermsConditions/TermsConditions";
 import { connect } from "react-redux";
 
 function PrivateRoute({ userAuth, children, ...rest }) {
@@ -60,6 +61,7 @@ class Main extends Component {
 
           {/*Home Page*/}
           <Route exact path="/home" component={Home} />
+          <Route exact path = "/terms_and_conditions" component={TermsConditions}/>
 
           {/*Contact us page*/}
           <Route exact path="/contact-us" component={() => <ContactUs />} />

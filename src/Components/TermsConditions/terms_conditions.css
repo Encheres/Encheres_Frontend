@@ -1,0 +1,16 @@
+.heading__blue{
+    color: #00a1ff;
+}
+.condition_block{
+    color: #eee;
+    font-size:1.1rem;
+    margin-bottom: 1rem;
+}
+
+.condition_number{
+    margin-right: 1rem;
+    color: #0040ff;
+    font-weight: 600;
+    font-size: 1.4rem;
+
+}

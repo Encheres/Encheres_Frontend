@@ -267,7 +267,7 @@ class SignUp extends Component {
             <Row>
                 <p className='form__text--para'>
                 <input type="checkbox" className="input_checkbox" id="terms_conditions" name="terms_conditions" value="" checked={this.state.accept_conditions} onChange={this.handleCheckboxChange}/> 
-                        By using encheres application, you must agree to our <Link to='/terms-and-conditions' target='blank'>Terms and Conditions</Link></p>
+                        By using encheres application, you must agree to our <Link to='/terms_and_conditions' target='blank'>Terms and Conditions</Link></p>
             </Row>
 
             <Button className="form__button pink_blue_gradiend_btn" type="submit" onClick={this.integrateMetamaskAccount}>
