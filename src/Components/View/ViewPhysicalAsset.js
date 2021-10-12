@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { FetchPhysicalAssets } from '../../apis_redux/actions/physicalAsset';
 import { categoryList, customSelectStyles } from '../../variables';
 import Select from 'react-select'
+import InfiniteScroll from "react-infinite-scroll-component";
 import {renderPhysicalAssetCategories} from '../FrequentComponents/Asset'
 import {Card, CardText, CardBody, Collapse, UncontrolledCarousel,
     CardSubtitle, Button, ListGroup, ListGroupItem} from "reactstrap";
@@ -17,6 +18,8 @@ class ViewPhysicalAsset extends Component {
         super(props);
 
         this.state={
+            page: 0,
+            assets: [],
             categoryFilter: '',
             isFilterOpen: false,
             category: []
@@ -26,7 +29,32 @@ class ViewPhysicalAsset extends Component {
     }
 
     async componentDidMount(){
-        await this.props.FetchPhysicalAssets()
+        await this.props.FetchPhysicalAssets(this.state.page)
+
+        if(this.props.physicalAsset.assets.length){
+            this.setState({
+                assets: this.props.physicalAsset.assets
+            })
+        }
+    }
+
+    async fetchMoreAssets(){
+        this.setState({
+            page: this.state.page+1
+        })
+
+        await this.props.FetchPhysicalAssets(this.state.page);
+
+        if(this.props.physicalAsset.assets.length){
+            var tempAssets = this.state.assets;
+            for(var i=0;i<this.props.physicalAsset.assets.length;i++){
+                tempAssets.push(this.props.physicalAsset.assets[i]);
+            }
+    
+            this.setState({
+                assets: tempAssets
+            })
+        }
     }
 
     toggleFilter(){
@@ -48,7 +76,7 @@ class ViewPhysicalAsset extends Component {
             showcaseElement = {
                 src: "https://ipfs.infura.io/ipfs/"+asset.asset.images[i],
                 altText: "Slide "+i.toString(),
-                key: i.toString(),
+                key: i.toString()
             }
 
             assetShowcaseCarousel.push(showcaseElement);
@@ -58,11 +86,13 @@ class ViewPhysicalAsset extends Component {
                 <div className='col-10 col-sm-6 col-md-5 col-lg-3'>
                     <Card id="new-item-card">
                             <CardBody>
-                                <UncontrolledCarousel items={assetShowcaseCarousel} /> :
+                                <div style={{height: '100%'}}>
+                                    <UncontrolledCarousel style={{height: '100%'}} items={assetShowcaseCarousel} /> :
+                                </div>
                                 <CardSubtitle
-                                tag="h5"
-                                className="mt-3 mb-3 new-item-card-subtitle"
-                                id="new-item-card-username"
+                                    tag="h5"
+                                    className="mt-3 mb-3 new-item-card-subtitle"
+                                    id="new-item-card-username"
                                 >
                                     {asset.asset.name}
                                 </CardSubtitle>
@@ -121,7 +151,7 @@ class ViewPhysicalAsset extends Component {
 
     render(){
 
-        if(this.props.physicalAsset.isLoading){
+        if(this.props.physicalAsset.isLoading && !this.state.assets.length){
             return(
                 <Loading type='spokes' color='white' />
             );
@@ -174,8 +204,26 @@ class ViewPhysicalAsset extends Component {
                     <div 
                         className={'row justify-content-center '+cardContainerStyle}>
                         {
-                            this.props.physicalAsset.assets.length ?
-                            this.props.physicalAsset.assets.map((asset) => this.renderAssets(asset)) :
+                            this.state.assets.length 
+                            ?
+                            <InfiniteScroll
+                                className={'row justify-content-center'}
+                                dataLength={this.state.assets.length}
+                                next={() => this.fetchMoreAssets()}
+                                hasMore={this.props.physicalAsset.assets.length ? true : false}
+                                loader={<h4 style={{color: 'white'}}>Loading...</h4>}
+                                endMessage={
+                                    <h3 className='col-12 rainbow-lr new-item-heading'>
+                                        No More Assets Currently On Sale :(
+                                        <br/>
+                                        <br/>
+                                        Check Back Soon!!
+                                    </h3>
+                                }
+                                >
+                                {this.state.assets.map((asset) => this.renderAssets(asset))}
+                            </InfiniteScroll>
+                            :
                             <h3 className='col-12 rainbow-lr new-item-heading'>
                                 No Assets Currently On Sale :(
                                 <br/>
@@ -201,7 +249,7 @@ const  mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     
     return {
-        FetchPhysicalAssets : () => dispatch(FetchPhysicalAssets())
+        FetchPhysicalAssets : (page) => dispatch(FetchPhysicalAssets(page))
     };
 }
 
