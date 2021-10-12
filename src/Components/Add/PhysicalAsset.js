@@ -6,15 +6,19 @@ import * as ipfsClient  from 'ipfs-http-client';
 import moment from 'moment';
 import Switch from "react-switch";
 import Datetime from 'react-datetime';
-import {Badge, Image} from 'react-bootstrap';
+import {Badge, Image, ThemeProvider} from 'react-bootstrap';
 import {Card, CardText, CardBody, 
-    CardSubtitle, Button, ButtonGroup,
+    CardSubtitle, Button, ButtonGroup, UncontrolledCarousel,
     Modal, ModalHeader, ModalBody, ModalFooter, Alert} from "reactstrap";
 import Form from 'react-bootstrap/Form';
 import {FaPalette, FaFootballBall, FaCarSide,
     FaWallet, FaBuilding} from 'react-icons/fa';
 import {GiBearFace, GiClockwork, 
     GiVendingMachine, GiSofa, GiClothes, GiWatch} from 'react-icons/gi';
+
+import { connect } from "react-redux";
+import {PostPhysicalAsset} from '../../apis_redux/actions/physicalAsset';
+
 import {addressValidation} from '../FrequentComponents/AddressForm';
 import preview from "../../assets/images/nft.jpg";
 import "./Add.css";
@@ -23,6 +27,42 @@ import "../Authentication/styles.css"
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
+var demoShowcaseCarousel = [
+    {
+        src: "https://ipfs.infura.io/ipfs/QmTD5WhB9hFi8sxMyZVRuEFbdRmi3uq3dt1BSxXqcV112f",
+        altText: "Slide 1",
+        key: "1"
+    },
+    {
+        src: "https://ipfs.infura.io/ipfs/QmP9AKueSGHTDz3h8JaG62RsikHRaRBjvQNf43N7dYcQr5",
+        altText: "Slide 2",
+        key: "2"
+    },
+    ,
+    {
+        src: "https://ipfs.infura.io/ipfs/QmNMAB8Lfi13Jva6PQvF7CLo8qH6erUYrT3Z86paEBfoP6",
+        altText: "Slide 3",
+        key: "3"
+    }
+]
+
+const assetShowcaseCarousel = [
+
+]
+
+const  mapStateToProps = (state) => {
+    return{
+        auth: state.auth,
+        physicalAsset: state.physicalAsset
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    
+    return {
+        PostPhysicalAsset: (asset) => dispatch(PostPhysicalAsset(asset))
+    };
+}
 
 class PhysicalAsset extends Component {
 
@@ -74,9 +114,12 @@ class PhysicalAsset extends Component {
             startDateTime: "",
             endDateTime: "",
 
-            assetFileUploading: false,
+            assetImageFileUploading: false,
+            assetVideoFileUploading: false,
             success: false,
             fail: false,
+
+            postError: ""
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -90,27 +133,60 @@ class PhysicalAsset extends Component {
 
     onSuccessDismiss(){
         this.setState({
-            success: !this.state.success
+            success: true
         })
     }
 
     onFailDismiss(){
         this.setState({
-            fail: !this.state.fail
+            fail: true
         })
     }
 
     async createItem() {
         
+        console.log(this.state);
         if(this.formValidattion()){
             console.log(this.state);
 
-            // await this.uploadAssetFile()
-            // this.onSuccessDismiss()
+            const newAsset = {
+                categories: this.state.categories,
+                event_start_date_time: this.state.startDateTime,
+                event_end_date_time: this.state.endDateTime,
+                pickup_point: {
+                    addressLine1: this.state.address.addressLine1,
+                    addressLine2: this.state.address.addressLine2,
+                    city: this.state.address.city,
+                    state: this.state.address.addressState,
+                    country: this.state.address.country,
+                    postalCode: this.state.address.postalCode
+                },
+                sale: this.state.onSale,
+                bids: this.state.bids,
+                owner_contact: this.state.contact,
+                asset: {
+                    name: this.state.name,
+                    quantity: this.state.quantity,
+                    aggregate_base_price: this.state.price,
+                    description: this.state.description,
+                    images: this.state.assetImagesHash,
+                    video: this.state.assetVideoHash
+                }
+            }
 
-            // setTimeout(() => {
-            //     this.onSuccessDismiss()
-            // }, 10000);
+            console.log(newAsset);
+
+            await this.props.PostPhysicalAsset(newAsset);
+
+            if(this.props.physicalAsset.postFail){
+                this.setState({
+                    postError: this.props.physicalAsset.postFailMess
+                })
+                this.onFailDismiss();
+            }
+            else{
+                this.onSuccessDismiss()
+            }
         }
     }
 
@@ -234,25 +310,40 @@ class PhysicalAsset extends Component {
         try {
             
             this.setState({
-                assetFileUploading: true
+                assetImageFileUploading: true
             })
 
             const file = await ipfs.add(this.state.buffer)
             const assetImagesHash = this.state.assetImagesHash;
-            assetImagesHash.push(file.path)
+            assetImagesHash.push(file.path);
+
             this.setState({
-                assetImagesHash: file.path,
-                assetFileUploading: false
+                assetImagesHash: assetImagesHash,
+                assetImageFileUploading: false
             })
+
+            var showcaseElement = {
+                src: "https://ipfs.infura.io/ipfs/"+file.path,
+                altText: "Slide "+assetImagesHash.length.toString(),
+                key: assetImagesHash.length.toString(),
+            }
+
+            console.log('$',this.state.assetImagesHash);
+
+            assetShowcaseCarousel.push(showcaseElement);
+
+            console.log('@',showcaseElement)
+            console.log('#',assetShowcaseCarousel);
 
             console.log(file.path)
 
         } catch (error) {
 
+            this.setState({
+                assetImageFileUploading: false,
+                buffer: null
+            })
             this.onFailDismiss();
-            setTimeout(() => {
-                this.onFailDismiss()
-            }, 10000);
 
         }
 
@@ -263,7 +354,7 @@ class PhysicalAsset extends Component {
         try {
             
             this.setState({
-                assetFileUploading: true
+                assetVideoFileUploading: true
             })
 
             const file = await ipfs.add(this.state.buffer)
@@ -271,18 +362,20 @@ class PhysicalAsset extends Component {
             assetVideoHash.push(file.path)
             this.setState({
                 assetVideoHash: file.path,
-                assetFileUploading: false
+                assetVideoFileUploading: false
             })
 
             console.log(file.path)
 
         } catch (error) {
 
-            this.onFailDismiss();
-            setTimeout(() => {
-                this.onFailDismiss()
-            }, 10000);
+            this.setState({
+                assetImageFileUploading: false,
+                buffer: null
+            })
 
+            this.onFailDismiss();
+            
         }
 
         //https://ipfs.infura.io/ipfs/<hash>
@@ -336,7 +429,7 @@ class PhysicalAsset extends Component {
                             </CardSubtitle>
                             <div className='new-item-dropbox'>
                                 <CardText className='new-item-card-text'>
-                                    PNG, JPEG, WEBP, MP4 or MP3. Max 5mb
+                                    PNG, JPEG, WEBP, JFIF Max 5mb
                                 </CardText>
                                 <div className='new-item-card-button-div'>
                                     <input 
@@ -347,9 +440,14 @@ class PhysicalAsset extends Component {
                                 </div>
                                 <div className='row justify-content-center'>
                                     <Button 
+                                        disabled={!this.state.buffer || this.state.assetImageFileUploading}
                                         onClick={() => this.uploadAssetImageFile()}
                                         className='mt-4' style={{height:40, width: 40, borderRadius: 20}}>
-                                    <span className='fa fa-plus-circle'/>
+                                    {   
+                                        this.state.assetImageFileUploading ?
+                                        <span className='fa fa-spinner'/>:
+                                        <span className='fa fa-plus-circle'/>
+                                    }
                                     </Button>
                                 </div>
                             </div> 
@@ -372,9 +470,14 @@ class PhysicalAsset extends Component {
                                 </div>
                                 <div className='row justify-content-center'>
                                     <Button 
+                                        disabled={!this.state.buffer || this.state.assetVideoFileUploading}
                                         onClick={() => this.uploadAssetVideoFile()}
                                         className='mt-4' style={{height:40, width: 40, borderRadius: 20}}>
-                                    <span className='fa fa-plus-circle'/>
+                                    {   
+                                        this.state.assetVideoFileUploading ?
+                                        <span className='fa fa-spinner'/>:
+                                        <span className='fa fa-plus-circle'/>
+                                    }
                                     </Button>
                                 </div>
                             </div> 
@@ -679,18 +782,24 @@ class PhysicalAsset extends Component {
                             </CardBody>
                             <Alert color="success" isOpen={this.state.success}>
                                 Sucess!!
+                                <br/>
+                                Asset Posted successfully!!
                             </Alert>
                             <Alert color="danger" isOpen={this.state.fail}>
                                 Failed!!
+                                <br/>
+                                {this.state.postError}
                             </Alert>
                         </Card>
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
                             <Card id="new-item-card">
-                                {/* <Image className="new-item-image" rounded
-                                    src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
-                                /> */}
                             <CardBody>
+                                {
+                                    this.state.assetImagesHash.length ? 
+                                    <UncontrolledCarousel items={assetShowcaseCarousel} /> :
+                                    <UncontrolledCarousel items={demoShowcaseCarousel} />
+                                }
                                 <CardSubtitle
                                 tag="h5"
                                 className="mt-3 mb-3 new-item-card-subtitle"
@@ -731,6 +840,14 @@ class PhysicalAsset extends Component {
                                 }
                                 <div>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Showcase Video{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {(!this.state.assetVideoHash) ? 
+                                            "Not Available" : 
+                                            <a style={{textDecoration: 'none', color: 'cyan'}} href={'https://ipfs.infura.io/ipfs/'+this.state.assetVideoHash}>Link</a>}
+                                    </span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
                                     Price{"  "}
                                     <span style={{ marginLeft: 10, color: "cyan" }}>
                                         {(!this.state.price || this.state.price === 0.0000) ? '0.0000 ETH' : this.state.price+' ETH'}
@@ -765,4 +882,4 @@ class PhysicalAsset extends Component {
         }
 }
 
-export default PhysicalAsset;
+export default connect(mapStateToProps, mapDispatchToProps)(PhysicalAsset);
