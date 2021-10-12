@@ -16,10 +16,10 @@ export const addAssets = (assets) => ({
 	payload: assets,
 });
 
-export const FetchPhysicalAssets = () => (dispatch) => {
+export const FetchPhysicalAssets = (page) => (dispatch) => {
 
 	dispatch(assetsLoading(true))
-	return fetch(devURL+'/items')
+	return fetch(devURL+`/items?page=${page}`)
 	.then(
 		(response) => {
 			if (response.ok) {

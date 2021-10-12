@@ -186,6 +186,59 @@ class PhysicalAsset extends Component {
             else{
                 this.onSuccessDismiss()
             }
+
+            this.setState({
+                assetImagesHash: [],
+                assetVideoHash: "",
+                name: "",
+                quantity: 1,
+                description: "",
+                price: 0.0000,
+                contact: 0,
+                categories: [],
+                createrUsername: "john_bill123",
+                address:{
+                    addressLine1:"",
+                    addressLine2:"",
+                    city:"",
+                    addressState:"",
+                    country:"",
+                    postalCode:"",
+                },
+    
+                errors: {
+                    assetImagesHash: "",
+                    name: "",
+                    quantity: "",
+                    description: "",
+                    price: "",
+                    contact: "",
+                    categories: "",
+                    dateTime: "",
+                    onSale: "",
+                    address:{
+                        addressLine1:"",
+                        addressLine2:"",
+                        city:"",
+                        addressState:"",
+                        country:"",
+                        postalCode:"",
+                    }
+                },
+    
+                dateTimeModal: false,
+                onSale: false,
+                bids: false,
+                startDateTime: "",
+                endDateTime: "",
+    
+                assetShowcaseCarousel: [],
+    
+                assetImageFileUploading: false,
+                assetVideoFileUploading: false,
+    
+                postError: ""
+            })
         }
     }
 
