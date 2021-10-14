@@ -9,15 +9,12 @@ import {Card, CardText, CardBody,
     CardSubtitle, Button,
     Modal, ModalHeader, ModalBody, ModalFooter, Alert} from "reactstrap";
 import Form from 'react-bootstrap/Form';
-import {FaPalette, FaMusic, FaFootballBall, 
-    FaWallet} from 'react-icons/fa';
-import {GrDomain } from 'react-icons/gr';
-import {GiCardRandom, GiBearFace} from 'react-icons/gi';
-import { BiWorld } from "react-icons/bi";
+import {FaPalette} from 'react-icons/fa';
 import preview from "../../assets/images/nft.jpg";
-
-import {renderAssetCategories, renderPhysicalAssetCategories} from '../FrequentComponents/Asset'
-import {AddressForm, addressValidation} from '../FrequentComponents/AddressForm';
+import {categoryList} from '../../variables';
+import {DisplayBadges} from '../FrequentComponents/Category_Badges';
+import AddressForm from '../FrequentComponents/AddressForm';
+import {addressValidation} from '../FrequentComponents/AddressForm';
 import "./Add.css";
 
 //Declare IPFS
@@ -32,6 +29,7 @@ class LiveAuction extends Component {
             // general
             items:[],
             tags:[],
+            categories: [],
             organizer:'',
             event_date_time:'',
             address:{
@@ -61,12 +59,20 @@ class LiveAuction extends Component {
                 categories: "",
                 dateTime: "",
                 quantity: "",
+                organizer_contact: "",
+                address:{
+                    addressLine1:"",
+                    addressLine2:"",
+                    city:"",
+                    addressState:"",
+                    country:"",
+                    postalCode:"",
+                }
             },
-            display_item_form:true,
+            display_first: true,
             
 
             createrUsername: "john_bill123",
-            categories: [],
 
             onSale: false,
             dateTimeModal: false,
@@ -88,7 +94,11 @@ class LiveAuction extends Component {
         });
     }
 
-
+    handleAddressChange = (address)=>{
+        this.setState({
+            address: address
+        })
+    }
 
     // file uploading
     onFileChange = (e) => {
@@ -185,14 +195,61 @@ class LiveAuction extends Component {
     validateform = () =>{
         // validate complete form
         const {items, tags, address, organizer_contact, event_date_time} = this.state;
-        let itemsError = "", tagsError = "", addressError = "", organizerError = "", dateTimeError = "", error = false;
-
-
+        let itemsError = "", tagsError = "", organizerError = "", dateTimeError = "", error = false;
+        if(!items||items.length<1){
+            itemsError="At least one item is required";
+            error = true;
+        }
+        if(!tags||tags.length<1){
+            tagsError="At least one tag is required";
+            error = true;
+        }
+        if(!organizer_contact.trim()){
+            // also add phone number check
+            organizerError="Organizer contact is required";
+            error = true;
+        }
+        if(!event_date_time.trim()){
+            dateTimeError="Event date and time is required";
+            error = true;
+        }
+        const addressStatus = addressValidation(address);
+        if(!error){
+            error = addressStatus.error;
+        }
+        this.setState({
+            errors:{
+                items: itemsError,
+                tags: tagsError,
+                address: addressStatus.address_error,
+                organizer: organizerError,
+                dateTime: dateTimeError,
+            }
+        })
+        return !error;
     }
 
 /*-----------------------------------------*/
 /*-----------------------------------------*/
     // Button handlers
+    handleFormChange = e=>{
+        this.setState({
+            display_first: !this.state.display_first
+        })
+    }
+
+    toggleCategory = (category) =>{
+        const {categories} = this.state;
+        if(categories.findIndex(cat => cat === category) === -1){
+            categories.push(category);
+        }else{
+            categories.splice(categories.findIndex(cat => cat === category), 1);
+        }
+        this.setState({
+            categories: categories
+        })
+    }
+
     handleAddItem = (e)=>{
         // adding a single item to items array
         e.preventDefault();
@@ -217,8 +274,9 @@ class LiveAuction extends Component {
 
     handleSubmit = (e)=>{
         e.preventDefault();
-        const {items, tags, address, organizer_contact, event_date_time} = this.state;
+        const {items, tags, address, organizer, organizer_contact, event_date_time} = this.state;
         const isValid = this.validateform();
+        const data = {items, tags, address, organizer, organizer_contact, event_date_time};
         if(isValid){
             this.setState({
                 success: true
@@ -228,11 +286,6 @@ class LiveAuction extends Component {
 /*--------------------------------------*/
 /*-----------------------------------------*/
     /* DISPLAY COMPONENTS*/
-    moveNext = () =>{
-        this.setState({
-            display_item_form: false
-        })
-    }
 
     renderItemForm = ()=>{
         return(
@@ -305,86 +358,97 @@ class LiveAuction extends Component {
                         </Button>
 
                         <Button className='mt-2 new-item-card-button'
-                            disabled={this.state.items.length === 0}
-                            onClick={() => this.moveNext()}
+                            // disabled={this.state.items.length === 0}
+                            onClick={this.handleFormChange}
                         >
                             NEXT
                         </Button>     
                     </div>
                 </Form>
             </CardBody>
-            
-            
-            
             </>
         )
     }
+
+    renderAuctionDetailsForm = ()=>{
+        return(
+            <>
+            <CardBody>
+                <CardSubtitle tag="h6" className="new-item-card-subtitle">
+                    AUCTION DETAILS
+                </CardSubtitle>
+
+                {this.renderAllAssetCategories()}
+
+                <Form className='mt-3'>
+                    <div className='row'>
+                                    
+                     <div className='col-6'>
+                        <Form.Group className="mb-3" controlId="itemPrice">
+                            <input name="price" className="form_input_field form-control" type="number" value={this.state.price} placeholder="Initial price in ETH" onChange={this.handleInputChange} min={0} step={'any'}/>
+                            <div className="invalid__feedback">{this.state.errors.price}</div>
+                        </Form.Group>
+                    </div>
+            
+                    <div className='col-6'>
+                        <Form.Group className="mb-3" controlId="itemPrice">
+                            <input name="organizer_contact" className="form_input_field form-control" type="text" value={this.state.organizer_contact} placeholder="Contact Number" onChange={this.handleInputChange}/>
+                            <div className="invalid__feedback">{this.state.errors.organizer_contact}</div>
+                        </Form.Group>
+                    </div>
+                    </div>
+
+                    <AddressForm address={this.state.address} handleAddressChange = {this.handleAddressChange} errors = {this.state.errors.address}/>
+                </Form>
+
+                <Button className='mt-2 new-item-card-button'
+                            // disabled={this.state.items.length === 0}
+                            onClick={this.handleFormChange}
+                        >
+                            Previous
+                        </Button> 
+            </CardBody>
+        </>
+        )
+    }
+
+    nullHandler = (e)=>{
+        e.preventDefault();  
+    }
+
+    renderSelectedCategories = () =>{
+        const {categories} = this.state;
+        return categories.map(category => {
+            return(
+                <DisplayBadges key={category} category={category} toggleCategory={this.nullHandler} selected_bg='True'/>
+            )
+        })
+    }
+    
+
     renderAllAssetCategories = ()=>{
+        const avaliable_categories = categoryList;
+        return(
         <>
             <CardText className='new-item-card-text'>
                 Select Asset Categories
             </CardText>
             <div>
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Art")}
-                    bg={this.state.categories.indexOf("Art")>=0 ? "secondary": "light"}>
-                    <span><FaPalette/></span> Art
-                </Badge>
-
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Music")}
-                    bg={this.state.categories.indexOf("Music")>=0 ? "secondary": "light"}>
-                    <span><FaMusic/></span> Music
-                </Badge>
-                                    
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Domain Names")}
-                    bg={this.state.categories.indexOf("Domain Names")>=0 ? "secondary": "light"}>
-                    <span><GrDomain/></span> Domain Names
-                </Badge>
-                
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Virtual Worlds")} 
-                    bg={this.state.categories.indexOf("Virtual Worlds")>=0 ? "secondary": "light"}>
-                    <span><BiWorld/></span> Virtual Worlds
-                </Badge>
-                
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Trading Cards")}  
-                    bg={this.state.categories.indexOf("Trading Cards")>=0 ? "secondary": "light"}>
-                    <span><GiCardRandom/></span> Trading Cards
-                </Badge>
-                
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Collectibles")} 
-                    bg={this.state.categories.indexOf("Collectibles")>=0 ? "secondary": "light"}>
-                    <span><GiBearFace/></span> Collectibles
-                </Badge>
-                
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Sports")} 
-                    bg={this.state.categories.indexOf("Sports")>=0 ? "secondary": "light"}>
-                    <span><FaFootballBall/></span> Sports
-                </Badge>
-                
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Documents")}  
-                    bg={this.state.categories.indexOf("Documents")>=0 ? "secondary": "light"}>
-                    <span className='fa fa-file'/> Documents
-                </Badge>
-
-                <Badge className='new-item-badge' pill text="dark"
-                    onClick={() => this.addCategory("Utility")}    
-                    bg={this.state.categories.indexOf("Utility")>=0 ? "secondary": "light"}>
-                    <span><FaWallet/></span> Utility
-                </Badge>
-                
-                <div className='mb-4' id='new-item-form-error'>{this.state.errors.categories}</div>
+            {
+                avaliable_categories.map(category => {
+                    const isSelected = this.state.categories.findIndex(cat => cat === category.label) !== -1;
+                    return(
+                        <DisplayBadges key={category.label} category={category.label} toggleCategory={this.toggleCategory} selected_bg={isSelected}/>
+                    )
+                })
+            }
             </div>
-        
-        
+            <div className='mb-4' id='new-item-form-error'>{this.state.errors.categories}</div>
+            
         </>
+        )
     }
+
     renderItem = (item)=>{
         return(
             <>
@@ -431,23 +495,6 @@ class LiveAuction extends Component {
     }
 
     
-
-    addCategory(name){
-        var cat = this.state.categories;
-        var ind = cat.indexOf(name);
-
-        if(ind >= 0)
-            cat.splice(ind, 1);
-        else 
-            cat.push(name);
-
-        this.setState({
-            categories: cat
-        })
-
-        console.log(this.state.categories);
-    }
-    
     handleCheckChange() {
         this.setState({
             bids : !this.state.bids
@@ -459,6 +506,7 @@ class LiveAuction extends Component {
             startDateTime: this.state.startDateTime
         })
     }
+
     
 
 
@@ -477,7 +525,8 @@ class LiveAuction extends Component {
                             
                             
                             <CardBody>
-                                {this.state.display_item_form && this.renderItemForm()}
+                                {this.state.display_first && this.renderItemForm()}
+                                {!this.state.display_first && this.renderAuctionDetailsForm()}
                             
                                 <Form>
 
@@ -654,17 +703,13 @@ class LiveAuction extends Component {
                                             </span>{" "}
                                             Art
                                         </Badge>
-                                        <Badge className="new-item-badge" pill bg="light" text="dark">
-                                            <span>
-                                            <GiBearFace />
-                                            </span>{" "}
-                                            Collectibles
-                                        </Badge>
+                                        
                                     </div>
                                     :
                                     <div>
                                         {
-                                            renderPhysicalAssetCategories(this.state.categories)
+                                            this.renderSelectedCategories()
+                                            // renderPhysicalAssetCategories(this.state.categories)
                                         }
                                     </div>
                                 }
