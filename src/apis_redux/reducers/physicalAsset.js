@@ -1,5 +1,5 @@
 import {PHYSICAL_ASSETS_FAILED, PHYSICAL_ASSETS_LOADING, PHYSICAL_ASSETS_SUCCESS,
-    ADD_PHYSICAL_ASSET, POST_FAIL} from '../actions/actionTypes';
+    ADD_PHYSICAL_ASSET, PHYSICAL_ASSETS_UPDATION, POST_FAIL} from '../actions/actionTypes';
 
 export default (
     state = { isLoading: true, errMess: null, assets: [], postFail: false, postFailMess: '' },
@@ -28,6 +28,10 @@ export default (
             var asset = action.payload;
             return { ...state, assets: state.assets.concat(asset), postFail: false, postFailMess: ''};
 
+        case PHYSICAL_ASSETS_UPDATION:
+            var newAsset = [action.payload];
+            var updatedAssets = state.assets.map(obj => newAsset.find(o => o.id === obj.id) || obj);
+            return { ...state, assets: updatedAssets, postFail: false, postFailMess: ''};
         default:
             return state;
     }

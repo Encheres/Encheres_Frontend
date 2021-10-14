@@ -1,6 +1,6 @@
 import { record, devURL } from "../apis/encheres";
 import { PHYSICAL_ASSETS_FAILED, PHYSICAL_ASSETS_LOADING, PHYSICAL_ASSETS_SUCCESS, ADD_PHYSICAL_ASSET, 
-    POST_FAIL } from "./actionTypes";
+    PHYSICAL_ASSETS_UPDATION, POST_FAIL } from "./actionTypes";
 
 export const assetsLoading = () => ({
 	type: PHYSICAL_ASSETS_LOADING,
@@ -15,6 +15,44 @@ export const addAssets = (assets) => ({
 	type: PHYSICAL_ASSETS_SUCCESS,
 	payload: assets,
 });
+
+export const updateAssets = (asset) => ({
+	type: PHYSICAL_ASSETS_UPDATION,
+	payload: asset,
+})
+
+export const UpdatePhysicalAsset = (assetId, updatedAsset) => (dispatch) => {
+
+	const bearer = "Bearer " + localStorage.getItem("encheres_token");
+	return fetch(devURL+`/items/${assetId}`, {
+		method: "PUT",
+		body: JSON.stringify(updatedAsset),
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: bearer
+		}  
+	})
+	.then(
+		(response) => {
+			if (response.ok) {
+				return response;
+			} else {
+				var error = new Error(
+					"Error " + response.status + ": " + response.statusText
+				);
+				error.response = response;
+				throw error;
+			}
+		},
+		(error) => {
+			var errmess = new Error(error.message);
+			throw errmess;
+		}
+	)
+	.then((response) => response.json())
+	.then((asset) => dispatch(updateAssets(asset)))
+	.catch((error) => dispatch(assetsFailed(error.message)));
+}
 
 export const FetchPhysicalAssets = (page, bids) => (dispatch) => {
 

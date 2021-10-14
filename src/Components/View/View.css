@@ -6,3 +6,15 @@
 .asset-card-container{
     margin-top: 250px !important;
 }
+
+#single-asset-purchase-button-container{
+    text-align: center;
+    margin-bottom: 0;
+}
+
+#single-asset-purchase-button{
+    background-color: #0B1126;
+    border-radius: 40px;
+    border: solid 2px gray;
+    padding: 5px;
+}

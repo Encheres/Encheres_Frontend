@@ -1,20 +1,81 @@
-import {Card, CardBody, UncontrolledCarousel, CardSubtitle, CardText} from 'reactstrap';
+import React, {useState} from 'react';
+import {Card, CardBody, UncontrolledCarousel, CardSubtitle, CardText, Button, Collapse} from 'reactstrap';
+import { Form } from 'react-bootstrap';
 import { renderPhysicalAssetCategories } from '../FrequentComponents/Asset';
 import { CountdownTimer } from '../FrequentComponents/CountdownTimer';
+import { FaEthereum } from 'react-icons/fa';
+import './View.css'
+import { render } from '@testing-library/react';
+class RenderPhysicalAssets extends React.Component{
 
-export const renderPhysicalAssets = (asset) => {
+    constructor(props){
+        super(props);
 
-    var assetShowcaseCarousel = [];
-    var showcaseElement;
-    for(var i=0;i<asset.asset.images.length;i++){
-        showcaseElement = {
-            src: "https://ipfs.infura.io/ipfs/"+asset.asset.images[i],
-            altText: "Slide "+i.toString(),
-            key: i.toString()
+        this.state={
+            isOpen: false,
+            bid: this.props.asset.asset.aggregate_base_price,
+            bidsError: ''
         }
 
-        assetShowcaseCarousel.push(showcaseElement);
+        this.handleBidChange = this.handleBidChange.bind(this);
     }
+
+    toggle = () => {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    }
+
+    submitBid(){
+
+        /******** FRONTEND AVOIDANCE TO ALLOW ONLY HIGHER BIDS *******/
+        if(this.state.bid <= this.props.asset.asset.aggregate_base_price){
+            this.setState({
+                bidsError: "You can only Place a Bid higher than current Price!!"
+            })
+            return;
+        }
+
+        var aggregate_base_price = this.state.bid;
+        var bidder = this.props.auth.userId;
+
+        var asset = {
+            ...this.props.asset.asset,
+            aggregate_base_price
+        }
+
+        var updatedAsset = {
+            ...this.props.asset,
+            asset,
+            bidder
+        }
+
+        this.props.placeBid(this.props.asset._id, updatedAsset);
+    }
+
+    handleBidChange(event) {
+        const target = event.target;
+        const name = target.name;
+        this.setState({
+            [name]: parseFloat(event.target.value)
+        });
+    }
+
+    render(){
+
+        var asset = this.props.asset
+
+        var assetShowcaseCarousel = [];
+        var showcaseElement;
+        for(var i=0;i<asset.asset.images.length;i++){
+            showcaseElement = {
+                src: "https://ipfs.infura.io/ipfs/"+asset.asset.images[i],
+                altText: "Slide "+i.toString(),
+                key: i.toString()
+            }
+
+            assetShowcaseCarousel.push(showcaseElement);
+        }
 
         return(
             <div className='col-10 col-sm-6 col-md-5 col-lg-3'>
@@ -42,44 +103,85 @@ export const renderPhysicalAssets = (asset) => {
                                     }
                                 </div>
                             <div>
-                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                Showcase Video{"  "}
-                                <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    {(!asset.asset.assetVideoHash) ? 
-                                        "Not Available" : 
-                                        <a style={{textDecoration: 'none', color: 'cyan'}} href={'https://ipfs.infura.io/ipfs/'+asset.assetVideoHash}>Link</a>}
-                                </span>
-                            </CardSubtitle>
-                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                Price{"  "}
-                                <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    {asset.asset.aggregate_base_price+' ETH'}
-                                </span>
-                            </CardSubtitle>
-                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                Quantity{"  "}
-                                <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    {asset.asset.quantity}
-                                </span>
-                            </CardSubtitle>
-                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                Pickup Point
-                                <p style={{ marginTop: 10, color: "cyan" }}>
-                                    { 
-                                        asset.pickup_point.addressLine1+', '+asset.pickup_point.city+', '+
-                                        asset.pickup_point.state+', '+asset.pickup_point.country
-                                    }
-                                </p>
-                            </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Showcase Video{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {(!asset.asset.assetVideoHash) ? 
+                                            "Not Available" : 
+                                            <a style={{textDecoration: 'none', color: 'cyan'}} href={'https://ipfs.infura.io/ipfs/'+asset.assetVideoHash}>Link</a>}
+                                    </span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Price{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {asset.asset.aggregate_base_price+' ETH'}
+                                    </span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Quantity{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {asset.asset.quantity}
+                                    </span>
+                                </CardSubtitle>
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Pickup Point
+                                    <p style={{ marginTop: 10, color: "cyan" }}>
+                                        { 
+                                            asset.pickup_point.addressLine1+', '+asset.pickup_point.city+', '+
+                                            asset.pickup_point.state+', '+asset.pickup_point.country
+                                        }
+                                    </p>
+                                </CardSubtitle>
+                                
                             </div>
-                            <div className="new-item-accountbox">
-                            <CardText id="new-item-card-account">
-                                @{"john_bill123"}
-                            </CardText>
+                            <div className="mt-0 mb-4 new-item-accountbox">
+                                <CardText id="new-item-card-account">
+                                    @{"john_bill123"}
+                                </CardText>
+                            </div>
+                            <div id='single-asset-purchase-button-container'>
+                                <Button 
+                                    id='single-asset-purchase-button' 
+                                    disabled={!asset.bids}
+                                    onClick={this.toggle}>
+                                    <span><FaEthereum /> Purchase</span>
+                                </Button>
+                                <Collapse isOpen={this.state.isOpen}>
+                                    <div className='mt-4 row col-12'>
+                                        <div className='col-10'>
+                                            <Form>
+                                                <Form.Group className="mb-3" controlId="bid">
+                                                    <Form.Control
+                                                        type='number'
+                                                        name='bid'
+                                                        onChange={this.handleBidChange}
+                                                        className='new-item-form-field' 
+                                                        style={{backgroundColor: '#03091F', 
+                                                            borderWidth: 0,
+                                                            color: 'white'
+                                                            }}
+                                                        placeholder="Bid Price (ETH)"
+                                                        />
+                                                    <div className='mb-4' id='new-item-form-error'>{this.state.bidsError}</div>
+                                                </Form.Group>
+                                            </Form>
+                                        </div>
+                                        <div className='col-2'>
+                                            <Button
+                                                onClick={() => this.submitBid()}
+                                            >
+                                                <span className='fa fa-telegram'/>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </Collapse>
                             </div>
                         </CardBody>
                         </Card>
             </div>
                 
         )
-}
+    }
+} 
+
+export default RenderPhysicalAssets;

@@ -160,6 +160,7 @@ class PhysicalAsset extends Component {
                     country: this.state.address.country,
                     postalCode: this.state.address.postalCode
                 },
+                owner: this.props.auth.userId,
                 sale: this.state.onSale,
                 bids: this.state.bids,
                 owner_contact: this.state.contact,
