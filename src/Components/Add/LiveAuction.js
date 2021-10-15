@@ -2,15 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as ipfsClient  from 'ipfs-http-client';
 import moment from 'moment';
-import Switch from "react-switch";
 import Datetime from 'react-datetime';
-import {Badge, Image} from 'react-bootstrap';
-import {Card, CardText, CardBody, 
-    CardSubtitle, Button,
-    Modal, ModalHeader, ModalBody, ModalFooter, Alert} from "reactstrap";
+import {Card, CardText, CardBody, UncontrolledCarousel,
+    CardSubtitle, Button, Alert} from "reactstrap";
 import Form from 'react-bootstrap/Form';
-import {FaPalette} from 'react-icons/fa';
-import preview from "../../assets/images/nft.jpg";
 import {categoryList} from '../../variables';
 import {DisplayBadges} from '../FrequentComponents/Category_Badges';
 import AddressForm from '../FrequentComponents/AddressForm';
@@ -46,6 +41,9 @@ class LiveAuction extends Component {
             name: "",
             description: "",
             base_price: 0.0000,
+            assetImagesHash:[],
+            assetImageFileUploading:false,
+            assetShowcaseCarousel: [],
             assetFileHash: "",
             assetFileSize: 0,
             buffer:'',
@@ -74,8 +72,6 @@ class LiveAuction extends Component {
 
             createrUsername: "john_bill123",
 
-            onSale: false,
-            dateTimeModal: false,
             assetFileUploading: false,
             success: false,
             fail: false,
@@ -116,6 +112,50 @@ class LiveAuction extends Component {
         console.log("Submitting file to ipfs...")
     };
 
+    uploadAssetImageFile = async() => {
+        try {
+            
+            this.setState({
+                assetImageFileUploading: true
+            })
+
+            const file = await ipfs.add(this.state.buffer)
+            let assetImagesHash = this.state.assetImagesHash;
+            assetImagesHash.push(file.path);
+
+            this.setState({
+                assetImagesHash: assetImagesHash,
+                assetImageFileUploading: false
+            })
+
+            var tempHash = this.state.assetShowcaseCarousel;
+
+            var showcaseElement = {
+                src: "https://ipfs.infura.io/ipfs/"+file.path,
+                altText: "Slide "+assetImagesHash.length.toString(),
+                key: assetImagesHash.length.toString(),
+            }
+
+            tempHash.push(showcaseElement);
+
+            this.setState({
+                assetShowcaseCarousel: tempHash
+            })
+
+        } catch (error) {
+            console.error(error)
+
+            this.setState({
+                assetImageFileUploading: false,
+                buffer: null
+            })
+            this.onFailDismiss();
+
+        }
+
+        //https://ipfs.infura.io/ipfs/<hash>
+    }
+
     uploadAssetFile = async() =>{
         try {
             
@@ -124,6 +164,9 @@ class LiveAuction extends Component {
             })
 
             const file = await ipfs.add(this.state.buffer)
+            // const assetImagesHash = this.state.assetImagesHash;
+            // assetImagesHash.push(file.path);
+
             this.setState({
                 assetFileHash: file.path,
                 assetFileSize: (file.size/1000),
@@ -155,7 +198,7 @@ class LiveAuction extends Component {
         const {assetFileHash, name, description, price, quantity} = item;
         let assetFileError = "", nameError = "", descriptionError = "", priceError = "", quantityError="", error = false;
 
-        if(!assetFileHash.trim()){
+        if(!assetFileHash || !assetFileHash.trim()){
             assetFileError='Asset File is required';
             error = true;
         }
@@ -227,6 +270,11 @@ class LiveAuction extends Component {
             }
         })
         return !error;
+    }
+    dateValidate(current){
+        var yesterday = moment().subtract(1, 'day');
+
+        return current.isAfter( yesterday );
     }
 
 /*-----------------------------------------*/
@@ -305,9 +353,12 @@ class LiveAuction extends Component {
                     </div>
                     
                     <div className='row justify-content-center'>
-                        <Button 
-                            className='mt-4' style={{height:40, width: 40, borderRadius: 20}}>
-                        <span className='fa fa-plus-circle'/>
+                        <Button className='mt-4' onClick={this.uploadAssetImageFile} style={{height:40, width: 40, borderRadius: 20}}>
+                        {   
+                            this.state.assetImageFileUploading ?
+                            <span className='fa fa-spinner'/>:
+                            <span className='fa fa-plus-circle'/>
+                        }
                         </Button>
                     </div>
                 </div> 
@@ -385,8 +436,14 @@ class LiveAuction extends Component {
                                     
                      <div className='col-6'>
                         <Form.Group className="mb-3" controlId="itemPrice">
-                            <input name="price" className="form_input_field form-control" type="number" value={this.state.price} placeholder="Initial price in ETH" onChange={this.handleInputChange} min={0} step={'any'}/>
-                            <div className="invalid__feedback">{this.state.errors.price}</div>
+                        <Datetime initialValue={this.state.event_date_time}
+                            isValidDate={this.dateValidate}
+                            onChange={(d) => {
+                                this.setState({
+                                    event_date_time: d
+                                })
+                            }}/>
+                            {/* <div className="invalid__feedback">{this.state.errors.price}</div> */}
                         </Form.Group>
                     </div>
             
@@ -449,49 +506,48 @@ class LiveAuction extends Component {
         )
     }
 
-    renderItem = (item)=>{
+    renderPreviewItem = ()=>{
         return(
             <>
-            <p>Item will be displayed here</p>
-
+            
             </>
         )
     }
 
-    // onSuccessDismiss(){
-    //     this.setState({
-    //         success: !this.state.success
-    //     })
-    // }
+    renderSelectedItems = ()=>{
+        const {items} = this.state;
+        if(!items|| items.length<1){
+            return(
+                <>
+                    <p className='form__text--para'>No item has been added. Please add items to continue</p>
+                </>
+            )
+        }else{
+            return items.map(item => {
+                return(
+                    <div className='row' key={item.id}>
+                        <div className='col-6'>
+                            <p className='form__text--para'>{item.name}</p>
+                        </div>
+                        <div className='col-6'>
+                            <p className='form__text--para'>{item.price}</p>
+                        </div>
+                    </div>
+                )
+            })
+        }
+    }
 
-    // onFailDismiss(){
-    //     this.setState({
-    //         fail: !this.state.fail
-    //     })
-    // }
+    onSuccessDismiss(){
+        this.setState({
+            success: !this.state.success
+        })
+    }
 
-    // async createItem() {
-        
-    //     if(this.formValidattion()){
-    //         console.log(this.state);
-
-    //         await this.uploadAssetFile()
-    //         this.onSuccessDismiss()
-
-    //         setTimeout(() => {
-    //             this.onSuccessDismiss()
-    //         }, 10000);
-    //     }
-    // }
-
-    
-
-    
-
-    dateValidate(current){
-        var yesterday = moment().subtract(1, 'day');
-
-        return current.isAfter( yesterday );
+    onFailDismiss(){
+        this.setState({
+            fail: !this.state.fail
+        })
     }
 
     
@@ -530,119 +586,6 @@ class LiveAuction extends Component {
                             
                                 <Form>
 
-
-                                    {/* <div className='row'>
-                                        <div>
-                                            <Button className='mt-2 new-item-card-button' disabled={this.state.assetFileUploading}
-                                                onClick={this.handleAddItem}
-                                            >
-                                                ADD ITEM
-                                            </Button>
-                                        </div>
-                                        <div>
-                                            <p>You can sell multiple items in a single auction</p>
-                                        </div>
-                                    </div> */}
-
-                                    {
-                                        this.state.onSale ?
-                                        <div>
-                                            <div className='mt-4'>
-                                            <span className='new-item-switch-label'>
-                                                Allow Bids
-                                            </span>
-                                            <Switch 
-                                                onChange={() => this.handleCheckChange()} 
-                                                checked={this.state.bids}
-                                                height={24}
-                                                width={50}
-                                                offColor='#03091F'
-                                                onColor='#00CAFF'
-                                                />
-                                            </div>
-                                            <div className='mt-4 mb-4'>
-                                            <span className='new-item-date-time-label'>
-                                                <Modal isOpen={this.state.dateTimeModal}
-                                                >
-                                                    <ModalHeader
-                                                        style={{backgroundColor: '#222242'}}
-                                                    >
-                                                        <div style={{color: 'grey'}}>
-                                                            Enter Date and Time
-                                                        </div>
-                                                    </ModalHeader>
-                                                    <ModalBody
-                                                    >
-                                                        Start
-                                                        <Datetime initialValue={this.state.startDateTime}
-                                                            isValidDate={this.dateValidate}
-                                                            onChange={(d) => {
-                                                                this.setState({
-                                                                    startDateTime: d
-                                                                })
-                                                            }}
-                                                            />
-                                                        End
-                                                        <Datetime initialValue={this.state.endDateTime}
-                                                            isValidDate={this.dateValidate}
-                                                            onChange={(d) => {
-                                                                this.setState({
-                                                                    endDateTime: d
-                                                                })
-                                                            }}
-                                                            />
-                                                        <div className='mb-4' style={{color: 'red'}}>{this.state.errors.dateTime}</div>
-                                                    </ModalBody>
-                                                    <ModalFooter 
-                                                            style={{backgroundColor: '#222242'}}
-                                                    >
-                                                        <Button 
-                                                            className='fa fa-lg fa-telegram'
-                                                            onClick={() => {
-                                                                if(moment(this.state.startDateTime).format('MMMM Do YYYY, h:mm A')==='Invalid date'||moment(this.state.endDateTime).format('MMMM Do YYYY, h:mm A')==='Invalid date'){
-                                                                    var er = this.state.errors;
-                                                                    er.dateTime = "Invalid Date-Time"
-
-                                                                    this.setState({
-                                                                        errors: er
-                                                                    })
-                                                                }
-                                                                else if(this.state.startDateTime >= this.state.endDateTime){
-
-                                                                    er = this.state.errors;
-                                                                    er.dateTime = "End Date-time must be greater than Start Date-time"
-
-                                                                    this.setState({
-                                                                        errors: er
-                                                                    })
-                                                                }else{
-                                                                    this.setState({
-                                                                        dateTimeModal: !this.state.dateTimeModal
-                                                                    })
-                                                                }
-                                                            }}
-                                                        >
-                                                        </Button>
-                                                        <Button 
-                                                            className='fa fa-lg fa-times-circle'
-                                                            onClick={() => {
-                                                                this.setState({
-                                                                onSale: !this.state.onSale,
-                                                                dateTimeModal: false,
-                                                                bids: false,
-                                                                startDateTime: "",
-                                                                endDateTime: ""
-                                                            })
-                                                        }}>
-                                                        </Button>
-                                                    </ModalFooter>
-                                                </Modal>
-                                            </span>
-                                            </div>
-                                        </div>
-                                        :
-                                        <div></div>
-                                    }
                                     {/* <div className='mt-4 new-item-card-button-div'>
                                         <Button className='mt-2 new-item-card-button'
                                             disabled={this.state.assetFileUploading}
@@ -673,45 +616,34 @@ class LiveAuction extends Component {
                             </Alert>
                         </Card>
                         </div>
+                        
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
                             <Card id="new-item-card">
-                                <Image className="new-item-image" rounded
+                                <div><p className="sidebar__heading">Current Item Preview</p></div>
+                                {
+                                    this.state.assetImagesHash.length ? 
+                                    <UncontrolledCarousel items={this.state.assetShowcaseCarousel} /> :
+                                    ""
+                                }
+                                {/* <Image className="new-item-image" rounded
                                     src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
-                                />
-                            <CardBody>
-                                <CardSubtitle
-                                tag="h5"
-                                className="mt-3 mb-3 new-item-card-subtitle"
-                                id="new-item-card-username"
-                                >
-                                    {this.state.name === "" ? 'Deslajd ed d' : this.state.name}
-                                </CardSubtitle>
+                                /> */}
+                                <CardBody>
+                                    <CardSubtitle tag="h5" className="mt-3 mb-3 new-item-card-subtitle" id="new-item-card-username">
+                                        {this.state.name? this.state.name:""}
+                                    </CardSubtitle>
                                 <CardText id="new-item-card-info" className="mb-4">
                                     {   
-                                        this.state.description === "" ? 
-                                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit.' :
-                                        this.state.description
+                                        this.state.description? this.state.description:""
                                     }
                                 </CardText>
                                 {
-                                    this.state.categories.length === 0 
-                                    ?
-                                    <div>
-                                        <Badge className="new-item-badge" pill bg="light" text="dark">
-                                            <span>
-                                            <FaPalette />
-                                            </span>{" "}
-                                            Art
-                                        </Badge>
-                                        
-                                    </div>
-                                    :
+                                    this.state.categories.length>0?
                                     <div>
                                         {
                                             this.renderSelectedCategories()
-                                            // renderPhysicalAssetCategories(this.state.categories)
                                         }
-                                    </div>
+                                    </div>:<div/>
                                 }
                                 <div>
                                 
@@ -731,11 +663,21 @@ class LiveAuction extends Component {
                                         }
                                     </span>
                                 </CardSubtitle>
+
+                                <CardSubtitle tag="h6" className="new-item-preview-price">
+                                    Quantity{"  "}
+                                    <span style={{ marginLeft: 10, color: "cyan" }}>
+                                        {(this.state.quantity?this.state.quantity:0)+' no'}
+                                    </span>
+                                </CardSubtitle>
                                 </div>
-                                <div className="new-item-accountbox">
-                                <CardText id="new-item-card-account">
-                                    @{this.state.createrUsername}
-                                </CardText>
+
+                                
+                                <div className='selected_items_div'>
+                                    <div><p className="sidebar__heading">Added Items</p></div>
+                                    {this.renderSelectedItems()}
+
+
                                 </div>
                             </CardBody>
                             </Card>
