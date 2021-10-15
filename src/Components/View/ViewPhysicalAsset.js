@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import Loading from '../loading';
 import { connect } from 'react-redux';
-import { FetchPhysicalAssets, FetchFilteredPhysicalAssets } from '../../apis_redux/actions/physicalAsset';
-import { renderPhysicalAssets } from './SingleAsset';
+import { FetchPhysicalAssets, FetchFilteredPhysicalAssets, UpdatePhysicalAsset } from '../../apis_redux/actions/physicalAsset';
+import RenderPhysicalAssets from './SingleAsset';
 import { categoryList, customSelectStyles } from '../../variables';
 import Select from 'react-select'
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Button } from "reactstrap";
 import '../View/View.css'
+import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 
 
 class ViewPhysicalAsset extends Component {
@@ -184,7 +185,11 @@ class ViewPhysicalAsset extends Component {
                                     </h3>
                                 }
                                 >
-                                {this.state.assets.map((asset) => renderPhysicalAssets(asset))}
+                                {this.state.assets.map((asset) => < RenderPhysicalAssets 
+                                    asset={asset}  
+                                    placeBid = {this.props.UpdatePhysicalAsset}
+                                    auth = {this.props.auth}
+                                />)}
                             </InfiniteScroll>
                             :
                             <h3 className='col-12 rainbow-lr new-item-heading'>
@@ -213,7 +218,8 @@ const mapDispatchToProps = dispatch => {
     
     return {
         FetchPhysicalAssets : (page) => dispatch(FetchPhysicalAssets(page)),
-        FetchFilteredPhysicalAssets: (page, categories) => dispatch(FetchFilteredPhysicalAssets(page, categories))
+        FetchFilteredPhysicalAssets: (page, categories) => dispatch(FetchFilteredPhysicalAssets(page, categories)),
+        UpdatePhysicalAsset: (assetId, updateAsset) => dispatch(UpdatePhysicalAsset(assetId, updateAsset))
     };
 }
 

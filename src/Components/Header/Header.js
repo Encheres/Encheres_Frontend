@@ -63,7 +63,7 @@ class Header extends Component {
                     <span className="NavBarLink fa fa-plus-square fa-lg" /> Add
                   </DropdownToggle>
                   <DropdownMenu right>
-                    <DropdownItem href="/create/New-Item">
+                    <DropdownItem href="/create/live_auction">
                       Live Auction
                     </DropdownItem>
                     <DropdownItem href="/create/independent-digital-assets">

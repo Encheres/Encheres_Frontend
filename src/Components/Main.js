@@ -4,6 +4,7 @@ import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 import DigitalAsset from "./Add/DigitalAsset";
 import PhysicalAsset from "./Add/PhysicalAsset";
+import LiveAuction from "./Add/LiveAuction";
 import ViewDigitalAsset from "./View/ViewDigitalAsset";
 import ViewPhysicalAsset from "./View/ViewPhysicalAsset";
 import ContactUs from "./Contactus/Contactus";
@@ -79,6 +80,11 @@ class Main extends Component {
             path="/create/independent-physical-assets"
             component={() => <PhysicalAsset />}
           />
+
+          {/* Create Live-Auction */}
+          <Route exact path="/create/live_auction" component={() => <LiveAuction />} />
+
+          {/* View Independent-Digital-Asset */}
 
           {/* View Independent DIgital Assets */}
           <Route
