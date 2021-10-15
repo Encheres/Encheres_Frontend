@@ -1,5 +1,5 @@
 import {PHYSICAL_ASSETS_FAILED, PHYSICAL_ASSETS_LOADING, PHYSICAL_ASSETS_SUCCESS,
-    ADD_PHYSICAL_ASSET, PHYSICAL_ASSETS_UPDATION, POST_FAIL} from '../actions/actionTypes';
+    ADD_PHYSICAL_ASSET, PHYSICAL_ASSETS_UPDATION, POST_FAIL, ILLEGAL_BID, LEGAL_BID} from '../actions/actionTypes';
 
 // eslint-disable-next-line
 export default (
@@ -13,7 +13,8 @@ export default (
                 isLoading: false,
                 errMess: null,
                 assets: action.payload,
-                postFail: false, postFailMess: ''
+                postFail: false, postFailMess: '',
+                isBidLegal: true, illegalBidMess: '', legalBidMess: ''
             };
 
         case PHYSICAL_ASSETS_LOADING:
@@ -24,6 +25,12 @@ export default (
 
         case POST_FAIL:
             return { ...state, postFail: true, postFailMess: action.payload}
+
+        case LEGAL_BID:
+            return { ...state, isBidLegal: true, illegalBidMess: '', legalBidMess: action.payload }
+
+        case ILLEGAL_BID:
+            return { ...state, isBidLegal: false, illegalBidMess: action.payload }
 
         case ADD_PHYSICAL_ASSET:
             var asset = action.payload;

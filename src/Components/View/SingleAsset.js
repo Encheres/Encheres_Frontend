@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
 import {Card, CardBody, UncontrolledCarousel, CardSubtitle, CardText, Button, Collapse} from 'reactstrap';
 import { Form } from 'react-bootstrap';
 import { renderPhysicalAssetCategories } from '../FrequentComponents/Asset';
@@ -14,6 +15,7 @@ class RenderPhysicalAssets extends React.Component{
         this.state={
             isOpen: false,
             bid: this.props.asset.asset.aggregate_base_price,
+            price: this.props.asset.asset.aggregate_base_price,
             bidsError: ''
         }
 
@@ -26,7 +28,7 @@ class RenderPhysicalAssets extends React.Component{
         })
     }
 
-    submitBid(){
+    async submitBid(){
 
         /******** FRONTEND AVOIDANCE TO ALLOW ONLY HIGHER BIDS *******/
         if(this.state.bid <= this.props.asset.asset.aggregate_base_price){
@@ -34,6 +36,11 @@ class RenderPhysicalAssets extends React.Component{
                 bidsError: "You can only Place a Bid higher than current Price!!"
             })
             return;
+        }
+        else{
+            this.setState({
+                bidsError: ''
+            })
         }
 
         var aggregate_base_price = this.state.bid;
@@ -50,7 +57,17 @@ class RenderPhysicalAssets extends React.Component{
             bidder
         }
 
-        this.props.placeBid(this.props.asset._id, updatedAsset);
+        await this.props.placeBid(this.props.asset._id, updatedAsset);
+
+        if(this.props.assetStatus.isBidLegal){
+            this.setState({
+                price: this.state.bid
+            })
+            alert(this.props.assetStatus.legalBidMess);
+        }
+        else{
+            alert(this.props.assetStatus.illegalBidMess);
+        }
     }
 
     handleBidChange(event) {
@@ -114,7 +131,7 @@ class RenderPhysicalAssets extends React.Component{
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
                                     Price{"  "}
                                     <span style={{ marginLeft: 10, color: "cyan" }}>
-                                        {asset.asset.aggregate_base_price+' ETH'}
+                                        {this.state.price+' ETH'}
                                     </span>
                                 </CardSubtitle>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">
@@ -170,16 +187,15 @@ class RenderPhysicalAssets extends React.Component{
                                             <Button
                                                 onClick={() => this.submitBid()}
                                             >
-                                                <span className='fa fa-telegram'/>
+                                                <span className='fa fa-telegram fa-lg'/>
                                             </Button>
                                         </div>
                                     </div>
                                 </Collapse>
                             </div>
                         </CardBody>
-                        </Card>
+                    </Card>
             </div>
-                
         )
     }
 } 

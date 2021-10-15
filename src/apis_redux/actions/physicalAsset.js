@@ -1,6 +1,6 @@
 import { record, devURL } from "../apis/encheres";
 import { PHYSICAL_ASSETS_FAILED, PHYSICAL_ASSETS_LOADING, PHYSICAL_ASSETS_SUCCESS, ADD_PHYSICAL_ASSET, 
-    PHYSICAL_ASSETS_UPDATION, POST_FAIL } from "./actionTypes";
+    PHYSICAL_ASSETS_UPDATION, POST_FAIL, ILLEGAL_BID, LEGAL_BID } from "./actionTypes";
 
 export const assetsLoading = () => ({
 	type: PHYSICAL_ASSETS_LOADING,
@@ -10,6 +10,16 @@ export const assetsFailed = (errmess) => ({
 	type: PHYSICAL_ASSETS_FAILED,
 	payload: errmess,
 });
+
+export const illegalBid = (errmess) => ({
+	type: ILLEGAL_BID,
+	payload: errmess
+})
+
+export const legalBid = (mess) => ({
+	type: LEGAL_BID,
+	payload: mess
+})
 
 export const addAssets = (assets) => ({
 	type: PHYSICAL_ASSETS_SUCCESS,
@@ -50,8 +60,8 @@ export const UpdatePhysicalAsset = (assetId, updatedAsset) => (dispatch) => {
 		}
 	)
 	.then((response) => response.json())
-	.then((asset) => dispatch(updateAssets(asset)))
-	.catch((error) => dispatch(assetsFailed(error.message)));
+	.then((asset) => dispatch(legalBid("Bid accepted!!")))
+	.catch((error) => dispatch(illegalBid("It seems someone raised the bar of item price. Stay tuned and Bid even higher!!")));
 }
 
 export const FetchPhysicalAssets = (page, bids) => (dispatch) => {
@@ -77,7 +87,7 @@ export const FetchPhysicalAssets = (page, bids) => (dispatch) => {
 		)
 		.then((response) => response.json())
 		.then((assets) => dispatch(addAssets(assets)))
-		.catch((error) => dispatch(assetsFailed(error.message)));
+		.catch((error) => dispatch(assetsFailed(error)));
 }
 
 export const FetchFilteredPhysicalAssets = (page, categories) => (dispatch) => {

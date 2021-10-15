@@ -189,6 +189,7 @@ class ViewPhysicalAsset extends Component {
                                     asset={asset}  
                                     placeBid = {this.props.UpdatePhysicalAsset}
                                     auth = {this.props.auth}
+                                    assetStatus = {this.props.physicalAsset}
                                 />)}
                             </InfiniteScroll>
                             :

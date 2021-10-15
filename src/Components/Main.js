@@ -108,7 +108,7 @@ class Main extends Component {
 
           <Redirect to="home" />
         </Switch>
-        <Footer />
+        <Footer /> 
       </div>
     );
   }
