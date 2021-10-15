@@ -76,6 +76,10 @@ class LiveAuction extends Component {
     }
 
     componentDidMount(){
+        // this.setState({
+        //     organizer:this.props.auth?this.props.auth.userId:'1566549845',
+        // })
+        
 
     }
 
@@ -312,7 +316,7 @@ class LiveAuction extends Component {
                 items: [...prevState.items, item],
                 name:'',
                 description:'',
-                price:0,
+                price:'',
                 assetFileUploading: false,
                 assetImagesHash: [],
                 buffer: '',
@@ -348,7 +352,8 @@ class LiveAuction extends Component {
                                 
                 <div className='new-item-dropbox'>
                     <CardText className='new-item-card-text'>
-                        PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb
+                        PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb.
+                        You can add multiple files
                     </CardText>
                     <div className='new-item-card-button-div'>
                         <input type="file" onChange={this.onFileChange} className='new-item-card-button'/>
@@ -588,30 +593,6 @@ class LiveAuction extends Component {
                             <CardBody>
                                 {this.state.display_first && this.renderItemForm()}
                                 {!this.state.display_first && this.renderAuctionDetailsForm()}
-                            
-                                <Form>
-
-                                    {/* <div className='mt-4 new-item-card-button-div'>
-                                        <Button className='mt-2 new-item-card-button'
-                                            disabled={this.state.assetFileUploading}
-                                            onClick={() => this.addItem()}
-                                        >
-                                            ADD ITEM
-                                        </Button>
-
-                                        <Button className='mt-2 new-item-card-button'
-                                            disabled={this.state.assetFileUploading}
-                                            onClick={() => this.uploadAssetFile()}
-                                        >
-                                            PREVIEW ASSET FILE
-                                        </Button>  
-                                        <Button className='mt-2 new-item-card-button'
-                                            onClick={() => this.createItem()}
-                                        >
-                                            CREATE ASSET
-                                        </Button>   
-                                    </div> */}
-                                </Form>
                             </CardBody>
                             <Alert color="success" isOpen={this.state.success}>
                                 Sucess!!
