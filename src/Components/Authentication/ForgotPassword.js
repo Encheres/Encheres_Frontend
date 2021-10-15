@@ -68,7 +68,7 @@ class ForgotPassword extends Component{
                     </h3>
                 </Row>
                 <Row className="section_content">
-                    
+
                     <Col md={12}>
                         <Card id="singup_form_card">
                             <CardBody>
@@ -82,7 +82,7 @@ class ForgotPassword extends Component{
                                         <Row>
                                             <h4 className="main_heading__form blue_violet_gradient">It Happens...</h4>
                                             <br/>
-                                            <h4 className="form__text--para text__small"> Please enter your email id registered with us. <br/> 
+                                            <h4 className="form__text--para text__small"> Please enter your email id registered with us. <br/>
                                                 Your password reset link will be sent to your email id.
                                             </h4>
                                         </Row>
@@ -94,11 +94,11 @@ class ForgotPassword extends Component{
                                                 <div className="invalid__feedback">{this.state.errors.email}</div>
                                             </Form.Group>
                                         </Row>
-                                        {this.state.message && 
+                                        {this.state.message &&
                                             <>
                                                 <div className="success_text">{this.state.message}</div>
                                                 <div className="text-muted">If you didn't get an mail from our side, then please try again after some time</div>
-                                            </>    
+                                            </>
                                         }
                                         {this.state.error && <div className="failed_text">{this.state.error}</div>}
 
@@ -106,7 +106,7 @@ class ForgotPassword extends Component{
                                         <Button className="form__button pink_blue_gradiend_btn" type="submit" onClick={this.handleSubmit}>
                                             Send Reset Link
                                         </Button>
-                                        
+
                                     </Form>
                                     </Col>
                                 </Row>
