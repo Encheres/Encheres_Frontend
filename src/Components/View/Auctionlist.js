@@ -4,7 +4,9 @@ import SingleAuctionComponent from "./SingleAuctionComponent";
 import "./auctionlist.css";
 import { Accordion } from "react-bootstrap";
 import Select from "react-select";
-
+// redux stuff
+import { connect } from 'react-redux';
+import { get_auction_list, get_filtered_auction } from '../../apis_redux/actions/auction_list'
 const styles = {
   multiValue: (styles) => {
     return {
@@ -29,6 +31,8 @@ class Auctionlist extends Component {
         { value: "Documents", label: "Documents" },
         { value: "Utility", label: "Utility" },
       ],
+      loading: false,
+
     };
   }
   render = () => {
@@ -102,4 +106,6 @@ class Auctionlist extends Component {
     );
   };
 }
+
+
 export default Auctionlist;
