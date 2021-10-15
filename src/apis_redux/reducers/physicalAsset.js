@@ -1,6 +1,7 @@
 import {PHYSICAL_ASSETS_FAILED, PHYSICAL_ASSETS_LOADING, PHYSICAL_ASSETS_SUCCESS,
     ADD_PHYSICAL_ASSET, PHYSICAL_ASSETS_UPDATION, POST_FAIL} from '../actions/actionTypes';
 
+// eslint-disable-next-line
 export default (
     state = { isLoading: true, errMess: null, assets: [], postFail: false, postFailMess: '' },
     action

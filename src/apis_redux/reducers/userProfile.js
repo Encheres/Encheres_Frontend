@@ -5,7 +5,7 @@ const INITIAL_STATE = {
     profile:null
 }
 
-/* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
+// eslint-disable-next-line
 export default (state=INITIAL_STATE,action)=>{
     switch(action.type){
         case GET_USER_PROFILE_FAILED:

@@ -3,8 +3,7 @@ const INITIAL_STATE = {
     error:null,
     message:null
 }
-
-/* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
+// eslint-disable-next-line
 export default (state=INITIAL_STATE, action) => {
     switch(action.type){
         case FORGOT_PASS:
