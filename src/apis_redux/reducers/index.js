@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { items } from './item';
 import physicalAsset from './physicalAsset';
 import authReducer from "./authReducer";
 import resetPassword from './resetPassword'
@@ -8,6 +9,7 @@ import auctionlist from './auctionListReducer';
 export default combineReducers({
   // reducers
   physicalAsset: physicalAsset,
+  items: items,
   auth: authReducer,
   userProfile: userProfile,
   contactus: contact,

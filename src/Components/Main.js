@@ -7,6 +7,7 @@ import PhysicalAsset from "./Add/PhysicalAsset";
 import LiveAuction from "./Add/LiveAuction";
 import ViewDigitalAsset from "./View/ViewDigitalAsset";
 import ViewPhysicalAsset from "./View/ViewPhysicalAsset";
+import SingleAssetDetail from './View/SingleAsset';
 import ContactUs from "./Contactus/Contactus";
 import SignUp from "./Authentication/SignUp";
 import Login from "./Authentication/Login";
@@ -42,6 +43,12 @@ function PrivateRoute({ userAuth, children, ...rest }) {
 class Main extends Component {
   componentDidMount() {
     document.body.style.backgroundColor = "#03091F";
+  }
+
+  renderPhysicalAssetDetail = ({match}) => {
+     return(
+       <SingleAssetDetail itemId={match.params.assetId} />
+     )
   }
 
   render() {
@@ -84,21 +91,28 @@ class Main extends Component {
           {/* Create Live-Auction */}
           <Route exact path="/create/live_auction" component={() => <LiveAuction />} />
 
-          {/* View Independent-Digital-Asset */}
 
-          {/* View Independent DIgital Assets */}
+          {/* View Independent Digital Assets */}
           <Route
             exact
             path="/view/independent-digital-assets"
             component={() => <ViewDigitalAsset />}
           />
 
-          {/* View Independent DIgital Assets */}
+          {/* View Independent Pysical Assets */}
           <Route
             exact
             path="/view/independent-physical-assets"
             component={() => <ViewPhysicalAsset />}
           />
+
+          {/* Independent Physical Asset Detail */}
+          <Route 
+            exact
+            path="/view/independent-physical-assets/:assetId"
+            component={this.renderPhysicalAssetDetail}
+          />
+
           {/* View Live Auctions List */}
           <Route
             exact
