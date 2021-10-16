@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import Loading from '../loading';
 import { connect } from 'react-redux';
-import { FetchPhysicalAssets, FetchFilteredPhysicalAssets, UpdatePhysicalAsset } from '../../apis_redux/actions/physicalAsset';
-import RenderPhysicalAssets from './SingleAsset';
+import { FetchPhysicalAssets, FetchFilteredPhysicalAssets, 
+    UpdatePhysicalAsset } from '../../apis_redux/actions/physicalAsset';
+import { fetchItem } from '../../apis_redux/actions/item';
+import RenderPhysicalAssets from './PhysicalAssetListing';
 import { categoryList, customSelectStyles } from '../../variables';
 import Select from 'react-select'
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Button } from "reactstrap";
 import '../View/View.css'
-import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 
 
 class ViewPhysicalAsset extends Component {
@@ -211,7 +212,8 @@ class ViewPhysicalAsset extends Component {
 const  mapStateToProps = (state) => {
     return{
         auth: state.auth,
-        physicalAsset: state.physicalAsset
+        physicalAsset: state.physicalAsset,
+        item: state.item
     };
 }
 
@@ -220,7 +222,8 @@ const mapDispatchToProps = dispatch => {
     return {
         FetchPhysicalAssets : (page) => dispatch(FetchPhysicalAssets(page)),
         FetchFilteredPhysicalAssets: (page, categories) => dispatch(FetchFilteredPhysicalAssets(page, categories)),
-        UpdatePhysicalAsset: (assetId, updateAsset) => dispatch(UpdatePhysicalAsset(assetId, updateAsset))
+        UpdatePhysicalAsset: (assetId, updateAsset) => dispatch(UpdatePhysicalAsset(assetId, updateAsset)),
+        fetchItem: (itemId) => dispatch(fetchItem(itemId))
     };
 }
 

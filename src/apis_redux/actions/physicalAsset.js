@@ -1,4 +1,4 @@
-import { record, devURL } from "../apis/encheres";
+import { devURL } from "../apis/encheres";
 import { PHYSICAL_ASSETS_FAILED, PHYSICAL_ASSETS_LOADING, PHYSICAL_ASSETS_SUCCESS, ADD_PHYSICAL_ASSET, 
     PHYSICAL_ASSETS_UPDATION, POST_FAIL, ILLEGAL_BID, LEGAL_BID } from "./actionTypes";
 
