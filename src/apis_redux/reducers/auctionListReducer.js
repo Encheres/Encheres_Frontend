@@ -17,13 +17,10 @@ const auction_list_reducer = (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
     case GET_AUCTION_LIST:
       return { ...state, payload: action.payload, loading: false };
-      break;
-    case GET_FILTERED_AUCTION:
+	case GET_FILTERED_AUCTION:
       return { ...state, payload: action.payload, loading: false };
-      break;
     case GET_AUCTION_LIST_ERROR:
       return { ...state, payload: null, errors: "error", loading: false };
-      break;
     default:
       return state;
   }
