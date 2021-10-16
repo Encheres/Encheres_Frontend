@@ -7,6 +7,8 @@ import { BiWorld } from "react-icons/bi";
 import { Accordion, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./auctionlist.css";
+import { renderPhysicalAssetCategories } from "../FrequentComponents/Asset";
+
 class SingleAuctionComponent extends Component {
   constructor(props) {
     super();
@@ -77,93 +79,7 @@ class SingleAuctionComponent extends Component {
                 marginBottom: "15px",
               }}
             >
-              {this.props.tags === "Art" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <FaPalette />
-                  </span>
-                  Art
-                </Badge>
-              ) : (
-                <></>
-              )}
-              {this.props.tags === "Music" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <FaMusic />
-                  </span>
-                  Music
-                </Badge>
-              ) : (
-                ""
-              )}
-              {this.props.tags === "Domain Names" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <GrDomain />
-                  </span>{" "}
-                  Domain Names
-                </Badge>
-              ) : (
-                ""
-              )}
-              {this.props.tags === "Virtual Worlds" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <BiWorld />
-                  </span>
-                  Virtual Worlds
-                </Badge>
-              ) : (
-                ""
-              )}
-              {this.props.tags === "Trading Cards" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <GiCardRandom />
-                  </span>
-                  Trading Cards
-                </Badge>
-              ) : (
-                ""
-              )}
-              {this.props.tags === "Collectibles" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <GiBearFace />
-                  </span>
-                  Collectibles
-                </Badge>
-              ) : (
-                ""
-              )}
-              {this.props.tags === "Sports" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <FaFootballBall />
-                  </span>
-                  Sports
-                </Badge>
-              ) : (
-                ""
-              )}
-              {this.props.tags === "Documents" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span className="fa fa-file" /> Documents
-                </Badge>
-              ) : (
-                ""
-              )}
-              {this.props.tags === "Utility" ? (
-                <Badge className="new-item-badge" pill text="dark" bg="light">
-                  <span>
-                    <FaWallet />
-                  </span>
-                  Utility
-                </Badge>
-              ) : (
-                ""
-              )}
+              {renderPhysicalAssetCategories(this.props.tags)}
             </div>
 
             <div>

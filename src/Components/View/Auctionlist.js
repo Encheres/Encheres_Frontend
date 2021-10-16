@@ -6,11 +6,22 @@ import { Accordion } from "react-bootstrap";
 import Select from "react-select";
 // redux stuff
 import { connect } from "react-redux";
+
+import {
+  GiCardRandom,
+  GiBearFace,
+  GiClockwork,
+  GiVendingMachine,
+  GiSofa,
+  GiClothes,
+  GiWatch,
+} from "react-icons/gi";
 import {
   get_auction_list,
   get_filtered_auction,
 } from "../../apis_redux/actions/auction_list";
 import Loading from "../loading";
+
 const styles = {
   multiValue: (styles) => {
     return {
@@ -26,14 +37,16 @@ class Auctionlist extends Component {
     this.state = {
       options: [
         { value: "Art", label: "Art" },
-        { value: "Music", label: "Music" },
-        { value: "Domain Names", label: "Domain Names" },
-        { value: "Virtual World", label: "Virtual World" },
-        { value: "Trading Cards", label: "Trading Cards" },
+        { value: "Antiques", label: "Antiques" },
+        { value: "Electronics", label: "Electronics" },
+        { value: "Vehicles", label: "Vehicles" },
+        { value: "Households", label: "Households" },
         { value: "Collectibles", label: "Collectibles" },
         { value: "Sports", label: "Sports" },
-        { value: "Documents", label: "Documents" },
-        { value: "Utility", label: "Utility" },
+        { value: "Fashion", label: "Fashion" },
+        { value: "Real Estate", label: "Real Estate" },
+        { value: "Miscellaneous", label: "Miscellaneous" },
+        { value: "Mini Items", label: "Mini Items" },
       ],
       selectedTag: [],
       selectedTime: "",
