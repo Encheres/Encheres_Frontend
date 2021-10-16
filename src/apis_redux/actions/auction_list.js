@@ -2,12 +2,13 @@ import { record } from "../apis/encheres";
 import {
 	GET_AUCTION_LIST,
 	GET_FILTERED_AUCTION,
-	GET_AUCTION_LIST_ERROR,
+	GET_AUCTION_LIST_ERROR, LOADING_AUCTION_LIST
 } from "./actionTypes";
 
 export const get_auction_list = (page) => {
 	return async (dispatch, getState) => {
 		try {
+			dispatch({ type: LOADING_AUCTION_LIST });
 			return await record
 				.get(`/auctions?/items?page=${page}`)
 				.then((res) => {
