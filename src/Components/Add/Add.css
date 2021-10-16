@@ -31,6 +31,14 @@
     padding-top: 30px;
     margin-top: 50px;
 }
+.form__card__container{
+    border-radius: 25px !important;
+    background-color: #0B1126 !important;
+    padding-bottom: 30px !important;
+    padding-top: 30px;
+    margin-top: 50px;
+    margin-bottom: 5rem;
+}
 
 /* Customized Scrollbar */
 
@@ -153,4 +161,26 @@
     background: linear-gradient(to bottom, red, orange , yellow, green, cyan, blue, violet);
     color:transparent;
     background-clip: text;
+}
+
+.sidebar__heading{
+    color: white;
+    font-size: larger;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.selected_items_div{
+    margin-top: 2rem;
+    border-top: 2px solid #666;
+}
+
+.rdtPicker, .date_time_input{
+    background-color: #0B1126 !important;
+    color: #fff;
+}
+
+.rdtNext:hover,.rdtPrev:hover, .rdtSwitch, .rdtCounter .rdtBtn:hover {
+    background: #243c94 !important;
 }

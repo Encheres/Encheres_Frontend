@@ -23,7 +23,6 @@ class LiveAuction extends Component {
         this.state={
             // general
             items:[],
-            tags:[],
             categories: [],
             organizer:'',
             event_date_time:'',
@@ -44,7 +43,8 @@ class LiveAuction extends Component {
             assetImagesHash:[],
             assetImageFileUploading:false,
             assetShowcaseCarousel: [],
-            assetFileHash: "",
+            assetVideoHash:"",
+            assetVideoFileUploading:false,
             assetFileSize: 0,
             buffer:'',
             quantity: '',
@@ -68,14 +68,19 @@ class LiveAuction extends Component {
                 }
             },
             display_first: true,
-            
-
-            createrUsername: "john_bill123",
 
             assetFileUploading: false,
             success: false,
             fail: false,
         }
+    }
+
+    componentDidMount(){
+        // this.setState({
+        //     organizer:this.props.auth?this.props.auth.userId:'1566549845',
+        // })
+        
+
     }
 
     /*-----------------------------------------*/
@@ -120,6 +125,7 @@ class LiveAuction extends Component {
             })
 
             const file = await ipfs.add(this.state.buffer)
+            
             let assetImagesHash = this.state.assetImagesHash;
             assetImagesHash.push(file.path);
 
@@ -156,37 +162,36 @@ class LiveAuction extends Component {
         //https://ipfs.infura.io/ipfs/<hash>
     }
 
-    uploadAssetFile = async() =>{
+    uploadAssetVideoFile = async() =>{
         try {
             
             this.setState({
-                assetFileUploading: true
+                assetVideoFileUploading: true
             })
 
             const file = await ipfs.add(this.state.buffer)
-            // const assetImagesHash = this.state.assetImagesHash;
-            // assetImagesHash.push(file.path);
-
+            const assetVideoHash = this.state.assetVideoHash;
+            assetVideoHash.push(file.path)
             this.setState({
-                assetFileHash: file.path,
-                assetFileSize: (file.size/1000),
-                assetFileUploading: false
+                assetVideoHash: file.path,
+                assetVideoFileUploading: false
             })
 
             console.log(file.path)
 
         } catch (error) {
 
-            this.onFailDismiss();
-            setTimeout(() => {
-                this.onFailDismiss()
-            }, 10000);
+            this.setState({
+                assetVideoFileUploading: false,
+                buffer: null
+            })
 
+            this.onFailDismiss();
+            
         }
 
         //https://ipfs.infura.io/ipfs/<hash>
     }
-
 
 
     /*-----------------------------------------*/
@@ -195,11 +200,11 @@ class LiveAuction extends Component {
     // Form Validation
     validateItem = (item) =>{
         // validate each item
-        const {assetFileHash, name, description, price, quantity} = item;
-        let assetFileError = "", nameError = "", descriptionError = "", priceError = "", quantityError="", error = false;
-
-        if(!assetFileHash || !assetFileHash.trim()){
-            assetFileError='Asset File is required';
+        const {assetImagesHash, name, description, price, quantity} = item;
+        let assetImageError = "", nameError = "", descriptionError = "", priceError = "", quantityError="", error = false;
+        console.log(assetImagesHash)
+        if(!assetImagesHash || assetImagesHash.length<1){
+            assetImageError='Asset File is required';
             error = true;
         }
 
@@ -224,7 +229,8 @@ class LiveAuction extends Component {
 
         this.setState(prevState => ({
             errors:{
-                assetFile: assetFileError,
+                ...prevState.errors,
+                assetFile: assetImageError,
                 name:nameError,
                 description: descriptionError,
                 price: priceError,
@@ -237,14 +243,14 @@ class LiveAuction extends Component {
 
     validateform = () =>{
         // validate complete form
-        const {items, tags, address, organizer_contact, event_date_time} = this.state;
-        let itemsError = "", tagsError = "", organizerError = "", dateTimeError = "", error = false;
+        const {items, categories, address, organizer_contact, event_date_time} = this.state;
+        let itemsError = "", categoriesError = "", organizerError = "", dateTimeError = "", error = false;
         if(!items||items.length<1){
             itemsError="At least one item is required";
             error = true;
         }
-        if(!tags||tags.length<1){
-            tagsError="At least one tag is required";
+        if(!categories||categories.length<1){
+            categoriesError="At least one tag is required";
             error = true;
         }
         if(!organizer_contact.trim()){
@@ -252,7 +258,7 @@ class LiveAuction extends Component {
             organizerError="Organizer contact is required";
             error = true;
         }
-        if(!event_date_time.trim()){
+        if(!event_date_time){
             dateTimeError="Event date and time is required";
             error = true;
         }
@@ -263,7 +269,7 @@ class LiveAuction extends Component {
         this.setState({
             errors:{
                 items: itemsError,
-                tags: tagsError,
+                categories: categoriesError,
                 address: addressStatus.address_error,
                 organizer: organizerError,
                 dateTime: dateTimeError,
@@ -301,20 +307,19 @@ class LiveAuction extends Component {
     handleAddItem = (e)=>{
         // adding a single item to items array
         e.preventDefault();
-        const {name, description, price, assetFileHash, quantity} = this.state;
+        const {name, description, price, assetImagesHash, quantity} = this.state;
         
-        const item = { name, description, price, assetFileHash, quantity };
+        const item = { name, description, price, assetImagesHash, quantity };
         const isValid = this.validateItem(item);
         if(isValid){
             this.setState(prevState => ({
                 items: [...prevState.items, item],
                 name:'',
                 description:'',
-                price:0,
-                assetFileHash:'',
-                assetFileSize:0,
+                price:'',
                 assetFileUploading: false,
-                buffer: null,
+                assetImagesHash: [],
+                buffer: '',
                 quantity: '',
             }))
         }        
@@ -322,9 +327,10 @@ class LiveAuction extends Component {
 
     handleSubmit = (e)=>{
         e.preventDefault();
-        const {items, tags, address, organizer, organizer_contact, event_date_time} = this.state;
+        const {items, categories, address, organizer, organizer_contact, event_date_time} = this.state;
         const isValid = this.validateform();
-        const data = {items, tags, address, organizer, organizer_contact, event_date_time};
+        const data = {items, tags:categories, address, organizer, organizer_contact, event_date_time};
+        console.log(data);
         if(isValid){
             this.setState({
                 success: true
@@ -346,7 +352,8 @@ class LiveAuction extends Component {
                                 
                 <div className='new-item-dropbox'>
                     <CardText className='new-item-card-text'>
-                        PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb
+                        PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb.
+                        You can add multiple files
                     </CardText>
                     <div className='new-item-card-button-div'>
                         <input type="file" onChange={this.onFileChange} className='new-item-card-button'/>
@@ -409,7 +416,7 @@ class LiveAuction extends Component {
                         </Button>
 
                         <Button className='mt-2 new-item-card-button'
-                            // disabled={this.state.items.length === 0}
+                            disabled={this.state.items.length === 0}
                             onClick={this.handleFormChange}
                         >
                             NEXT
@@ -437,13 +444,16 @@ class LiveAuction extends Component {
                      <div className='col-6'>
                         <Form.Group className="mb-3" controlId="itemPrice">
                         <Datetime initialValue={this.state.event_date_time}
-                            isValidDate={this.dateValidate}
+                            inputProps={{
+                                className:"form_input_field form-control date_time_input",
+                                placeholder: "Event Date and Time"
+                            }} 
+                        isValidDate={this.dateValidate}
                             onChange={(d) => {
                                 this.setState({
                                     event_date_time: d
                                 })
                             }}/>
-                            {/* <div className="invalid__feedback">{this.state.errors.price}</div> */}
                         </Form.Group>
                     </div>
             
@@ -458,12 +468,20 @@ class LiveAuction extends Component {
                     <AddressForm address={this.state.address} handleAddressChange = {this.handleAddressChange} errors = {this.state.errors.address}/>
                 </Form>
 
-                <Button className='mt-2 new-item-card-button'
-                            // disabled={this.state.items.length === 0}
-                            onClick={this.handleFormChange}
-                        >
-                            Previous
-                        </Button> 
+                <div className='mt-4 new-item-card-button-div'>
+                    <Button className='mt-2 new-item-card-button' onClick={this.handleFormChange}>
+                            PREVIOUS
+                    </Button> 
+
+                    <Button className='mt-2 new-item-card-button'
+                        disabled={this.state.items.length === 0}
+                        onClick={this.handleSubmit}
+                    >
+                        SUBMIT
+                    </Button>     
+                    </div>
+
+                
             </CardBody>
         </>
         )
@@ -503,14 +521,6 @@ class LiveAuction extends Component {
             <div className='mb-4' id='new-item-form-error'>{this.state.errors.categories}</div>
             
         </>
-        )
-    }
-
-    renderPreviewItem = ()=>{
-        return(
-            <>
-            
-            </>
         )
     }
 
@@ -569,13 +579,13 @@ class LiveAuction extends Component {
     render(){        
         return(
             <div className='container-fluid'>
-                <div className='row justify-content-center' id='new-item-card-row'>
+                <div className='row justify-content-center' id='row'>
                     <h3 className='col-12 rainbow-lr new-item-heading'>
                         CREATE NEW AUCTION
                     </h3>
                     
                     <div className='col-11 col-sm-8 col-md-7 col-lg-7'>
-                        <Card id='new-item-card'>
+                        <Card className='form__card__container'>
                             {/* Input Image/ Video files */}
                             
                             
@@ -583,30 +593,6 @@ class LiveAuction extends Component {
                             <CardBody>
                                 {this.state.display_first && this.renderItemForm()}
                                 {!this.state.display_first && this.renderAuctionDetailsForm()}
-                            
-                                <Form>
-
-                                    {/* <div className='mt-4 new-item-card-button-div'>
-                                        <Button className='mt-2 new-item-card-button'
-                                            disabled={this.state.assetFileUploading}
-                                            onClick={() => this.addItem()}
-                                        >
-                                            ADD ITEM
-                                        </Button>
-
-                                        <Button className='mt-2 new-item-card-button'
-                                            disabled={this.state.assetFileUploading}
-                                            onClick={() => this.uploadAssetFile()}
-                                        >
-                                            PREVIEW ASSET FILE
-                                        </Button>  
-                                        <Button className='mt-2 new-item-card-button'
-                                            onClick={() => this.createItem()}
-                                        >
-                                            CREATE ASSET
-                                        </Button>   
-                                    </div> */}
-                                </Form>
                             </CardBody>
                             <Alert color="success" isOpen={this.state.success}>
                                 Sucess!!
@@ -618,59 +604,57 @@ class LiveAuction extends Component {
                         </div>
                         
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
-                            <Card id="new-item-card">
-                                <div><p className="sidebar__heading">Current Item Preview</p></div>
-                                {
-                                    this.state.assetImagesHash.length ? 
-                                    <UncontrolledCarousel items={this.state.assetShowcaseCarousel} /> :
-                                    ""
+                            <Card className='form__card__container'>
+                                {this.state.display_first && <>
+                                    <div><p className="sidebar__heading">Current Item Preview</p></div>
+                                    {
+                                        this.state.assetImagesHash.length ? 
+                                        <UncontrolledCarousel items={this.state.assetShowcaseCarousel} /> :
+                                        ""
+                                    }
+                                    </>
                                 }
-                                {/* <Image className="new-item-image" rounded
-                                    src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
-                                /> */}
+                
                                 <CardBody>
+                                {    this.state.display_first && <>
                                     <CardSubtitle tag="h5" className="mt-3 mb-3 new-item-card-subtitle" id="new-item-card-username">
                                         {this.state.name? this.state.name:""}
                                     </CardSubtitle>
-                                <CardText id="new-item-card-info" className="mb-4">
-                                    {   
-                                        this.state.description? this.state.description:""
-                                    }
-                                </CardText>
+                                    <CardText id="new-item-card-info" className="mb-4">
+                                        {   
+                                            this.state.description? this.state.description:""
+                                        }
+                                    </CardText>
+                                
+                                <div>
+                                    <CardSubtitle tag="h6" className="new-item-preview-price">
+                                        Price{"  "}
+                                        <span style={{ marginLeft: 10, color: "cyan" }}>
+                                            {(!this.state.price || this.state.price === 0.0000) ? '0.0000 ETH' : this.state.price+' ETH'}
+                                        </span>
+                                    </CardSubtitle>
+
+
+                                    <CardSubtitle tag="h6" className="new-item-preview-price">
+                                        Quantity{"  "}
+                                        <span style={{ marginLeft: 10, color: "cyan" }}>
+                                            {(this.state.quantity?this.state.quantity:0)+' no'}
+                                        </span>
+                                    </CardSubtitle>
+                                </div>
+                                </>
+                                }
+
                                 {
-                                    this.state.categories.length>0?
+                                    ((this.state.categories.length>0) && (!this.state.display_first))?
                                     <div>
-                                        {
+                                    <div><p className="sidebar__heading">Tags</p></div>
+                                        <>{
                                             this.renderSelectedCategories()
                                         }
+                                        </>
                                     </div>:<div/>
                                 }
-                                <div>
-                                
-                                <CardSubtitle tag="h6" className="new-item-preview-price">
-                                    Price{"  "}
-                                    <span style={{ marginLeft: 10, color: "cyan" }}>
-                                        {(!this.state.price || this.state.price === 0.0000) ? '0.0000 ETH' : this.state.price+' ETH'}
-                                    </span>
-                                </CardSubtitle>
-
-                                <CardSubtitle tag="h6" className="new-item-preview-price">
-                                    Size{"  "}
-                                    <span style={{ marginLeft: 10, color: "cyan" }}>
-                                        {
-                                            (!this.state.assetFileSize || this.state.assetFileSize === 0) ? 
-                                            '0 KB' : this.state.assetFileSize+' KB'
-                                        }
-                                    </span>
-                                </CardSubtitle>
-
-                                <CardSubtitle tag="h6" className="new-item-preview-price">
-                                    Quantity{"  "}
-                                    <span style={{ marginLeft: 10, color: "cyan" }}>
-                                        {(this.state.quantity?this.state.quantity:0)+' no'}
-                                    </span>
-                                </CardSubtitle>
-                                </div>
 
                                 
                                 <div className='selected_items_div'>
