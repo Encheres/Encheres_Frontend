@@ -181,6 +181,6 @@
     color: #fff;
 }
 
-.rdtNext:hover,.rdtPrev:hover, .rdtSwitch, .rdtCounter .rdtBtn:hover {
+.rdtNext:hover,.rdtPrev:hover, .rdtSwitch, .rdtCounter .rdtBtn:hover,.rdtDay:hover {
     background: #243c94 !important;
 }

@@ -5,6 +5,7 @@ import resetPassword from './resetPassword'
 import userProfile from "./userProfile";
 import contact from "./contact_us";
 import auctionlist from './auctionListReducer';
+import liveAuctionReducer from './live_auction'
 export default combineReducers({
   // reducers
   physicalAsset: physicalAsset,
@@ -13,4 +14,5 @@ export default combineReducers({
   contactus: contact,
   resetPass: resetPassword,
   auctionlist : auctionlist,
+  liveAuction: liveAuctionReducer
 });
