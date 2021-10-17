@@ -17,6 +17,7 @@ import Logout from "./Authentication/Logout";
 import ForgotPassword from "./Authentication/ForgotPassword";
 import ResetPassword from "./Authentication/ResetPassword";
 import TermsConditions from "./TermsConditions/TermsConditions";
+import LiveAuctionRoom from "./LiveAuctionRoom/LiveAuctionRoom";
 import { connect } from "react-redux";
 
 function PrivateRoute({ userAuth, children, ...rest }) {
@@ -119,6 +120,11 @@ class Main extends Component {
             path="/view/auctions"
             component={() => <Auctionlist />}
           />
+
+          {/* Live Auction Room */}
+          <Route exact
+            path='/view/auctions/:auctionId'
+            component={LiveAuctionRoom}/>
 
           <Redirect to="home" />
         </Switch>
