@@ -168,7 +168,7 @@ class Auctionlist extends Component {
     );
   };
   render = () => {
-    return this.props.auctionlist.loading ? <Loading /> : <> {this.ui()} </>;
+    return this.props.auctionlist.loading ? <Loading color='white' /> : <> {this.ui()} </>;
   };
 }
 
