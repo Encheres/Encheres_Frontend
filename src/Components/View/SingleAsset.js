@@ -235,7 +235,6 @@ class SingleAssetDetail extends React.Component{
                                                     }
                                                 </p>
                                             </CardSubtitle>
-                                            
                                         </div>
                                         
                                         <div className='mt-4' id='single-asset-purchase-button-container'>

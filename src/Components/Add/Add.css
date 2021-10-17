@@ -40,7 +40,7 @@
     margin-bottom: 5rem;
 }
 
-/* Customized Scrollbar */
+/* Customized Scrollbar*/
 
   ::-webkit-scrollbar {
     width: 2px;
@@ -61,7 +61,7 @@
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #0B1126; 
-  }
+  } 
 
 .new-item-card-subtitle{
     color: white;

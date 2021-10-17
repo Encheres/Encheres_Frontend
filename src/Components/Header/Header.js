@@ -89,7 +89,7 @@ class Header extends Component {
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink href="">
+                  <NavLink href="/my-winnings">
                     <span className="NavBarLink fa fa-trophy fa-lg" /> Winnings
                   </NavLink>
                 </NavItem>
