@@ -203,6 +203,9 @@ class SingleAssetDetail extends React.Component{
                                             <CardText id="new-item-card-account">
                                                 Owned By @{asset.owner && asset.owner.name ? asset.owner.name : "john_bill123"}
                                             </CardText>
+                                            <CardText id="new-item-card-account">
+                                                Owned By @{asset.sale ? "true" : "false"}
+                                            </CardText>
                                         </div>
                                         <CardSubtitle
                                             tag="h6"

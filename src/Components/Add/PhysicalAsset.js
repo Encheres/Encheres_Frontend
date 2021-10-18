@@ -679,7 +679,7 @@ class PhysicalAsset extends Component {
                                                 }}
                                             placeholder="Contact Number"
                                             />
-                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.contactNumber}</div>
+                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.contact}</div>
                                     </Form.Group>
                                     </div>
                                     </div>
