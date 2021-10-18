@@ -845,7 +845,7 @@ class PhysicalAsset extends Component {
                         </Card>
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
-                            <Card id="new-item-card style-2">
+                            <Card id="new-item-card">
                             <CardBody>
                                 {
                                     this.state.assetImagesHash.length ? 

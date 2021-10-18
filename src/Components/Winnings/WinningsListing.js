@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardBody, CardText, CardSubtitle,
     Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Form } from 'react-bootstrap';
-import { FetchPhysicalAssets } from '../../apis_redux/actions/physicalAsset';
+import { FetchPhysicalAssetWinnings } from '../../apis_redux/actions/winning';
 import AddressForm from '../FrequentComponents/AddressForm';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loading from '../loading';
@@ -17,7 +17,7 @@ class Winnings extends Component{
 
         this.state={
             page: 0,
-            assets: [],
+            winnings: [],
             detailsFilled: false,
             winnerDetailsModal: false,
             receiverAddress:{
@@ -42,11 +42,11 @@ class Winnings extends Component{
 
     async componentDidMount(){
 
-        await this.props.FetchPhysicalAssets(0)
+        await this.props.FetchPhysicalAssetWinnings(0)
 
-        if(this.props.physicalAsset.assets.length){
+        if(this.props.winnings.winnings.length){
             this.setState({
-                assets: this.props.physicalAsset.assets
+                winnings: this.props.winnings.winnings
             })
         }
     }
@@ -56,16 +56,16 @@ class Winnings extends Component{
             page: this.state.page+1
         })
 
-        await this.props.FetchPhysicalAssets(this.state.page);
+        await this.props.FetchPhysicalAssetWinnings(this.state.page);
 
-        if(this.props.physicalAsset.assets.length){
-            var tempAssets = this.state.assets;
-            for(var i=0;i<this.props.physicalAsset.assets.length;i++){
-                tempAssets.push(this.props.physicalAsset.assets[i]);
+        if(this.props.winnings.winnings.length){
+            var tempWinnings = this.state.winnings;
+            for(var i=0;i<this.props.winnings.winnings.length;i++){
+                tempWinnings.push(this.props.winnings.winnings[i]);
             }
     
             this.setState({
-                assets: tempAssets
+                winnings: tempWinnings
             })
         }
     }
@@ -87,11 +87,11 @@ class Winnings extends Component{
                         </div>
                         <div className='col-6 col-md-4 col-lg-2'>
                             <h6 className='winning-card-label rainbow-lr'>From </h6>
-                            <h6 className='mr-4 winning-card-detail'>@{"Ron Johanson"}</h6>
+                            <h6 className='mr-4 winning-card-detail'>@{asset.owner.name}</h6>
                         </div>
                         <div className='col-6 col-md-4 col-lg-2'>
                             <h6 className='winning-card-label rainbow-lr'>To </h6>
-                            <h6 className='winning-card-detail'>@{"Mario Bridge"}</h6>
+                            <h6 className='winning-card-detail'>@{asset.bidder.name}</h6>
                         </div>
                         <div className='col-12 col-md-4 col-lg-2'>
                             {
@@ -151,15 +151,15 @@ class Winnings extends Component{
     }
 
     render(){
-        if(this.props.physicalAsset.isLoading && !this.state.assets.length){
+        if(this.props.winnings.isLoading && !this.state.winnings.length){
             return(
                 <Loading type='spokes' color='white' />
             );
         }
-        else if(this.props.physicalAsset.errMess){
+        else if(this.props.winnings.errMess){
             return(
                 <div>
-                    <h1>{this.props.physicalAsset.errMess}</h1>
+                    <h1>{this.props.winnings.errMess}</h1>
                 </div>
             );
         }
@@ -172,26 +172,34 @@ class Winnings extends Component{
                         </h3>
                     </div>
                         {
-                            this.state.assets.length 
+                            this.state.winnings.length 
                             ?
                             <InfiniteScroll
                                 className={'row justify-content-center'}
-                                dataLength={this.state.assets.length}
+                                dataLength={this.state.winnings.length}
                                 next={() => this.fetchMoreAssets()}
-                                hasMore={this.props.physicalAsset.assets.length ? true : false}
+                                hasMore={this.props.winnings.winnings.length ? true : false}
                                 loader={<h4 style={{color: 'white'}}>Loading...</h4>}
                                 endMessage={
-                                    <h4 className='col-12 rainbow-lr winnings-end-note'>
-                                        That's the end Buddy!!
-                                    </h4>
+                                    <div>
+                                        <h4 className='col-12 rainbow-lr winnings-end-note'>
+                                            No More Winnings :( 
+                                            <br/>
+                                            Participate in More Auctions :)
+                                        </h4>
+                                    </div>
                                 }
                                 >
-                                {this.state.assets.map((asset) => this.renderTransaction(asset))}
+                                {this.state.winnings.map((asset) => this.renderTransaction(asset))}
                             </InfiniteScroll>
                             :
-                            <h4 className='col-12 rainbow-lr winnings-end-note'>
-                                That's the end Buddy!!
-                            </h4>
+                            <div>
+                                <h4 className='col-12 rainbow-lr winnings-end-note'>
+                                    No More Winnings :(
+                                    <br/>
+                                    Participate in More Auctions :)
+                                </h4>
+                            </div>
                         }
                 </div>
             );
@@ -201,14 +209,14 @@ class Winnings extends Component{
 
 const  mapStateToProps = (state) => {
     return{
-        physicalAsset: state.physicalAsset,
+        winnings: state.winnings
     };
 }
 
 const mapDispatchToProps = dispatch => {
     
     return {
-        FetchPhysicalAssets : (page) => dispatch(FetchPhysicalAssets(page))
+        FetchPhysicalAssetWinnings : (page) => dispatch(FetchPhysicalAssetWinnings(page))
     };
 }
 

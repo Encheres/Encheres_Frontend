@@ -1,15 +1,18 @@
 import { combineReducers } from "redux";
 import { items } from './item';
 import physicalAsset from './physicalAsset';
+import winnings from "./winnings";
 import authReducer from "./authReducer";
 import resetPassword from './resetPassword'
 import userProfile from "./userProfile";
 import contact from "./contact_us";
 import auctionlist from './auctionListReducer';
 import liveAuctionReducer from './live_auction'
+
 export default combineReducers({
   // reducers
   physicalAsset: physicalAsset,
+  winnings: winnings,
   items: items,
   auth: authReducer,
   userProfile: userProfile,
