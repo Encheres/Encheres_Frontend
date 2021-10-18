@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
-import {Card, CardText, CardBody, CardSubtitle, Button, UncontrolledCarousel, Row, Col} from "reactstrap";
+import {Card, CardText, CardBody, Button, UncontrolledCarousel, Row, Col} from "reactstrap";
 import './auctionRoom.css'
 import {ipfs_base_url} from '../../apis_redux/apis/encheres'
 import {DisplayBadges} from '../FrequentComponents/Category_Badges'
+import ReactPlayer from 'react-player'
+import { Message } from './Message';
 
 const auctionDetails = {
     "tags":["Antiques","Households","Collectibles","Mini Items"],
@@ -29,7 +31,8 @@ const auctionDetails = {
                 "anonymous_name":"Jonas"
 
             }
-        }
+        },
+        "video":"QmXSeaxB7P694pgTJX6o8H2fRo2GLX5Ccm584RhjjVreHt"
 
     }],
 }
@@ -42,6 +45,7 @@ class LiveAuctionRoom extends Component{
             cntOneLeft:true,
             cntTwoLeft:true,
             cntSoldLeft:true,
+            my_price:''
         }
     }
     componentDidMount(){
@@ -50,8 +54,20 @@ class LiveAuctionRoom extends Component{
             auction_id
         })
     }
-    nullHandler = (e)=>{
-        e.preventDefault();  
+
+    nullHandler = (e) =>{
+
+    }
+    
+    handleInputChange = (event) => {
+        const {name, value} = event.target;
+        this.setState({
+            [name]:value
+        })
+    }
+
+    handleStatusButtons = e =>{
+        e.preventDefault();
     }
 
 
@@ -88,7 +104,8 @@ class LiveAuctionRoom extends Component{
         }
         return(
         <>
-            <p>Video is being displayed here: {video}</p>
+            {/* <ReactPlayer url={`${ipfs_base_url}`+video}/> */}
+            <p>Video is being displayed here: </p>
         </>)
     }
     
@@ -98,19 +115,19 @@ class LiveAuctionRoom extends Component{
             <h3 className="item__name"> {item.name} </h3>
             <div className='blue_text_inline' style={{textAlign:'Right'}}>Item 1 of 1</div>
             <Row className="title_row">
-                <Col sm={6}>
+                <Col lg={6} className='auction_para_div'>
                     <div>
                         <span className='item_desc_title'>High Bid</span>
                         <span className='blue_text_inline'><b>{item.bid.price} ETH</b> by <b>{item.bid.bidder.anonymous_name}</b></span>
                     </div>
-
                 </Col>
-                <Col sm={6}>
-                    <Button className='auction_status_buttons' disabled={this.state.cntOneLeft} onClick={this.nullHandler}>ONCE </Button>
-                    <Button className='auction_status_buttons' disabled={this.state.cntTwoLeft} onClick={this.nullHandler}>TWICE </Button>
-                    <Button className='auction_status_buttons' disabled={this.state.cntSoldLeft} onClick={this.nullHandler}>SOLD </Button>
+                <Col lg={6}>
+                    <Button className='auction_status_buttons' disabled={this.state.cntOneLeft} onClick={this.handleStatusButtons}>ONCE </Button>
+                    <Button className='auction_status_buttons' disabled={this.state.cntTwoLeft} onClick={this.handleStatusButtons}>TWICE </Button>
+                    <Button className='auction_status_buttons' disabled={this.state.cntSoldLeft} onClick={this.handleStatusButtons}>SOLD </Button>
                 </Col>
             </Row>
+
             <div>
                 <p className='item_desc_title'>Images
                 {this.renderImageCarousel(item.images)}
@@ -121,11 +138,11 @@ class LiveAuctionRoom extends Component{
                     {this.renderVideo(item.video)}
                 </span>
             </div>
-            <div>
+            <div className='auction_para_div'>
                 <p className='item_desc_title'> Description: </p>
                 <p className='text_para_auctionRoom'>{item.description}</p>
             </div>
-            <div>
+            <div className='auction_para_div'>
                 <span className='item_desc_title'>Quantity</span>
                 <span className='blue_text_inline'>{item.quantity}</span>
             </div>
@@ -147,25 +164,25 @@ class LiveAuctionRoom extends Component{
         <>
             <h3 className="auction__heading"> Auction Details</h3>
             <Row className="title_row">
-            <Col sm={6}>    
+            <Col sm={6} className='auction_para_div'>    
                 <div>
                     <span className='item_desc_title'>Sold By</span>
                     <span className='blue_text_inline'>Jonnathan</span>
                 </div>
             </Col>
 
-            <Col sm={6}>    
+            <Col sm={6} className='auction_para_div'>    
                 <div>
                     <span className='item_desc_title'>Number of Items sold:</span>
                     <span className='blue_text_inline'>1</span>
                 </div>
             </Col>
             </Row>
-            <div className='live_auction_details'>
+            <div className='live_auction_details auction_para_div'>
                 <span className='item_desc_title'>Categories</span>
                 <span style={{marginLeft:'1rem'}}>{this.renderSelectedCategories(auctionDetails.tags)}</span>
             </div>
-            <div>
+            <div className='auction_para_div'>
                 <span className='item_desc_title'>Pickup address</span>
                 <span className='blue_text_inline'>{auctionDetails.pickup_point.city} , {auctionDetails.pickup_point.addressState}, 
                     {auctionDetails.pickup_point.country}, {auctionDetails.pickup_point.postalCode}
@@ -174,6 +191,14 @@ class LiveAuctionRoom extends Component{
 
         </>
         )
+    }
+
+    renderMessage = (message) =>{
+        const data = {type:'start', message}
+        return(
+            <Message data = {data}/>
+        )
+
     }
 
 
@@ -189,7 +214,7 @@ class LiveAuctionRoom extends Component{
                 <Row className="section_content">
                     
                     <Col md={8}>
-                        <Card id="singup_form_card">
+                        <Card id="singup_form_card" className='auction_card_desc'>
                             <CardBody>
                                 <>
                                     <div>
@@ -199,20 +224,52 @@ class LiveAuctionRoom extends Component{
                                         {this.renderAuctionDetails(auctionDetails)}
 
                                     </div>
+                                    <div className='auction_bidding_input'>
+                                        <h3>Place Your Bid</h3>
+                                        <Row>
+                                            <Col sm={8}>
+                                            <input name='my_price' type='text' className='form-control auction_input_field' value={this.state.my_price} onChange={this.handleInputChange}/>
+                                            </Col>
+                                            <Col sm={4}>
+                                                <Button className='form__button pink_blue_gradiend_btn'>Place Bid</Button>
+                                            </Col>
+                                        </Row>
+                                    </div>
                                 </>
                             </CardBody>
                         </Card>
                     </Col>
                     <Col md={4}>
-                        <Card id="singup_form_card">
+                        <Card id="singup_form_card" className='chat__section__container'>
                             <CardBody>
                                 <CardText>
-                                    <h3>Message Center</h3>
+                                    <h3 className='chat_heading'>Message Center</h3>
+                                    <div className='chat__section_div'>
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                        {this.renderMessage("$1000, selling item")}
+                                    </div>
+
                                 </CardText>
                             </CardBody>
                         </Card>
                     </Col>
                 </Row>
+
+                
 
 
             </div>
