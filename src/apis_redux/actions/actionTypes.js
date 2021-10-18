@@ -20,6 +20,11 @@ export const GET_ITEM = "GET_ITEM";
 export const ITEM_LOADING = "ITEM_LOADING";
 export const ITEM_FAILED = "ITEM_FAILED";
 
+// Physical Assets Winning
+export const WINNINGS_LOADING = "WINNINGS_LOADING";
+export const WINNINGS_SUCCESS = "WINNINS_SUCCESS";
+export const WINNINGS_FAILED = "WINNINGS_FAILED";
+
 //GET PROFILE
 export const FETCH_PROFILE = "FETCH_PROFILE";
 export const FETCH_PROFILE_FAILED = "FETCH_PROFILE_FAILED";

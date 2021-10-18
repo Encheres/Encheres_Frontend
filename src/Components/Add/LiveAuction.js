@@ -10,7 +10,7 @@ import {categoryList} from '../../variables';
 import {DisplayBadges} from '../FrequentComponents/Category_Badges';
 import AddressForm from '../FrequentComponents/AddressForm';
 import {addressValidation} from '../FrequentComponents/AddressForm';
-import validator from 'validator' 
+import validator from 'validator';
 import "./Add.css";
 
 import {handleCreateAuction} from '../../apis_redux/actions/live_auction'

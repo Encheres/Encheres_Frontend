@@ -1,0 +1,28 @@
+.winnings-end-note{
+    margin-top: 40px !important;
+    text-align: center !important;
+    margin-bottom: 40px !important; 
+}
+
+.winning-card-label{
+    margin-top: 20px;
+}
+
+.winning-card-detail{
+    color: lightseagreen;
+    margin-bottom: 20px;
+}
+
+.winning-card-link{
+    text-decoration: none;
+}
+
+#winning-card{
+    border-radius: 25px ;
+    background-color: #0B1126;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 50px;
+    border-radius: 40px;
+    border: solid 4px gray;
+}

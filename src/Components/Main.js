@@ -8,6 +8,7 @@ import LiveAuction from "./Add/LiveAuction";
 import ViewDigitalAsset from "./View/ViewDigitalAsset";
 import ViewPhysicalAsset from "./View/ViewPhysicalAsset";
 import SingleAssetDetail from './View/SingleAsset';
+import Winnings from "./Winnings/WinningsListing";
 import ContactUs from "./Contactus/Contactus";
 import SignUp from "./Authentication/SignUp";
 import Login from "./Authentication/Login";
@@ -125,6 +126,11 @@ class Main extends Component {
           <Route exact
             path='/view/auctions/:auctionId'
             component={LiveAuctionRoom}/>
+
+          <Route exact 
+            path='/my-winnings'
+            component={() => <Winnings/>}
+          />
 
           <Redirect to="home" />
         </Switch>
