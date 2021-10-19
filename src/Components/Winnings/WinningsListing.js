@@ -5,7 +5,7 @@ import { Card, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reacts
 import { Form } from 'react-bootstrap';
 import { FetchPhysicalAssetWinnings } from '../../apis_redux/actions/winning';
 import { PostOrder } from '../../apis_redux/actions/order';
-import { UpdatePhysicalAsset } from '../../apis_redux/actions/physicalAsset';
+import { UpdateSaleForItem } from '../../apis_redux/actions/item';
 import AddressForm from '../FrequentComponents/AddressForm';
 import { addressValidation } from '../FrequentComponents/AddressForm';
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -22,7 +22,10 @@ class Winnings extends Component{
             page: 0,
             winnings: [],
             winnerDetailsModal: false,
+            detailsFilled: false,
             contact: 0,
+            totalPayment: 0,
+            paymentModal: false,
             address:{
                 addressLine1:"",
                 addressLine2:"",
@@ -33,7 +36,8 @@ class Winnings extends Component{
             },
             errors: {
                 address: '',
-                contact: ''
+                contact: '',
+                totalPayment: ''
             }
         }
 
@@ -58,8 +62,13 @@ class Winnings extends Component{
 
     formValidate(){
 
-        var error, contactError='';
+        var error, contactError='', paymentError='';
         var temp = this.state.contact.toString();
+
+        if(!this.state.totalPayment || this.state.totalPayment <= 0){
+            paymentError="Total Payment must be greater than 0";
+            error = true;
+        }
 
         if(!temp.trim() || temp.length != 10){
             contactError="Invalid Contact Number";
@@ -74,11 +83,51 @@ class Winnings extends Component{
         this.setState({
             errors: {
                 address:addressStatus.address_error,
-                contact: contactError
+                contact: contactError,
+                totalPayment: paymentError
             }
         })
 
         return !error;
+    }
+
+    paymentFormValidate(){
+
+        var error, paymentError='';
+
+        if(!this.state.totalPayment || this.state.totalPayment <= 0){
+            paymentError="Total Payment must be greater than 0";
+            error = true;
+        }
+
+        this.setState({
+            errors: {
+                totalPayment: paymentError
+            }
+        })
+
+        return !error;
+    }
+
+    onWinDetailModalSubmit(){
+        if(!this.formValidate()){
+            return;
+        }
+        this.setState({
+            detailsFilled: true, 
+            winnerDetailsModal: !this.state.winnerDetailsModal
+        })
+    }
+
+    onPaymentModalSubmit(){
+        if(!this.paymentFormValidate()){
+            return;
+        }
+        this.setState({
+            paymentModal: !this.state.paymentModal
+        })
+
+        alert(this.state.totalPayment);
     }
 
     async onSubmitReceiverDetail(asset){
@@ -118,12 +167,14 @@ class Winnings extends Component{
         console.log(updatedAsset)
 
         await this.props.PostOrder(order);
-        await this.props.UpdatePhysicalAsset(asset._id, updatedAsset)
+        await this.props.UpdateSaleForItem(asset._id, false)
 
-        if(this.props.orders.postFail || !this.props.physicalAsset.isBidLegal){
+        if(this.props.orders.postFail || this.props.items.errMess){
             swal({
                 title: "Failure!!", 
-                text: this.props.orders.postFailMess ? this.props.orders.postFailMess : "Something went wrong :( Try again!!", 
+                text: (this.props.orders.postFailMess || this.props.items.errMess) ? 
+                (this.props.orders.postFailMess || this.props.items.errMess) : 
+                    "Something went wrong :( Try again!!", 
                 icon: "error"
             });
         }else{
@@ -166,6 +217,24 @@ class Winnings extends Component{
     }
 
     renderTransaction = (asset) => {
+
+        var transactionButton;
+        if(!asset.sale){
+            transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.setState({paymentModal: true})}>Make Payment</Button>
+        }
+        else if(this.state.detailsFilled){
+            transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.onSubmitReceiverDetail(asset)}>Submit Details</Button>
+        }
+        else {
+            transactionButton = <Button
+                                    onClick={() => this.setState({
+                                        winnerDetailsModal: !this.state.winnerDetailsModal
+                                    })}
+                                    id='single-asset-purchase-button' className='ml-4 mt-2'>
+                                    Receiver Details
+                                </Button>
+        }
+
         return(
                 <Card className='col-11' id='winning-card'>
                     <div className='row'>
@@ -189,19 +258,7 @@ class Winnings extends Component{
                             <h6 className='winning-card-detail'>@{asset.bidder.name}</h6>
                         </div>
                         <div className='col-12 col-md-4 col-lg-2'>
-                            {
-                                !asset.sale ?
-                                <Button id='single-asset-purchase-button'>
-                                    Make Payment
-                                </Button> :
-                                <Button
-                                    onClick={() => this.setState({
-                                        winnerDetailsModal: !this.state.winnerDetailsModal
-                                    })}
-                                    id='single-asset-purchase-button' className='ml-4 mt-2'>
-                                    Receiver Details
-                                </Button>
-                            }     
+                            {transactionButton}
                             <div className='mt-2 winning-card-detail '>
                                 <h6>
                                     <span className='fa fa-phone-square' style={{marginRight: 10}} />
@@ -244,11 +301,51 @@ class Winnings extends Component{
                                 style={{backgroundColor: '#0B1126', borderWidth: 0}}
                         >
                             <Button 
-                                onClick={() => this.onSubmitReceiverDetail(asset)}
+                                onClick={() => this.onWinDetailModalSubmit()}
                                 className='fa fa-lg fa-telegram' />
                             <Button 
                                 onClick={() => this.setState({
                                     winnerDetailsModal: !this.state.winnerDetailsModal
+                                })}
+                                className='fa fa-lg fa-times-circle' />
+                        </ModalFooter>
+                    </Modal>
+                    <Modal isOpen={this.state.paymentModal} >
+                        <ModalHeader
+                            style={{backgroundColor: '#0B1126', borderWidth: 0}}
+                        >
+                            <div style={{color: 'grey'}}>
+                                Enter Total Payment 
+                            </div>
+                        </ModalHeader>
+                        <ModalBody
+                            style={{backgroundColor: '#0B1126', borderWidth: 0}}
+                        >
+                            <div className='mb-4' id='new-item-form-error'>{"Payment Can't be reverted ! Fill Carefully and then submit."}</div>
+                            <Form.Group className="mb-3" controlId="totalPayment">
+                                <Form.Control
+                                    type='number'
+                                    name='totalPayment'
+                                    onChange={this.handleInputChange}
+                                    className='new-item-form-field' 
+                                    placeholder="Total Payment (Item Price + Delivery Cost) in ETH"
+                                    style={{backgroundColor: '#03091F', 
+                                        borderWidth: 0,
+                                        color: 'white'
+                                    }}
+                            />
+                            </Form.Group>
+                            <div className='mb-4' id='new-item-form-error'>{this.state.errors.totalPayment}</div>
+                        </ModalBody>
+                        <ModalFooter 
+                                style={{backgroundColor: '#0B1126', borderWidth: 0}}
+                        >
+                            <Button 
+                                onClick={() => this.onPaymentModalSubmit()}
+                                className='fa fa-lg fa-telegram' />
+                            <Button 
+                                onClick={() => this.setState({
+                                    paymentModal: !this.state.paymentModal
                                 })}
                                 className='fa fa-lg fa-times-circle' />
                         </ModalFooter>
@@ -318,7 +415,7 @@ const  mapStateToProps = (state) => {
     return{
         winnings: state.winnings,
         orders: state.orders,
-        physicalAsset: state.physicalAsset
+        items: state.items
     };
 }
 
@@ -327,7 +424,7 @@ const mapDispatchToProps = dispatch => {
     return {
         FetchPhysicalAssetWinnings : (page) => dispatch(FetchPhysicalAssetWinnings(page)),
         PostOrder: (order) => dispatch(PostOrder(order)),
-        UpdatePhysicalAsset: (assetId, updatedAsset) => dispatch(UpdatePhysicalAsset(assetId, updatedAsset))
+        UpdateSaleForItem: (itemId, sale) => dispatch(UpdateSaleForItem(itemId, sale))
     };
 }
 
