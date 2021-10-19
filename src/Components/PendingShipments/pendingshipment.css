@@ -1,0 +1,10 @@
+.img-fluid {
+  object-fit: contain;
+  padding: 5px;
+  border-radius: 15px;
+}
+
+.card-body {
+  height: 100%;
+  display: flex;
+}
