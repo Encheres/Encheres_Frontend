@@ -19,6 +19,7 @@
     "font-awesome": "^4.7.0",
     "ipfs-http-client": "^53.0.1",
     "jquery": "^3.6.0",
+    "mdb-react-ui-kit": "^1.4.0",
     "moment": "^2.29.1",
     "multiselect-react-dropdown": "^2.0.7",
     "pusher-js": "^7.0.3",
