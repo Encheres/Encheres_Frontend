@@ -3,7 +3,16 @@
     background-color: #0B1126;
     padding: 3rem;
     padding-top: 2.5rem;
+    margin-bottom: 3rem;
 }
+@media screen and (max-width: 400px) {
+    #singup_form_card{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+}
+
 .form_grp{
     margin-bottom: 1.5rem;
 }

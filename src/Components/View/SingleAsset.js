@@ -70,7 +70,11 @@ class SingleAssetDetail extends React.Component{
         })
     }
 
-    async submitBid(){
+    async submitBid(event_end_date_time){
+
+        if(moment(event_end_date_time).diff(moment(new Date())) <= 0 ){
+            await this.biddingLiveUpdate()
+        }
 
         /******** FRONTEND AVOIDANCE TO ALLOW ONLY HIGHER BIDS *******/
         if(this.state.bid <= this.state.price){
@@ -157,7 +161,7 @@ class SingleAssetDetail extends React.Component{
                     </div>
                     <div className='row mt-4 mb-4'>
                         <div className='col-12 col-md-7 col-lg-6'>
-                            <Card id="asset-card-detail">
+                            <Card id="new-item-card">
                                     <CardBody>
                                         <div style={{height: '100%'}}>
                                             <UncontrolledCarousel style={{height: '100%'}} items={assetShowcaseCarousel} /> :
@@ -193,11 +197,14 @@ class SingleAssetDetail extends React.Component{
                                 </Card>
                             </div>
                             <div className='col-12 col-md-5 col-6'>
-                                <Card id="asset-card-detail">
+                                <Card id="new-item-card">
                                     <CardBody>
                                         <div className="mt-0 mb-4 new-item-accountbox">
                                             <CardText id="new-item-card-account">
-                                                Owned By @{"john_bill123"}
+                                                Owned By @{asset.owner && asset.owner.name ? asset.owner.name : "john_bill123"}
+                                            </CardText>
+                                            <CardText id="new-item-card-account">
+                                                Owned By @{asset.sale ? "true" : "false"}
                                             </CardText>
                                         </div>
                                         <CardSubtitle
@@ -205,10 +212,18 @@ class SingleAssetDetail extends React.Component{
                                             className="mt-3 mb-3"
                                             id="new-item-card-info"
                                         >
-                                            Sale Ends on {moment(asset.event_end_date_time).format('MMMM Do YYYY, h:mm A')}
+                                            {
+                                                moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
+                                                <div>Sale Ends on {moment(asset.event_end_date_time).format('MMMM Do YYYY, h:mm A')}</div> :
+                                                <div>Sale Ended on {moment(asset.event_end_date_time).format('MMMM Do YYYY, h:mm A')}</div>
+                                            }
                                         </CardSubtitle>
                                         <div className='mb-4'>
-                                            <CountdownTimer end_date_time={asset.event_end_date_time} />
+                                            {
+                                                moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
+                                                <CountdownTimer end_date_time={asset.event_end_date_time} /> :
+                                                <div/>
+                                            }
                                         </div>
                                         <div>
                                             <CardSubtitle tag="h6" className="new-item-preview-price">
@@ -235,23 +250,27 @@ class SingleAssetDetail extends React.Component{
                                                     }
                                                 </p>
                                             </CardSubtitle>
-                                            
                                         </div>
                                         
                                         <div className='mt-4' id='single-asset-purchase-button-container'>
                                             {
-                                                asset.bids ?
+                                                asset.bids && moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
                                                 <Button 
                                                     id='single-asset-purchase-button' 
                                                     onClick={this.toggle}>
                                                     <span><FaEthereum /> Make Offer</span>
                                                 </Button> :
+                                                <div/>
+                                            }
+                                            {
+                                                !asset.bids && moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
                                                 <Button 
                                                     id='single-asset-purchase-button'>
                                                     <span><FaEthereum /> Buy</span>
-                                                </Button>
+                                                </Button> :
+                                                <div/>
                                             }
-                                            <Collapse isOpen={this.state.isOpen}>
+                                            <Collapse isOpen={moment(asset.event_end_date_time).diff(moment(new Date())) > 0 && this.state.isOpen}>
                                                 <div className='mt-4 row col-12'>
                                                     <div className='col-10'>
                                                         <Form>
@@ -273,7 +292,7 @@ class SingleAssetDetail extends React.Component{
                                                     </div>
                                                     <div className='col-2'>
                                                         <Button
-                                                            onClick={() => this.submitBid()}
+                                                            onClick={() => this.submitBid(asset.event_end_date_time)}
                                                         >
                                                             <span className='fa fa-telegram fa-lg'/>
                                                         </Button>

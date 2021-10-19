@@ -34,7 +34,7 @@ class RenderPhysicalAssets extends React.Component{
 
         return(
             <div className='col-10 col-sm-6 col-md-5 col-lg-3'>
-                <Card id="new-item-card">
+                <Card id="asset-card-detail">
                      <CountdownTimer end_date_time={asset.event_end_date_time} />
                         <CardBody>
                             <div style={{height: '100%'}}>

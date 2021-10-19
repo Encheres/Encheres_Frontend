@@ -13,6 +13,9 @@
 }
 
 #asset-card-detail{
+    min-height: 540px;
+    max-height: 540px;
+    overflow-y: scroll;
     border-radius: 25px ;
     background-color: #0B1126;
     padding-bottom: 30px;

@@ -679,7 +679,7 @@ class PhysicalAsset extends Component {
                                                 }}
                                             placeholder="Contact Number"
                                             />
-                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.contactNumber}</div>
+                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.contact}</div>
                                     </Form.Group>
                                     </div>
                                     </div>
@@ -845,7 +845,7 @@ class PhysicalAsset extends Component {
                         </Card>
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
-                            <Card id="new-item-card style-2">
+                            <Card id="new-item-card">
                             <CardBody>
                                 {
                                     this.state.assetImagesHash.length ? 

@@ -59,3 +59,69 @@
     size: 1.3rem;
     text-transform: uppercase;
 }
+.auction_para_div{
+    margin-bottom: .8rem;
+
+}
+.auction_card_desc{
+    max-height: 80vh;
+    overflow-y: scroll;
+}
+.auction_bidding_input{
+    position: sticky;
+    margin-top: 3rem;
+    bottom: -3rem;
+    background-color: rgb(43 166 121);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    opacity: 0.9;
+}
+.auction_input_field{
+    margin-bottom: 1rem;
+}
+/*Chat Messages*/
+.chat__section__container{
+    max-width: 25rem;
+    margin: 0 auto;
+}
+.chat__section_div{
+    max-height: 90vh;
+    overflow-y: scroll;
+    border-top: 2px solid #666;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    scroll-behavior: smooth;
+}
+
+.chat_heading{
+    font-size: 1.8rem;
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+    color: rgb(0, 115, 255);
+    margin-bottom: 3rem;
+}
+.message_div{
+    padding: .5rem;
+    /* margin-top: 1rem; */
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+}
+.general_box{
+    color: #fff;
+    background-color: rgb(221, 127, 255);
+}
+.warn_box{
+    color:black;
+    background-color: yellow;
+}
+.sold_box{
+    background-color: green;
+    color: #fff;
+}
+.start_box{
+    background-color: rgb(255, 0, 55);
+    color: white;
+}

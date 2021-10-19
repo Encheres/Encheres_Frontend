@@ -7,7 +7,12 @@ import PhysicalAsset from "./Add/PhysicalAsset";
 import LiveAuction from "./Add/LiveAuction";
 import ViewDigitalAsset from "./View/ViewDigitalAsset";
 import ViewPhysicalAsset from "./View/ViewPhysicalAsset";
+<<<<<<< HEAD
 import SingleAssetDetail from "./View/SingleAsset";
+=======
+import SingleAssetDetail from './View/SingleAsset';
+import Winnings from "./Winnings/WinningsListing";
+>>>>>>> 7ccbaf2ca5363a33c68f01c4edcd80a144988bab
 import ContactUs from "./Contactus/Contactus";
 import SignUp from "./Authentication/SignUp";
 import Login from "./Authentication/Login";
@@ -126,12 +131,17 @@ class Main extends Component {
             path="/view/auctions"
             component={() => <Auctionlist />}
           />
-          {/* Live Auction Room */}{" "}
-          <Route
-            exact
-            path="/view/auctions/:auctionId"
-            component={LiveAuctionRoom}
+
+          {/* Live Auction Room */}
+          <Route exact
+            path='/view/auctions/:auctionId'
+            component={LiveAuctionRoom}/>
+
+          <Route exact
+            path='/my-winnings'
+            component={() => <Winnings/>}
           />
+
           <Redirect to="home" />
         </Switch>{" "}
         <Footer />
