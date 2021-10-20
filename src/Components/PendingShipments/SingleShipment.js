@@ -6,41 +6,7 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import "./pendingshipment.css";
 class SingleShipment extends Component {
-  /*ui = () => {
-    return (
-      <div className="pending-shipment">
-        <div style={{ width: "30%" }}>
-          <img
-            src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone11-select-2019-family?wid=882&hei=1058&fmt=jpeg&qlt=80&.v=1567022175704"
-            alt="image_product"
-            className="pending-shipment_img"
-          />
-        </div>
-        <div style={{ width: "70%", paddingLeft: "9px" }}>
-          <div>
-            <div>
-              <h1>Iphone X</h1>
-            </div>
-            <div style={{ display: "flex" }}>
-              <div style={{ width: "50%" }}>Seller</div>
-              <div style={{ width: "50%" }}>Buyer</div>
-            </div>
-            <div>
-              <p>Address</p>
-              <p>Contact No : {"7347504481"}</p>
-            </div>
-            <div style={{ display: "flex" }}>
-              <div style={{ width: "50%" }}>Price</div>
-              <div style={{ width: "50%" }}>quantity</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };*/
-
   render = () => {
     return (
       <MDBCard
@@ -59,12 +25,12 @@ class SingleShipment extends Component {
               alt="Product"
               fluid
               style={{
-                width: "100%",
+                width: "100%",padding:'5px',borderRadius : '15px',objectFit:'contain',
               }}
             />
           </MDBCol>
           <MDBCol md="8">
-            <MDBCardBody>
+            <MDBCardBody style={{display:'flex',height:'100%'}}>
               <div
                 style={{
                   display: "flex",
