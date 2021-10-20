@@ -62,6 +62,7 @@ export const UpdatePhysicalAsset = (assetId, updatedAsset) => (dispatch) => {
 	.then((response) => response.json())
 	.then((asset) => dispatch(legalBid("Bid accepted!!")))
 	.catch((error) => dispatch(illegalBid("It seems someone raised the bar of item price. Stay tuned and Bid even higher!!")));
+
 }
 
 export const FetchPhysicalAssets = (page, bids) => (dispatch) => {
