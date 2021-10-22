@@ -88,7 +88,7 @@ export const FetchPhysicalAssets = (page, bids) => (dispatch) => {
 		)
 		.then((response) => response.json())
 		.then((assets) => dispatch(addAssets(assets)))
-		.catch((error) => dispatch(assetsFailed(error)));
+		.catch((error) => dispatch(assetsFailed(error.message)));
 }
 
 export const FetchFilteredPhysicalAssets = (page, categories) => (dispatch) => {
@@ -149,7 +149,6 @@ export const PostPhysicalAsset = (asset) => (dispatch) => {
 				}
 			},
 			(error) => {
-				alert(error);
 				throw error;
 			}
 		)

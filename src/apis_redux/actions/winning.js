@@ -45,5 +45,7 @@ export const FetchPhysicalAssetWinnings = (page) => (dispatch) => {
 		)
 		.then((response) => response.json())
 		.then((winnings) => dispatch(addWinnings(winnings)))
-		.catch((error) => dispatch(winningsFailed(error)));
+		.catch((error) => {
+			dispatch(winningsFailed(error.message))
+		});
 }
