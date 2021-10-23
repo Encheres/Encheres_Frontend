@@ -9,6 +9,7 @@ import { Form } from 'react-bootstrap';
 import { renderPhysicalAssetCategories } from '../FrequentComponents/Asset';
 import { CountdownTimer } from '../FrequentComponents/CountdownTimer';
 import Loading from '../loading';
+import RenderError from '../FrequentComponents/RenderError';
 import { FaEthereum } from 'react-icons/fa';
 import './View.css'
 import swal from 'sweetalert';
@@ -33,21 +34,25 @@ class SingleAssetDetail extends React.Component{
     async componentDidMount(){
         await this.props.fetchItem(this.props.itemId);
 
-        var asset = this.props.items.item
-        if(asset){
+        var assetStatus = this.props.items;
 
-            this.setState({
-                price: asset.asset.aggregate_base_price,
-                bid: asset.asset.aggregate_base_price
-            })
+        if(!assetStatus.errMess && assetStatus.item){
+            var asset = assetStatus.item;
+            if(asset){
+
+                this.setState({
+                    price: asset.asset.aggregate_base_price,
+                    bid: asset.asset.aggregate_base_price
+                })
+            }
+    
+            this.pusher = new Pusher('0bbbbf90036a3b074732', {
+                cluster: 'ap2',
+            });
+            this.channel = this.pusher.subscribe('biddings');
+                
+            this.channel.bind('updated', this.biddingLiveUpdate);
         }
-
-        this.pusher = new Pusher('0bbbbf90036a3b074732', {
-            cluster: 'ap2',
-        });
-        this.channel = this.pusher.subscribe('biddings');
-            
-        this.channel.bind('updated', this.biddingLiveUpdate);
     }
 
     async biddingLiveUpdate(){
@@ -167,9 +172,7 @@ class SingleAssetDetail extends React.Component{
         }
         else if(this.props.items.errMess){
             return(
-                <div>
-                    <h1>{this.props.items.errMess}</h1>
-                </div>
+                <RenderError error={this.props.items.errMess} />
             );
         }
         else {

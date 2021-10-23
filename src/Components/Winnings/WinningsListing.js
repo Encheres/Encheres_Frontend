@@ -11,6 +11,7 @@ import { addressValidation } from '../FrequentComponents/AddressForm';
 import InfiniteScroll from "react-infinite-scroll-component";
 import swal from 'sweetalert';
 import Loading from '../loading';
+import RenderError from '../FrequentComponents/RenderError';
 import './winnings.css'
 
 class Winnings extends Component{
@@ -362,9 +363,7 @@ class Winnings extends Component{
         }
         else if(this.props.winnings.errMess){
             return(
-                <div>
-                    <h1>{this.props.winnings.errMess}</h1>
-                </div>
+                <RenderError error={this.props.winnings.errMess} />
             );
         }
         else{

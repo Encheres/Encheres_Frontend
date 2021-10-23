@@ -20,7 +20,7 @@ export const fetchItem = (itemId) => async (dispatch, getState) => {
 		}
 	} catch (err) {
 		console.log("err", err);
-		dispatch({ type: ITEM_FAILED, payload: err });
+		dispatch({ type: ITEM_FAILED, payload: err.message });
 	}
 };
 
@@ -57,5 +57,5 @@ export const UpdateSaleForItem = (itemId, sale) => (dispatch) => {
 	)
 	.then((response) => response.json())
 	.then((asset) => dispatch({ type: GET_ITEM, payload: asset }))
-	.catch((error) => dispatch({ type: ITEM_FAILED, payload: error }));
+	.catch((error) => dispatch({ type: ITEM_FAILED, payload: error.message }));
 }
