@@ -11,17 +11,32 @@ warn -> countdown
 
 
 export const Message = (props) =>{
-    const data = props.data;
-    const {type, message} = data;
-    const class_name = `message_div  ${type}_box`;
+    const chat = props.chat;
+    const {message_type, message, time} = chat;
+    const date_time = new Date(time);
+    let year = date_time.getFullYear();
+    let month = date_time.getMonth()+1;
+    let day = date_time.getDate();
+    let hour = date_time.getHours();
+    let minutes = date_time.getMinutes();
+    let seconds = date_time.getSeconds();
+    if(hour<10){
+        hour = '0'+hour;
+    }
+    if(minutes<10){
+        minutes = '0'+minutes;
+    }
+    if(seconds<10){
+        seconds = '0'+seconds;
+    }
+    const class_name = `message_div  ${message_type}_box`;
     return(
         <>
-            <div style={{color:'#888'}}>18:21:25</div>
+            <div style={{color:'#888'}}>{hour}:{minutes}:{seconds}</div>
             <div>
             <div className={class_name}>
                 <span className='message_text'>
                     {message}
-
                 </span>
 
             </div>        
