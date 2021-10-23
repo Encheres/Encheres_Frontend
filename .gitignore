@@ -27,3 +27,4 @@ package*
 ./package-lock.
 .vscode/*
 .eslintric
+.env

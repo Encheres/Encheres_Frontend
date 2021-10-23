@@ -64,7 +64,7 @@
 
 }
 .auction_card_desc{
-    max-height: 80vh;
+    max-height: 90vh;
     overflow-y: scroll;
 }
 .auction_bidding_input{
@@ -86,7 +86,7 @@
     margin: 0 auto;
 }
 .chat__section_div{
-    max-height: 90vh;
+    max-height: 60vh;
     overflow-y: scroll;
     border-top: 2px solid #666;
     margin-top: 1rem;
@@ -101,6 +101,14 @@
     text-transform: uppercase;
     color: rgb(0, 115, 255);
     margin-bottom: 3rem;
+}
+.chat__notify{
+    text-align: center;
+    font-size: 1rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+
 }
 .message_div{
     padding: .5rem;
