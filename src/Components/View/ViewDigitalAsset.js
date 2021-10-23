@@ -9,6 +9,7 @@ import RenderPhysicalAssets from './PhysicalAssetListing';
 import { categoryList, customSelectStyles } from '../../variables';
 import Select from 'react-select'
 import InfiniteScroll from "react-infinite-scroll-component";
+import RenderError from '../FrequentComponents/RenderError';
 import { Button } from "reactstrap";
 import '../View/View.css'
 
@@ -119,9 +120,7 @@ class ViewDigitalAsset extends Component {
         }
         else if(this.props.physicalAsset.errMess){
             return(
-                <div>
-                    <h1>{this.props.physicalAsset.errMess}</h1>
-                </div>
+                <RenderError error={this.props.physicalAsset.errMess} />
             );
         }
         else {

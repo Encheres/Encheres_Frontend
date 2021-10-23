@@ -20,7 +20,42 @@ export const fetchItem = (itemId) => async (dispatch, getState) => {
 		}
 	} catch (err) {
 		console.log("err", err);
-		dispatch({ type: ITEM_FAILED, payload: err });
+		dispatch({ type: ITEM_FAILED, payload: err.message });
 	}
 };
 
+
+export const UpdateSaleForItem = (itemId, sale) => (dispatch) => {
+
+	const bearer = "Bearer " + localStorage.getItem("encheres_token");
+	return fetch(devURL+`/items/${itemId}`, {
+		method: "PATCH",
+		body: JSON.stringify({
+			sale: sale
+		}),
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: bearer
+		}  
+	})
+	.then(
+		(response) => {
+			if (response.ok) {
+				return response;
+			} else {
+				var error = new Error(
+					"Error " + response.status + ": " + response.statusText
+				);
+				error.response = response;
+				throw error;
+			}
+		},
+		(error) => {
+			var errmess = new Error(error.message);
+			throw errmess;
+		}
+	)
+	.then((response) => response.json())
+	.then((asset) => dispatch({ type: GET_ITEM, payload: asset }))
+	.catch((error) => dispatch({ type: ITEM_FAILED, payload: error.message }));
+}

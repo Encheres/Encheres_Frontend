@@ -84,7 +84,7 @@ class Header extends Component {
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <NavItem>
-                  <NavLink href="">
+                  <NavLink href="/pending-shipment">
                     <span className="NavBarLink fa fa-truck fa-lg" /> Shipments
                   </NavLink>
                 </NavItem>
@@ -99,13 +99,15 @@ class Header extends Component {
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  {this.props.signedIn? <NavLink href="">
-                    <span className="NavBarLink fa fa-user-circle fa-lg" />
-                  </NavLink>: <NavLink href="/login">
-                    <span className="NavBarLink fa fa-sign-in fa-lg" />
-                  </NavLink>
-
-                  }
+                  {this.props.signedIn ? (
+                    <NavLink href="">
+                      <span className="NavBarLink fa fa-user-circle fa-lg" />
+                    </NavLink>
+                  ) : (
+                    <NavLink href="/login">
+                      <span className="NavBarLink fa fa-sign-in fa-lg" />
+                    </NavLink>
+                  )}
                 </NavItem>
                 <NavItem>
                   <NavLink className="" href="/contact-us">
@@ -120,10 +122,10 @@ class Header extends Component {
     );
   }
 }
-const mapStateToProps = (state, ownprops)=>{
-  return{
-    signedIn:state.auth.isSignedIn,
-  }
-}
+const mapStateToProps = (state, ownprops) => {
+  return {
+    signedIn: state.auth.isSignedIn,
+  };
+};
 
-export default connect(mapStateToProps,{})(Header);
+export default connect(mapStateToProps, {})(Header);

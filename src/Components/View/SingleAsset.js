@@ -9,8 +9,10 @@ import { Form } from 'react-bootstrap';
 import { renderPhysicalAssetCategories } from '../FrequentComponents/Asset';
 import { CountdownTimer } from '../FrequentComponents/CountdownTimer';
 import Loading from '../loading';
+import RenderError from '../FrequentComponents/RenderError';
 import { FaEthereum } from 'react-icons/fa';
 import './View.css'
+import swal from 'sweetalert';
 
 class SingleAssetDetail extends React.Component{
 
@@ -32,21 +34,25 @@ class SingleAssetDetail extends React.Component{
     async componentDidMount(){
         await this.props.fetchItem(this.props.itemId);
 
-        var asset = this.props.items.item
-        if(asset){
+        var assetStatus = this.props.items;
 
-            this.setState({
-                price: asset.asset.aggregate_base_price,
-                bid: asset.asset.aggregate_base_price
-            })
+        if(!assetStatus.errMess && assetStatus.item){
+            var asset = assetStatus.item;
+            if(asset){
+
+                this.setState({
+                    price: asset.asset.aggregate_base_price,
+                    bid: asset.asset.aggregate_base_price
+                })
+            }
+    
+            this.pusher = new Pusher('0bbbbf90036a3b074732', {
+                cluster: 'ap2',
+            });
+            this.channel = this.pusher.subscribe('biddings');
+                
+            this.channel.bind('updated', this.biddingLiveUpdate);
         }
-
-        this.pusher = new Pusher('0bbbbf90036a3b074732', {
-            cluster: 'ap2',
-        });
-        this.channel = this.pusher.subscribe('biddings');
-            
-        this.channel.bind('updated', this.biddingLiveUpdate);
     }
 
     async biddingLiveUpdate(){
@@ -91,6 +97,7 @@ class SingleAssetDetail extends React.Component{
 
         var aggregate_base_price = this.state.bid;
         var bidder = this.props.auth.userId;
+        var event_end_date_time = new Date();
 
         var asset = {
             ...this.props.items.item.asset,
@@ -111,7 +118,40 @@ class SingleAssetDetail extends React.Component{
             })
         }
         else{
-            alert(this.props.physicalAsset.illegalBidMess)
+            swal("Failure!!", this.props.physicalAsset.illegalBidMess, "error");
+        }
+    }
+
+    async onBuyRequest(event_end_date_time){
+
+        if(moment(event_end_date_time).diff(moment(new Date())) <= 0 ){
+            await this.biddingLiveUpdate()
+        }
+
+        var aggregate_base_price = this.state.bid;
+        var bidder = this.props.auth.userId;
+        var event_end_date_time = moment(new Date());
+
+        var asset = {
+            ...this.props.items.item.asset,
+            aggregate_base_price
+        }
+
+        
+        var updatedAsset = {
+            ...this.props.items.item,
+            asset,
+            bidder,
+            event_end_date_time
+        }
+
+        await this.props.UpdatePhysicalAsset(this.props.itemId, updatedAsset);
+
+        if(this.props.physicalAsset.isBidLegal){
+            swal("Success!!", "Congratulations!! You just bought a Physical Asset Move to Winnings Section Now.", "success")
+        }
+        else{
+            swal("Failure!!", "Oops! Something got Wrong", "error")
         }
     }
 
@@ -132,9 +172,7 @@ class SingleAssetDetail extends React.Component{
         }
         else if(this.props.items.errMess){
             return(
-                <div>
-                    <h1>{this.props.items.errMess}</h1>
-                </div>
+                <RenderError error={this.props.items.errMess} />
             );
         }
         else {
@@ -255,15 +293,16 @@ class SingleAssetDetail extends React.Component{
                                                 <Button 
                                                     id='single-asset-purchase-button' 
                                                     onClick={this.toggle}>
-                                                    <span><FaEthereum /> Make Offer</span>
+                                                    <span><FaEthereum /> Make Offer </span>
                                                 </Button> :
                                                 <div/>
                                             }
                                             {
                                                 !asset.bids && moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
                                                 <Button 
+                                                    onClick={() => this.onBuyRequest(asset.event_end_date_time)}
                                                     id='single-asset-purchase-button'>
-                                                    <span><FaEthereum /> Buy</span>
+                                                    <span><FaEthereum /> Buy Now </span>
                                                 </Button> :
                                                 <div/>
                                             }

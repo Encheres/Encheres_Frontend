@@ -6,10 +6,10 @@ import * as ipfsClient  from 'ipfs-http-client';
 import moment from 'moment';
 import Switch from "react-switch";
 import Datetime from 'react-datetime';
-import {Badge, Image, ThemeProvider} from 'react-bootstrap';
+import {Badge} from 'react-bootstrap';
 import {Card, CardText, CardBody, 
-    CardSubtitle, Button, ButtonGroup, UncontrolledCarousel,
-    Modal, ModalHeader, ModalBody, ModalFooter, Alert} from "reactstrap";
+    CardSubtitle, Button, UncontrolledCarousel,
+    Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Form from 'react-bootstrap/Form';
 import {FaPalette, FaFootballBall, FaCarSide,
     FaWallet, FaBuilding} from 'react-icons/fa';
@@ -20,7 +20,8 @@ import { connect } from "react-redux";
 import {PostPhysicalAsset} from '../../apis_redux/actions/physicalAsset';
 
 import {addressValidation} from '../FrequentComponents/AddressForm';
-import preview from "../../assets/images/nft.jpg";
+import swal from 'sweetalert';
+
 import "./Add.css";
 import "../Authentication/styles.css"
 
@@ -179,13 +180,18 @@ class PhysicalAsset extends Component {
             await this.props.PostPhysicalAsset(newAsset);
 
             if(this.props.physicalAsset.postFail){
-                this.setState({
-                    postError: this.props.physicalAsset.postFailMess
-                })
-                this.onFailDismiss();
+                swal({
+                    title: "Failure!!", 
+                    text: this.props.physicalAsset.postFailMess ? this.props.physicalAsset.postFailMess : "Something went wrong :( Try again!!", 
+                    icon: "error"
+                });
             }
             else{
-                this.onSuccessDismiss()
+                swal({
+                    title: "Success!!",
+                    text: "Physical Asset Posted!!",
+                    icon: "success"
+                });
             }
 
             this.setState({
@@ -679,7 +685,7 @@ class PhysicalAsset extends Component {
                                                 }}
                                             placeholder="Contact Number"
                                             />
-                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.contactNumber}</div>
+                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.contact}</div>
                                     </Form.Group>
                                     </div>
                                     </div>
@@ -832,16 +838,6 @@ class PhysicalAsset extends Component {
                                     </div>
                                 </Form>
                             </CardBody>
-                            <Alert color="success" isOpen={this.state.success}>
-                                Sucess!!
-                                <br/>
-                                Asset Posted successfully!!
-                            </Alert>
-                            <Alert color="danger" isOpen={this.state.fail}>
-                                Failed!!
-                                <br/>
-                                {this.state.postError}
-                            </Alert>
                         </Card>
                         </div>
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
