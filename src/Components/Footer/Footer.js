@@ -29,7 +29,7 @@ function Footer(props) {
                   </div>
                   <ul
                     className="social-links"
-                    style={{ listStyle: 'none', display: 'flex'}}
+                    style={{ listStyle: 'none', display: 'flex',alignContent:'center' , justifyContent:'center'}}
                   >
                     <li style={{ marginRight: '12px' }}>
                       <a href="#">

@@ -53,7 +53,7 @@ class Auctionlist extends Component {
       customer_id: "not loaded",
     };
   }
-  componentDidUpdate = () => {};
+  componentDidUpdate = () => { };
   componentDidMount = () => {
     this.clearFilterButtonHandler();
   };
@@ -72,7 +72,7 @@ class Auctionlist extends Component {
   };
   buttonPressHandler = () => {
     let tagsarr = this.onlyValuesarray(this.state.selectedTag);
-    /* 
+    /*
       tags , page , time
     */
     this.props.get_filtered_auction({
