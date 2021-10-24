@@ -12,8 +12,9 @@ import AddressForm from '../FrequentComponents/AddressForm';
 import {addressValidation} from '../FrequentComponents/AddressForm';
 import validator from 'validator';
 import "./Add.css";
-
 import {handleCreateAuction} from '../../apis_redux/actions/live_auction'
+import { ipfs_base_url } from '../../apis_redux/apis/encheres';
+import VideoPlayer from '../FrequentComponents/VideoPlayer';
 
 
 //Declare IPFS
@@ -43,11 +44,11 @@ class LiveAuction extends Component {
             // specific to each item
             name: "",
             description: "",
-            base_price: 0.0000,
+            base_price: '',
             assetImagesHash:[],
             assetImageFileUploading:false,
             assetShowcaseCarousel: [],
-            assetVideoHash:"",
+            assetVideoHash:'',
             assetVideoFileUploading:false,
             assetFileSize: 0,
             buffer:'',
@@ -111,24 +112,45 @@ class LiveAuction extends Component {
     }
 
     // file uploading
-    onFileChange = (e) => {
-
+    onImageFileChange = (e) => {
         e.preventDefault()
         const file = e.target.files[0]
+
+        if(!file||(file.type!=="image/jpeg" && file.type!=="image/png" && file.type!=="image/jpg"&& file.type!=="image/gif" && file.type!=="image/webp")){
+            console.log("invalid image file");
+            return;
+        }
         const reader = new window.FileReader()
         reader.readAsArrayBuffer(file)
 
         reader.onloadend = () => {
-        this.setState({ buffer: Buffer(reader.result) })
-        console.log('buffer', this.state.buffer)
+            this.setState({ buffer: Buffer(reader.result) })
         }
+    };
 
-        console.log("Submitting file to ipfs...")
+    onVideoFileChange = e => {
+        e.preventDefault()
+        const file = e.target.files[0]
+        
+        if(!file||(file.type!=="video/mp4" && file.type!=="video/webm" && file.type!=="video/ogg" && file.type!=="audio/wav"&& file.type!=="audio/mp3" && file.type!=="audio/ogg")){
+            console.log("invalid video file");
+            return;
+        }
+        const reader = new window.FileReader()
+        reader.readAsArrayBuffer(file)
+
+        reader.onloadend = () => {
+            this.setState({ video_buffer: Buffer(reader.result) })
+        }
     };
 
     uploadAssetImageFile = async() => {
+        if(!this.state.buffer){
+            console.log("no file selected");
+            return;
+        }
+        
         try {
-            
             this.setState({
                 assetImageFileUploading: true
             })
@@ -140,13 +162,14 @@ class LiveAuction extends Component {
 
             this.setState({
                 assetImagesHash: assetImagesHash,
-                assetImageFileUploading: false
+                assetImageFileUploading: false,
+                buffer:''
             })
 
             var tempHash = this.state.assetShowcaseCarousel;
 
             var showcaseElement = {
-                src: "https://ipfs.infura.io/ipfs/"+file.path,
+                src: ipfs_base_url+file.path,
                 altText: "Slide "+assetImagesHash.length.toString(),
                 key: assetImagesHash.length.toString(),
             }
@@ -167,8 +190,6 @@ class LiveAuction extends Component {
             this.onFailDismiss();
 
         }
-
-        //https://ipfs.infura.io/ipfs/<hash>
     }
 
     uploadAssetVideoFile = async() =>{
@@ -178,18 +199,14 @@ class LiveAuction extends Component {
                 assetVideoFileUploading: true
             })
 
-            const file = await ipfs.add(this.state.buffer)
-            const assetVideoHash = this.state.assetVideoHash;
-            assetVideoHash.push(file.path)
+            const file = await ipfs.add(this.state.video_buffer)
             this.setState({
                 assetVideoHash: file.path,
                 assetVideoFileUploading: false
             })
 
-            console.log(file.path)
-
         } catch (error) {
-
+            console.log(error)
             this.setState({
                 assetVideoFileUploading: false,
                 buffer: null
@@ -198,8 +215,6 @@ class LiveAuction extends Component {
             this.onFailDismiss();
             
         }
-
-        //https://ipfs.infura.io/ipfs/<hash>
     }
 
 
@@ -211,7 +226,6 @@ class LiveAuction extends Component {
         // validate each item
         const {assetImagesHash, name, description, base_price, quantity} = item;
         let assetImageError = "", nameError = "", descriptionError = "", priceError = "", quantityError="", error = false;
-        console.log(assetImagesHash)
         if(!assetImagesHash || assetImagesHash.length<1){
             assetImageError='Asset File is required';
             error = true;
@@ -287,9 +301,11 @@ class LiveAuction extends Component {
         return !error;
     }
     dateValidate(current){
-        var yesterday = moment().subtract(1, 'day');
-
-        return current.isAfter( yesterday );
+        const event_date = new Date(current._d);
+        const now_date = new Date();
+        if(Date.parse(event_date)<=Date.parse(now_date))
+            return false;
+        return true;
     }
 
 /*-----------------------------------------*/
@@ -316,11 +332,11 @@ class LiveAuction extends Component {
     handleAddItem = (e)=>{
         // adding a single item to items array
         e.preventDefault();
-        const {name, description, base_price, assetImagesHash, quantity} = this.state;
+        const {name, description, base_price, assetImagesHash, assetVideoHash, quantity} = this.state;
         
         const item = { name, description, base_price, assetImagesHash, quantity };
         const isValid = this.validateItem(item);
-        const newItem = {name, quantity, base_price, description, images:assetImagesHash }
+        const newItem = {name, quantity, base_price, description, images:assetImagesHash, video:assetVideoHash};
         if(isValid){
             this.setState(prevState => ({
                 items: [...prevState.items, newItem],
@@ -331,6 +347,7 @@ class LiveAuction extends Component {
                 assetImagesHash: [],
                 buffer: '',
                 quantity: '',
+                assetShowcaseCarousel: [],
             }))
         }        
     }
@@ -340,12 +357,12 @@ class LiveAuction extends Component {
         const {items, categories, address, organizer, organizer_contact, event_date_time} = this.state;
         const isValid = this.validateform();
         const data = {items, tags:categories, pickup_point:address, organizer, organizer_contact, event_date_time};
-        console.log(data);
         if(isValid){
             await this.props.handleCreateAuction(data);
             if(this.props.liveAuction.message){
                 this.setState({
-                    success: true
+                    success: true,
+                    fail:false
                 })
             }else{
                 this.setState({
@@ -370,24 +387,55 @@ class LiveAuction extends Component {
                                 
                 <div className='new-item-dropbox'>
                     <CardText className='new-item-card-text'>
-                        PNG, JPEG, GIF, WEBP, PDF, DOCX, MP4 or MP3. Max 100mb.
-                        You can add multiple files
+                       Only PNG, JPG, JPEG, GIF or WEBP files are accepted. You can add multiple images
                     </CardText>
                     <div className='new-item-card-button-div'>
-                        <input type="file" onChange={this.onFileChange} className='new-item-card-button'/>
+                        <input type="file" onChange={this.onImageFileChange} className='new-item-card-button'/>
                     </div>
                     
                     <div className='row justify-content-center'>
+                    
                         <Button className='mt-4' onClick={this.uploadAssetImageFile} style={{height:40, width: 40, borderRadius: 20}}>
                         {   
                             this.state.assetImageFileUploading ?
                             <span className='fa fa-spinner'/>:
                             <span className='fa fa-plus-circle'/>
+                            
                         }
                         </Button>
                     </div>
                 </div> 
                 <div className='invalid__feedback'>{this.state.errors.assetFile}</div>
+            </CardBody>
+
+            <CardBody>
+                <CardSubtitle tag="h6" className="new-item-card-subtitle">
+                    UPLOAD ASSET SHOWCASE VIDEO (SINGLE)
+                </CardSubtitle>
+                <div className='new-item-dropbox'>
+                    <CardText className='new-item-card-text'>
+                        MP4, WEBM, MP3, OGG or WAV . Max 20mb
+                    </CardText>
+                    <div className='new-item-card-button-div'>
+                        <input 
+                            type="file"
+                            onChange={this.onVideoFileChange}
+                            className='new-item-card-button'
+                        />
+                    </div>
+                    <div className='row justify-content-center'>
+                        <Button 
+                            disabled={!this.state.video_buffer || this.state.assetVideoFileUploading}
+                            onClick={() => this.uploadAssetVideoFile()}
+                            className='mt-4' style={{height:40, width: 40, borderRadius: 20}}>
+                            {   
+                                this.state.assetVideoFileUploading ?
+                                <span className='fa fa-spinner'/>:
+                                <span className='fa fa-plus-circle'/>
+                            }
+                        </Button>
+                    </div>
+                </div> 
             </CardBody>
                             
                             
@@ -639,11 +687,17 @@ class LiveAuction extends Component {
                                     <div><p className="sidebar__heading">Current Item Preview</p></div>
                                     {
                                         this.state.assetImagesHash.length ? 
-                                        <UncontrolledCarousel items={this.state.assetShowcaseCarousel} /> :
+                                        <UncontrolledCarousel items={this.state.assetShowcaseCarousel} caption="Item Image"/> :
                                         ""
                                     }
+                                    
+                                    <br/>
+                                    {this.state.assetVideoHash && <VideoPlayer url = {this.state.assetVideoHash} playing={true}/>}
+                                    
                                     </>
                                 }
+
+                                
                 
                                 <CardBody>
                                 {    this.state.display_first && <>

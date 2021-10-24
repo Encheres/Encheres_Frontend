@@ -5,13 +5,11 @@ import Pusher from 'pusher-js';
 import './auctionRoom.css'
 import {ipfs_base_url} from '../../apis_redux/apis/encheres'
 import {DisplayBadges} from '../FrequentComponents/Category_Badges'
-import ReactPlayer from 'react-player'
 import { Message } from './Message';
 import {fetchAuctionDetails, updateUserBids, sellLiveItem} from '../../apis_redux/actions/live_auction';
+import VideoPlayer from '../FrequentComponents/VideoPlayer'
 
-// 1) Where to store anonymous name
-// 2) Where to store the video
-// 3) Shifting to next bid
+// 1) Where to store anonymous name -> get from user profile
 // 4) Image not visible in Brave
 // 5) Chat autoscroll correction
 // 6) Multiple api calls for sell. Try backend trigger.
@@ -294,7 +292,7 @@ class LiveAuctionRoom extends Component{
         )
     }
     renderVideo(video){
-        if(!video||video.length<0){
+        if(!video){
             return(
                 <span className='blue_text_inline'>No video found</span>
             )
@@ -302,8 +300,7 @@ class LiveAuctionRoom extends Component{
         }
         return(
         <>
-            {/* <ReactPlayer url={`${ipfs_base_url}`+video}/> */}
-            <p>Video is being displayed here: </p>
+            <VideoPlayer url = {video} play={true}/>
         </>)
     }
 
