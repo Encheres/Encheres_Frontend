@@ -41,7 +41,8 @@ class LiveAuctionRoom extends Component{
             time_left:'',
             minutes_left:'',
             seconds_left:'',
-            auctionCompleted:false
+            auctionCompleted:false,
+            start_timer:false,
         }
     }
     componentDidMount = async()=>{
@@ -62,7 +63,6 @@ class LiveAuctionRoom extends Component{
             if(this.props.liveAuctionDetails.data){
                 const item_index = this.chooseItemIndex();
                 if(item_index){
-                    console.log('item_index',item_index);
                     this.setItemIndex(item_index);
                 }
                     
@@ -120,26 +120,27 @@ class LiveAuctionRoom extends Component{
 
         if(this.props.bids.message){
             this.resetTimer();
-        }else{
-            console.log("In wrong");
-
         }
 
     }
     sellItem = async(e) =>{
         let {item_index} = this.state;
-        console.log('Request to sell item: ', item_index)
         item_index = parseInt(item_index);
         await this.props.sellLiveItem({auction_id:this.state.auction_id, item_id:this.props.liveAuctionDetails.data.items[item_index]._id});
-        const data = this.props.liveAuctionDetails.data;
-        if(data.completed){
-            this.setState({
-                auctionCompleted:true
-            })
-            return;
-        }
-        if(data.items[item_index].sell.sold){
-            await this.setItemIndex(item_index+1);
+        if(this.props.bids.message){
+            await this.auctionUpdate();
+            const data = this.props.liveAuctionDetails.data;
+            if(data.completed){
+                this.setState({
+                    auctionCompleted:true
+                })
+                return;
+            }
+            if(data.items[item_index].sell.sold){
+                await this.setItemIndex(item_index+1);
+            }
+        }else{
+            this.setItemIndex(item_index);
         }
         
     }
@@ -149,7 +150,6 @@ class LiveAuctionRoom extends Component{
 
     chooseItemIndex = () =>{
         const data = this.props.liveAuctionDetails.data.items;
-        // console.log(data);
         for(let i=0;i<data.length;i++){
             if(!data[i].sell.sold){
                 return i;
@@ -157,14 +157,12 @@ class LiveAuctionRoom extends Component{
         }
         this.setState({
             auctionCompleted: true
-        }, ()=>{
-            console.log('Auction completed from choose fxn');
         })
     }
 
     setItemIndex = async(index) =>{
-        console.log(index);
         this.setState({
+            start_timer:false,
             time_left:'',
             minutes_left:'',
             seconds_left:'',
@@ -176,13 +174,21 @@ class LiveAuctionRoom extends Component{
             cntSoldLeft:true,
             item_index:index,
             
-        }, ()=>{
-            console.log("After setting index:", this.state)
         })
     }
 
     /**************************************/
     // Timer/Counter Functions
+    InitiateTimer = () =>{
+        this.setState({
+            start_timer:true
+        })
+    }
+    DisableTimer = () =>{
+        this.setState({
+            start_timer:false
+        })
+    }
 
     resetTimer = ()=>{
         this.setState({
@@ -244,10 +250,12 @@ class LiveAuctionRoom extends Component{
             if(this.state.time_left===''||this.state.time_left>0){
                 const time_out = setTimeout(async ()=>{
                     this.startTimer(expiry_time);
-                    if(this.state.time_left<=0){
+                    if(this.state.time_left!=='' && this.state.time_left<=0){
                         await this.sellItem();
                         clearTimeout(time_out);
-                        console.log(time_out);
+                        setTimeout(()=>{
+                            // causing delay, so that set state can occur
+                        },2000)
                         // return;
                     }
                 },1000 )
@@ -338,8 +346,7 @@ class LiveAuctionRoom extends Component{
                     <Button className='auction_status_buttons' disabled={this.state.cntSoldLeft} onClick={this.handleStatusButtons}>SOLD </Button>
                 </Col>
             </Row>
-
-            {item.bid.price>0 && <Row className="title_row">
+            {this.state.start_timer && item.bid.price!=='' && item.bid.price>0 && <Row className="title_row">
                 <div>
                         <span className='item_desc_title'>Time Left</span>
                         {this.renderCounter(item.bid)}
@@ -466,6 +473,11 @@ class LiveAuctionRoom extends Component{
                    </div>
                 )
             }else{
+                if(!this.state.start_timer && this.props.liveAuctionDetails.data.items[this.state.item_index].bid.bidder){
+                    this.InitiateTimer();
+                }else if(this.state.start_timer && !this.props.liveAuctionDetails.data.items[this.state.item_index].bid.bidder){
+                    this.DisableTimer();
+                }
                 
             return(
                 <div className='live_auction_div'>

@@ -9,7 +9,6 @@ export const handleCreateAuction = (data) => async (dispatch,getState) =>{
         dispatch({type:CREATE_LIVE_AUCTION, payload:response.data});
         
     }catch(e){
-        console.log({error: e});
         dispatch({type:CREATE_LIVE_AUCTION_FAILED, payload:{error:"Something went wrong"}})
     }
 }
@@ -18,11 +17,9 @@ export const fetchAuctionDetails = data => async (dispatch,getState) =>{
     const token = getState().auth.token;
     try{
         const response = await authRecord(token).get(`/auctions/${data.auction_id}`);
-        // console.log(response.data);
         dispatch({type:GET_AUCTION_DETAILS, payload:response.data});
         
     }catch(e){
-        console.log({error: e});
         dispatch({type:GET_AUCTION_DETAILS_FAILED, payload:{error:"Something went wrong"}})
     }
 }
@@ -54,15 +51,12 @@ export const addNotificationMessage = data => async (dispatch,getState) =>{
 
 export const sellLiveItem = data => async (dispatch,getState) =>{
     const token = getState().auth.token;
-    console.log("Selling: ", data, Date);
     try{
-        console.log("called");
         const response = await authRecord(token).patch(`auctions/sell/${data.auction_id}/${data.item_id}`, data);
-        console.log(response.data, "sold");
+        dispatch({type:AUCTION_BIDDING_SUCCESS, payload:{message: "Item sold"}});
 
     }catch(e){
-        console.log({error: e});
-
+        dispatch({type:AUCTION_BIDDING_FAILED, payload:{error:"Selling item failed"}})
     }
 
 
