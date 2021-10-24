@@ -10,6 +10,8 @@ import contact from "./contact_us";
 import auctionlist from './auctionListReducer';
 import liveAuctionReducer from './live_auction'
 import getting_pending_orders_seller from './pending_order_seller';
+import bids from './bids';
+
 export default combineReducers({
   // reducers
   physicalAsset: physicalAsset,
@@ -23,4 +25,5 @@ export default combineReducers({
   auctionlist : auctionlist,
   liveAuction: liveAuctionReducer,
   pendingOrderSeller : getting_pending_orders_seller,
+  bids,
 });
