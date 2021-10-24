@@ -100,6 +100,7 @@ class SignUp extends Component {
             
             await account_contract.methods.createAccount(this.props.auth.userId).send({from: this.state.account_address})
             .once('receipt', (receipt) => {
+
                 swal({
                     title: "Woah! You are completly done",
                     text: "Blockchain Integration Successful and Signup Complete",
@@ -122,7 +123,6 @@ class SignUp extends Component {
         await this.loadWeb3()
         await this.loadAccountSmartContract();
 
-        alert(this.state.account_address, this.state.account_balance);
     }
     
     handleInputChange=(event)=>{
@@ -138,7 +138,6 @@ class SignUp extends Component {
             address: address
         })
     }
-
     
 
     formValidation = ()=>{

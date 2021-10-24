@@ -190,6 +190,19 @@ class SingleAssetDetail extends React.Component{
                 assetShowcaseCarousel.push(showcaseElement);
             }
 
+            let ownershipStatus;
+
+            if(!asset.shipped){
+                ownershipStatus = <CardText id="new-item-card-account">
+                                    Owned By @{asset.owner && asset.owner.name ? asset.owner.name : "john_bill123"}
+                                </CardText>
+            }
+            else{
+                ownershipStatus = <CardText id="new-item-card-account">
+                                    @{asset.owner.name} Sold asset to @{asset.bidder.name}
+                                </CardText>
+            }
+
             return(
                 <div className='container'>
                     <div className='row justify-content-center mt-4 mb-4'>
@@ -238,9 +251,7 @@ class SingleAssetDetail extends React.Component{
                                 <Card id="new-item-card">
                                     <CardBody>
                                         <div className="mt-0 mb-4 new-item-accountbox">
-                                            <CardText id="new-item-card-account">
-                                                Owned By @{asset.owner && asset.owner.name ? asset.owner.name : "john_bill123"}
-                                            </CardText>
+                                            {ownershipStatus}
                                         </div>
                                         <CardSubtitle
                                             tag="h6"
@@ -262,7 +273,7 @@ class SingleAssetDetail extends React.Component{
                                         </div>
                                         <div>
                                             <CardSubtitle tag="h6" className="new-item-preview-price">
-                                                Current Price{"  "}
+                                                Asset Price{"  "}
                                                 <span style={{ marginLeft: 10, color: "cyan" }}>
                                                     {this.state.price+' ETH'}
                                                 </span>

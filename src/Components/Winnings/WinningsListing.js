@@ -6,6 +6,7 @@ import { Form } from 'react-bootstrap';
 import { FetchPhysicalAssetWinnings } from '../../apis_redux/actions/winning';
 import { PostOrder } from '../../apis_redux/actions/order';
 import { UpdateSaleForItem } from '../../apis_redux/actions/item';
+import { UpdateShippedStatusForItem } from '../../apis_redux/actions/item';
 import AddressForm from '../FrequentComponents/AddressForm';
 import { addressValidation } from '../FrequentComponents/AddressForm';
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -14,6 +15,8 @@ import Loading from '../loading';
 import RenderError from '../FrequentComponents/RenderError';
 import './winnings.css'
 
+import Web3 from 'web3';
+import Account from '../../abis/Account.json';
 class Winnings extends Component{
 
     constructor(props){
@@ -39,12 +42,53 @@ class Winnings extends Component{
                 address: '',
                 contact: '',
                 totalPayment: ''
-            }
+            },
+
+            account_smart_contract: null
         }
+
 
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
 
+    }
+
+    async loadWeb3() {
+        if (window.web3) {
+          window.web3 = new Web3(window.ethereum)
+          await window.ethereum.enable()
+          console.log(window.web3)
+        }
+        else if (window.web3) {
+          window.web3 = new Web3(window.web3.currentProvider)
+        }
+        else {
+            swal({
+                title: "OOPS!!",
+                text: 'Non-Ethereum browser detected. You should consider trying MetaMask!',
+                icon: "error"
+            })
+        }
+    }
+
+    async loadAccountSmartContract() {
+       
+        const web3 = window.web3
+
+        // Network ID
+        const networkId = await web3.eth.net.getId()
+
+        const networkData = Account.networks[networkId]
+        if(networkData) {
+            const account_contract = new web3.eth.Contract(Account.abi, networkData.address)
+            this.setState({ account_smart_contract: account_contract })
+        } else {
+            swal({
+                title: "OOPS!!",
+                text: 'contract not deployed to detected network.',
+                icon: "error"
+            })
+        }
     }
 
     handleAddressChange = (address)=>{
@@ -63,13 +107,8 @@ class Winnings extends Component{
 
     formValidate(){
 
-        var error, contactError='', paymentError='';
+        var error = false, contactError='', paymentError='';
         var temp = this.state.contact.toString();
-
-        if(!this.state.totalPayment || this.state.totalPayment <= 0){
-            paymentError="Total Payment must be greater than 0";
-            error = true;
-        }
 
         if(!temp.trim() || temp.length != 10){
             contactError="Invalid Contact Number";
@@ -112,6 +151,7 @@ class Winnings extends Component{
 
     onWinDetailModalSubmit(){
         if(!this.formValidate()){
+            alert("called")
             return;
         }
         this.setState({
@@ -128,7 +168,32 @@ class Winnings extends Component{
             paymentModal: !this.state.paymentModal
         })
 
-        alert(this.state.totalPayment);
+    }
+
+    async onSubmitPayment(assetId, payer){
+        if(!this.paymentFormValidate()){
+            return;
+        }
+
+        let receiverId = 1; 
+        let paymentAmount = window.web3.utils.toWei(this.state.totalPayment.toString(), 'Ether')
+
+        await this.state.account_smart_contract.methods.receivePayment(receiverId)
+        .send({ from: payer, value: paymentAmount })
+        .once('receipt', async (receipt) => {
+
+            await this.props.UpdateShippedStatusForItem(assetId, true);
+
+            swal({
+                title: "Payment Successfull",
+                text: "Congratulations! Now you own this asset.",
+                icon: "success"
+            })
+            
+            setTimeout(() => {
+                window.location.reload(); 
+            }, 5000);
+        })
     }
 
     async onSubmitReceiverDetail(asset){
@@ -189,6 +254,10 @@ class Winnings extends Component{
 
     async componentDidMount(){
 
+        await this.loadWeb3();
+
+        await this.loadAccountSmartContract();
+
         await this.props.FetchPhysicalAssetWinnings(0)
 
         if(this.props.winnings.winnings.length){
@@ -221,7 +290,17 @@ class Winnings extends Component{
 
         var transactionButton;
         if(!asset.sale){
-            transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.setState({paymentModal: true})}>Make Payment</Button>
+
+            if(asset.shipped){
+                transactionButton =  <Button id='single-asset-purchase-button' disabled>Asset Shipped</Button>
+            }
+            else{
+                if(this.state.totalPayment === 0)
+                    transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.setState({paymentModal: true})}>Make Payment</Button>
+                else 
+                    transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.onSubmitPayment(asset._id, asset.bidder.accounts[0])}>Pay {this.state.totalPayment} ETH</Button>
+            }
+            
         }
         else if(this.state.detailsFilled){
             transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.onSubmitReceiverDetail(asset)}>Submit Details</Button>
@@ -423,7 +502,8 @@ const mapDispatchToProps = dispatch => {
     return {
         FetchPhysicalAssetWinnings : (page) => dispatch(FetchPhysicalAssetWinnings(page)),
         PostOrder: (order) => dispatch(PostOrder(order)),
-        UpdateSaleForItem: (itemId, sale) => dispatch(UpdateSaleForItem(itemId, sale))
+        UpdateSaleForItem: (itemId, sale) => dispatch(UpdateSaleForItem(itemId, sale)),
+        UpdateShippedStatusForItem: (itemId, shipped) => dispatch(UpdateShippedStatusForItem(itemId, shipped))
     };
 }
 
