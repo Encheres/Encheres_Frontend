@@ -16,7 +16,7 @@ import RenderError from '../FrequentComponents/RenderError';
 import './winnings.css'
 
 import Web3 from 'web3';
-import Account from '../../abis/Account.json';
+import Account from '../../abis_1/Account.json';
 class Winnings extends Component{
 
     constructor(props){
@@ -170,15 +170,14 @@ class Winnings extends Component{
 
     }
 
-    async onSubmitPayment(assetId, payer){
+    async onSubmitPayment(assetId, receiver, payer){
         if(!this.paymentFormValidate()){
             return;
         }
 
-        let receiverId = 1; 
         let paymentAmount = window.web3.utils.toWei(this.state.totalPayment.toString(), 'Ether')
 
-        await this.state.account_smart_contract.methods.receivePayment(receiverId)
+        await this.state.account_smart_contract.methods.receivePayment(receiver)
         .send({ from: payer, value: paymentAmount })
         .once('receipt', async (receipt) => {
 
@@ -296,9 +295,15 @@ class Winnings extends Component{
             }
             else{
                 if(this.state.totalPayment === 0)
-                    transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.setState({paymentModal: true})}>Make Payment</Button>
+                    transactionButton =  <Button id='single-asset-purchase-button' 
+                                            onClick={() => this.setState({paymentModal: true})}>
+                                            Make Payment
+                                        </Button>
                 else 
-                    transactionButton =  <Button id='single-asset-purchase-button' onClick={() => this.onSubmitPayment(asset._id, asset.bidder.accounts[0])}>Pay {this.state.totalPayment} ETH</Button>
+                    transactionButton =  <Button id='single-asset-purchase-button' 
+                                            onClick={() => this.onSubmitPayment(asset._id, asset.owner.accounts[0], asset.bidder.accounts[0])}>
+                                            Pay {this.state.totalPayment} ETH
+                                        </Button>
             }
             
         }

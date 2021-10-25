@@ -16,7 +16,7 @@ contract Account {
         uint[] createdAssets;
     }
 
-    mapping(uint => User) public Users;
+    mapping(address => User) public Users;
 
     event UserCreated(
         uint id,
@@ -28,8 +28,26 @@ contract Account {
     );
 
     event PaymentReceived(
-        uint receiverId,
+        address receiver,
         uint amount
+    );
+
+    event TransactionsUpdated(
+        address owner,
+        uint transactionId,
+        uint[] transactions
+    );
+
+    event OwnedAssetsUpdated(
+        address owner,
+        uint assetId,
+        uint[] ownedAssets
+    );
+
+    event CreatedAssetsUpdated(
+        address owner,
+        uint assetId,
+        uint[] createdAssets
     );
 
     function createAccount(string memory _centralDBID) public {
@@ -38,21 +56,71 @@ contract Account {
 
         usersCount++;
 
-        Users[usersCount] =  User(usersCount, msg.sender, _centralDBID, new uint[](0), new uint[](0), new uint[](0));
+        Users[msg.sender] =  User(usersCount, msg.sender, _centralDBID, new uint[](0), new uint[](0), new uint[](0));
 
         emit UserCreated(usersCount, msg.sender, _centralDBID, new uint[](0), new uint[](0), new uint[](0));
     }
 
-    function receivePayment(uint _receiverId) public payable {
+    function updateAccountTransactions(address _userAccountAddress, uint _transactionId) public {
+
+        User storage user = Users[_userAccountAddress];
+
+        user.transactions.push(_transactionId);
+
+        emit TransactionsUpdated(_userAccountAddress, _transactionId, user.transactions);
+    }
+
+    function updateAccountCreatedAssets(address _userAccountAddress, uint _assetId) public {
+
+        User storage user = Users[_userAccountAddress];
+
+        user.createdAssets.push(_assetId);
+
+        emit OwnedAssetsUpdated(_userAccountAddress, _assetId, user.createdAssets);
+    }
+
+    function updateAccountOwnedAssets(address _userAccountAddress, uint _assetId, uint _opType) public {
+
+        User storage user = Users[_userAccountAddress];
+
+        if(_opType == 1){
+            user.ownedAssets.push(_assetId);
+        }
+        else if(_opType == 2){
+
+            uint _assetPos = 0;
+
+            // Finding position for required assetid in array
+            for(uint i=0;i<user.ownedAssets.length;i++){
+
+                if(_assetId == user.ownedAssets[i]){
+                    _assetPos = i;
+                    break;
+                }
+            }
+
+            if(_assetPos == 0)
+                return;
+
+            // Shifting elements to maintain the order after deletion.
+            for(uint i=_assetPos;i<user.ownedAssets.length-1;i++){
+                user.ownedAssets[i] = user.ownedAssets[i+1];
+            }
+
+            user.ownedAssets.pop();
+        }
+
+        emit CreatedAssetsUpdated(_userAccountAddress, _assetId, user.ownedAssets);
+    }
+
+    function receivePayment(address _receiverAccountAddress) public payable {
 
         require(msg.value > 0);
 
-        User memory _receiver = Users[_receiverId];
+        address payable _payableAddress = address(uint160(_receiverAccountAddress));
 
-        address payable _receiverAddress = _receiver.owner;
+        address(_payableAddress).transfer(msg.value);
 
-        address(_receiverAddress).transfer(msg.value);
-
-        emit PaymentReceived(_receiverId, msg.value);
+        emit PaymentReceived(_receiverAccountAddress, msg.value);
     }
 }

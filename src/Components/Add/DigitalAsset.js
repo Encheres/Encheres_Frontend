@@ -108,7 +108,7 @@ class DigitalAsset extends Component {
             error = true;
         }
 
-        if(!price || isNaN(price) || price<0){
+        if(this.state.onSale && !price || isNaN(price) || price<0){
             priceError="Price must be positive number";
             error = true;
         }
@@ -227,7 +227,6 @@ class DigitalAsset extends Component {
             endDateTime: this.state.endDateTime
         })
     }
-
 
     render(){        
         return(
@@ -366,22 +365,6 @@ class DigitalAsset extends Component {
                                     </Form.Group>
                                     <div className='row'>
                                     <div className='col-6'>
-                                    <Form.Group className="mb-3" controlId="itemPrice">
-                                        <Form.Control
-                                            type='number'
-                                            name='price'
-                                            onChange={this.handleInputChange}
-                                            className='new-item-form-field' 
-                                            style={{backgroundColor: '#03091F', 
-                                                borderWidth: 0,
-                                                color: 'white'
-                                                }}
-                                            placeholder="Base/Fix Price in ETH"
-                                            />
-                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.price}</div>
-                                    </Form.Group>
-                                    </div>
-                                    <div className='col-6'>
                                     <Form.Group className="mb-3" controlId="itemRoyality">
                                         <Form.Control
                                             type='number'
@@ -395,6 +378,26 @@ class DigitalAsset extends Component {
                                             placeholder="Royality (%)" />
                                         <div className='mb-4' id='new-item-form-error'>{this.state.errors.royality}</div>
                                     </Form.Group>
+                                    </div>
+                                    <div className='col-6'>
+                                        {
+                                            this.state.onSale ? 
+                                            <Form.Group className="mb-3" controlId="itemPrice">
+                                                <Form.Control
+                                                    type='number'
+                                                    name='price'
+                                                    onChange={this.handleInputChange}
+                                                    className='new-item-form-field' 
+                                                    style={{backgroundColor: '#03091F', 
+                                                        borderWidth: 0,
+                                                        color: 'white'
+                                                        }}
+                                                    placeholder="Base/Fix Price in ETH"
+                                                    />
+                                                <div className='mb-4' id='new-item-form-error'>{this.state.errors.price}</div>
+                                            </Form.Group> :
+                                            <div></div>
+                                        }
                                     </div>
                                     </div>
                                     <div className='mt-4'>

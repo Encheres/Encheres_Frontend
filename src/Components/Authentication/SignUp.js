@@ -13,7 +13,7 @@ import {addressValidation} from '../FrequentComponents/AddressForm';
 import {handleSignUp} from '../../apis_redux/actions/auth.js';
 
 import Web3 from 'web3';
-import Account from '../../abis/Account.json';
+import Account from '../../abis_1/Account.json';
 class SignUp extends Component {
     
     constructor(props){
@@ -83,12 +83,6 @@ class SignUp extends Component {
         // Load account
         const accounts = await web3.eth.getAccounts()
         this.setState({account_address: accounts[0]});
-
-        // Load balance
-        var balwei = await web3.eth.getBalance(accounts.toString());
-
-        var baleth = await web3.utils.fromWei(balwei);
-        this.setState({account_balance: baleth});
 
         // Network ID
         const networkId = await web3.eth.net.getId()

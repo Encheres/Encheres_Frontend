@@ -1,4 +1,3 @@
-
 const Account = artifacts.require('Account');
 
 require('chai')
@@ -28,7 +27,8 @@ contract('Account', ([deployer, receiver, payer]) => {
     })
 
     describe('users', async () => {
-        let result, usersCount, centralDBID = "28deiuy873dd", owner = "0x777F5C4E25f6F822157d339635DB167C8A84A44e"        ;
+        let result, usersCount, centralDBID = "abc123", owner = "0x54a9E30cD33A30F9A8a953983473f3C419521fBb";
+        let createdAssets = [];
 
         before(async () => {
             result = await account.createAccount(centralDBID)
@@ -54,23 +54,34 @@ contract('Account', ([deployer, receiver, payer]) => {
 
         //check from Struct
         it('lists user', async () => {
-            const user = await account.Users(usersCount)
+            const user = await account.Users(owner)
             assert.equal(user.id.toNumber(), usersCount.toNumber(), 'Centeral DB ID is correct')
             assert.equal(user.centralDBID, centralDBID, 'Centeral DB ID is correct')
         })
 
         it('allows reception of payment', async () => {
 
-            result = await account.receivePayment(usersCount, { from: payer, value: web3.utils.toWei('1', 'Ether') })
+            result = await account.receivePayment(owner, { from: payer, value: web3.utils.toWei('1', 'Ether') })
 
             // SUCCESS
             const event = result.logs[0].args
-            assert.equal(event.receiverId, 1, 'receiverId is correct')
+            assert.equal(event.receiver, owner, 'receiverId is correct')
             assert.equal(event.amount, '1000000000000000000', 'amount is correct')
 
-            // FAILURE: Tries to pay a user that does not exist
-            //await account.receivePayment(99, { from: payer, value: web3.utils.toWei('1', 'Ether')}).should.be.rejected;
         })
+
+        it('allows account transactions update', async () => {
+
+            result = await account.updateAccountTransactions(owner, 1000)
+
+            // SUCCESS
+            const event = result.logs[0].args
+            assert.equal(event.owner, owner, 'receiverId is correct')
+            assert.equal(event.transactionId, 1000, 'transactionId is correct')
+            assert.equal(event.transactions.length, 1, 'transactions update is correct')
+
+        })
+        
     })
 
 
