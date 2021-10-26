@@ -37,7 +37,7 @@ contract('Account', ([deployer, receiver, payer]) => {
 
         it('creates user', async () => {
             // SUCESS
-            assert.equal(usersCount, 1)
+            assert.equal(usersCount, 4)
             const event = result.logs[0].args
 
             assert.equal(event.id.toNumber(), usersCount.toNumber(), 'id is correct')
@@ -79,6 +79,42 @@ contract('Account', ([deployer, receiver, payer]) => {
             assert.equal(event.owner, owner, 'receiverId is correct')
             assert.equal(event.transactionId, 1000, 'transactionId is correct')
             assert.equal(event.transactions.length, 1, 'transactions update is correct')
+
+        })
+
+        it('allows account owned assets insertion', async () => {
+
+            result = await account.updateAccountOwnedAssets(owner, 1001, 1)
+
+            // SUCCESS
+            const event = result.logs[0].args
+            assert.equal(event.owner, owner, 'receiverId is correct')
+            assert.equal(event.assetId, 1001, 'assetId is correct')
+            assert.equal(event.ownedAssets.length, 1, 'owned Assets update is correct')
+
+        })
+
+        it('allows account owned assets deletion', async () => {
+
+            result = await account.updateAccountOwnedAssets(owner, 1001, 2)
+
+            // SUCCESS
+            const event = result.logs[0].args
+            assert.equal(event.owner, owner, 'receiverId is correct')
+            assert.equal(event.assetId, 1001, 'assetId is correct')
+            assert.equal(event.ownedAssets.length, 0, 'owned Assets update is correct')
+
+        })
+
+        it('allows account created Assets update', async () => {
+
+            result = await account.updateAccountCreatedAssets(owner, 1000)
+
+            // SUCCESS
+            const event = result.logs[0].args
+            assert.equal(event.owner, owner, 'receiverId is correct')
+            assert.equal(event.assetId, 1000, 'assetId is correct')
+            assert.equal(event.createdAssets.length, 1, 'created Assets update is correct')
 
         })
         

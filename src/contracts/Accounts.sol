@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.5.0;
+pragma solidity ^0.8.0;
 
 
 contract Account {
@@ -9,7 +9,7 @@ contract Account {
 
     struct User {
         uint id;
-        address payable owner;
+        address owner;
         string centralDBID;
         uint[] transactions;
         uint[] ownedAssets;
@@ -76,7 +76,7 @@ contract Account {
 
         user.createdAssets.push(_assetId);
 
-        emit OwnedAssetsUpdated(_userAccountAddress, _assetId, user.createdAssets);
+        emit CreatedAssetsUpdated(_userAccountAddress, _assetId, user.createdAssets);
     }
 
     function updateAccountOwnedAssets(address _userAccountAddress, uint _assetId, uint _opType) public {
@@ -99,8 +99,11 @@ contract Account {
                 }
             }
 
-            if(_assetPos == 0)
+            if(_assetPos == 0){
+                emit OwnedAssetsUpdated(_userAccountAddress, _assetId, user.ownedAssets);
                 return;
+            }
+            
 
             // Shifting elements to maintain the order after deletion.
             for(uint i=_assetPos;i<user.ownedAssets.length-1;i++){
@@ -110,16 +113,14 @@ contract Account {
             user.ownedAssets.pop();
         }
 
-        emit CreatedAssetsUpdated(_userAccountAddress, _assetId, user.ownedAssets);
+        emit OwnedAssetsUpdated(_userAccountAddress, _assetId, user.ownedAssets);
     }
 
     function receivePayment(address _receiverAccountAddress) public payable {
 
         require(msg.value > 0);
 
-        address payable _payableAddress = address(uint160(_receiverAccountAddress));
-
-        address(_payableAddress).transfer(msg.value);
+        payable(_receiverAccountAddress).transfer(msg.value);
 
         emit PaymentReceived(_receiverAccountAddress, msg.value);
     }
