@@ -16,7 +16,7 @@ import RenderError from '../FrequentComponents/RenderError';
 import './winnings.css'
 
 import Web3 from 'web3';
-import Account from '../../abis/Account.json';
+// import Account from '../../abis/Account.json';
 
 
 class Winnings extends Component{
@@ -80,17 +80,17 @@ class Winnings extends Component{
         // Network ID
         const networkId = await web3.eth.net.getId()
 
-        const networkData = Account.networks[networkId]
-        if(networkData) {
-            const account_contract = new web3.eth.Contract(Account.abi, networkData.address)
-            this.setState({ account_smart_contract: account_contract })
-        } else {
-            swal({
-                title: "OOPS!!",
-                text: 'contract not deployed to detected network.',
-                icon: "error"
-            })
-        }
+        // const networkData = Account.networks[networkId]
+        // if(networkData) {
+        //     const account_contract = new web3.eth.Contract(Account.abi, networkData.address)
+        //     this.setState({ account_smart_contract: account_contract })
+        // } else {
+        //     swal({
+        //         title: "OOPS!!",
+        //         text: 'contract not deployed to detected network.',
+        //         icon: "error"
+        //     })
+        // }
     }
 
     handleAddressChange = (address)=>{

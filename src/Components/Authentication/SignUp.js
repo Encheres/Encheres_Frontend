@@ -11,7 +11,7 @@ import { valid_email } from '../../variables';
 import {addressValidation} from '../FrequentComponents/AddressForm';
 import {handleSignUp} from '../../apis_redux/actions/auth.js';
 import Web3 from 'web3';
-import Account from '../../abis/Account.json';
+// import Account from '../../abis/Account.json';
 import {Kaliedo_api} from '../../apis_redux/apis/encheres';
 
 
@@ -119,30 +119,30 @@ class SignUp extends Component {
         // Network ID
         const networkId = await web3.eth.net.getId()
 
-        const networkData = Account.networks[networkId]
-        if(networkData) {
-            const account_contract = new web3.eth.Contract(Account.abi, networkData.address)
-            this.setState({ account_smart_contract: account_contract })
+        // const networkData = Account.networks[networkId]
+        // if(networkData) {
+        //     const account_contract = new web3.eth.Contract(Account.abi, networkData.address)
+        //     this.setState({ account_smart_contract: account_contract })
             
-            await account_contract.methods.createAccount(this.props.auth.userId).send({from: this.state.account_address})
-            .once('receipt', (receipt) => {
+        //     await account_contract.methods.createAccount(this.props.auth.userId).send({from: this.state.account_address})
+        //     .once('receipt', (receipt) => {
 
-                swal({
-                    title: "Woah! You are completly done",
-                    text: "Blockchain Integration Successful and Signup Complete",
-                    icon: "success"
-                })
-            });
+        //         swal({
+        //             title: "Woah! You are completly done",
+        //             text: "Blockchain Integration Successful and Signup Complete",
+        //             icon: "success"
+        //         })
+        //     });
 
-            this.props.history.push('/');
+        //     this.props.history.push('/');
 
-        } else {
-            swal({
-                title: "OOPS!!",
-                text: 'contract not deployed to detected network.',
-                icon: "error"
-            })
-        }
+        // } else {
+        //     swal({
+        //         title: "OOPS!!",
+        //         text: 'contract not deployed to detected network.',
+        //         icon: "error"
+        //     })
+        // }
     }
 
     async connectWithBlockchain() {

@@ -7,7 +7,7 @@ class test extends Component {
     onClick = async() => {
         try{
             const  contractAddress = '0x5132bdd72834342db2616165145f54a2d58882c0'; // you can get this by calling the constructor function
-            const result = await Kaliedo_api.get('/u0qiuild3m/' + contractAddress + '/age', {});
+            const result = await Kaliedo_api(contractAddress).post('/u0qiuild3m/' + contractAddress + '/setAge', {_age: '25'});
             console.log(result);
         }catch(e){
             console.log(e);

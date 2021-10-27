@@ -12,15 +12,15 @@ const authRecord =(token) => axios.create({
   });
 
 
+
 // contract address -> address of contract deployed on Kaliedo
-// account -> address of metamask account that is sending the transaction
-const Kaliedo_api = (contractAddress, account) => axios.create({
+const Kaliedo_api = (contractAddress) => axios.create({
     baseURL: `https://thingproxy.freeboard.io/fetch/https://u0w0uw8pk4-u0nk78oaha-connect.us0-aws.kaleido.io/gateways/`,
     headers:{
       'Access-Control-Allow-Origin': '*',
       'Authorization': 'Basic '+process.env.REACT_APP_KALEIDO_AUTH_TOKEN,
       'address': contractAddress,
-      'kld-from':account
+      'x-kaleido-from': process.env.REACT_APP_KALEIDO_WALLET_PRIMARY_ADDRESS
   }
 })
 
