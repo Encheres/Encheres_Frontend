@@ -21,6 +21,7 @@ import TermsConditions from "./TermsConditions/TermsConditions";
 import LiveAuctionRoom from "./LiveAuctionRoom/LiveAuctionRoom";
 import PendingShipment from "./PendingShipments/PendingShipment";
 import { connect } from "react-redux";
+import TestComp from './test'
 
 function PrivateRoute({ userAuth, children, ...rest }) {
   let auth = userAuth;
@@ -59,6 +60,9 @@ class Main extends Component {
       <div>
         <Header />
         <Switch>
+          {/* NEED TO DELETE IT AFTER SETUP  */}
+          {/* <Route exact path="/testing" component={TestComp} /> */}
+          
           {" "}
           {/*Authentication*/} <Route exact path="/signup" component={SignUp} />{" "}
           <Route exact path="/login" component={Login} />{" "}

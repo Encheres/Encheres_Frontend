@@ -9,11 +9,14 @@ import { Link } from 'react-router-dom';
 import detectEthereumProvider from '@metamask/detect-provider'
 import { valid_email } from '../../variables';
 import {addressValidation} from '../FrequentComponents/AddressForm';
-
 import {handleSignUp} from '../../apis_redux/actions/auth.js';
-
 import Web3 from 'web3';
 import Account from '../../abis/Account.json';
+import {Kaliedo_api} from '../../apis_redux/apis/encheres';
+
+
+let web3  = new Web3(window.ethereum);
+
 class SignUp extends Component {
     
     constructor(props){
@@ -76,6 +79,29 @@ class SignUp extends Component {
         }
     }
 
+    // testFxn = async () => {
+    //     try{
+    //     // Load account
+    //     const accounts = await web3.eth.getAccounts()
+    //     // const accounts = await ethereum.request({ method: 'eth_accounts' });
+    //     console.log(accounts);
+    //     this.setState({account_address: accounts[0]});
+
+    //     // Load balance
+    //     var balwei = await web3.eth.getBalance(accounts.toString());
+    //     var baleth = await web3.utils.fromWei(balwei);
+    //     this.setState({account_balance: baleth});
+    //     console.log({balwei, baleth});
+        
+    //     // const res = await Kaliedo_api.post('/u0p31yfyo8/', {message:"hello"}); // constructor fxn
+    //     //     console.log(res);
+    //     //     res.send({from: this.state.account_address})
+    //     }catch(e){
+    //         console.log(e);
+    //     }
+    // }
+
+
     async loadAccountSmartContract() {
        
         const web3 = window.web3
@@ -121,7 +147,8 @@ class SignUp extends Component {
 
     async connectWithBlockchain() {
         await this.loadWeb3()
-        await this.loadAccountSmartContract();
+        // await this.loadAccountSmartContract();
+        // await this.testFxn();
 
     }
     
@@ -259,6 +286,7 @@ class SignUp extends Component {
     }
 
     handleFormChange = e=>{
+        // this.testFxn();
         this.setState({
             display_first: !this.state.display_first
         })
@@ -392,6 +420,7 @@ class SignUp extends Component {
     render() {
         return(
             <Container>
+                
                 <Row className="heading_section_row">
                     {/* <h3 className='rainbow-lr section_heading'>
                         SIGNUP

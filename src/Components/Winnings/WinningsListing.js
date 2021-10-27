@@ -17,6 +17,8 @@ import './winnings.css'
 
 import Web3 from 'web3';
 import Account from '../../abis/Account.json';
+
+
 class Winnings extends Component{
 
     constructor(props){
@@ -110,7 +112,7 @@ class Winnings extends Component{
         var error = false, contactError='', paymentError='';
         var temp = this.state.contact.toString();
 
-        if(!temp.trim() || temp.length != 10){
+        if(!temp.trim() || temp.length !== 10){
             contactError="Invalid Contact Number";
             error = true;
         }
