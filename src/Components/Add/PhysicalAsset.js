@@ -401,7 +401,12 @@ class PhysicalAsset extends Component {
                 assetImageFileUploading: false,
                 buffer: null
             })
-            this.onFailDismiss();
+
+            swal({
+                title: "OOPS!!",
+                text: 'Something Went Wrong. Try again!!',
+                icon: "error"
+            })
 
         }
 
