@@ -31,6 +31,16 @@ contract Auctions{
     // mapping of nft id to auction
     mapping(uint => Auction) public auctionMap;
 
+    event AuctionDetails(
+        address payable ownerAccount,
+        uint ownerId,
+        uint auctionEndTime,
+        uint auctionStartPrice,
+        uint auctionCurrentBid,
+        bool auctionEnded,
+        bool bidStarted
+    );
+
     event auctionCreated(
         uint nftId,
         uint ownerId,
