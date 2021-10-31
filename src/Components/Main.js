@@ -20,6 +20,7 @@ import ResetPassword from "./Authentication/ResetPassword";
 import TermsConditions from "./TermsConditions/TermsConditions";
 import LiveAuctionRoom from "./LiveAuctionRoom/LiveAuctionRoom";
 import PendingShipment from "./PendingShipments/PendingShipment";
+import MyDigitalAssets from "./MyDigitalAssets/MyDigitalAssets";
 import { connect } from "react-redux";
 
 function PrivateRoute({ userAuth, children, ...rest }) {
@@ -120,6 +121,12 @@ class Main extends Component {
             exact
             path="/view/independent-physical-assets/:assetId"
             component={this.renderPhysicalAssetDetail}
+          />
+          {/* My Nfts Listing */}{" "}
+          <Route
+            exact
+            path="/my-digital-assets"
+            component={() => <MyDigitalAssets/>}
           />
           {/* View Live Auctions List */}{" "}
           <Route

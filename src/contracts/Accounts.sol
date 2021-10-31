@@ -8,12 +8,12 @@ contract Account {
     uint public usersCount = 0;
 
     struct User {
-        uint id;
-        address owner;
-        string centralDBID;
-        uint[] transactions;
-        uint[] ownedAssets;
-        uint[] createdAssets;
+        uint id; // User ID
+        address owner; // User Account Address
+        string centralDBID; // UserID of MongoDB
+        uint[] transactions; // transactions realted to user 
+        uint[] ownedAssets; // list of asset ids owned by user
+        uint[] createdAssets; // list of asset ids created by user
     }
 
     mapping(address => User) public Users;
@@ -49,6 +49,27 @@ contract Account {
         uint assetId,
         uint[] createdAssets
     );
+
+    function getAccountCreatedAssets(address _userAccountAddress) public view returns(uint[] memory, uint) {
+
+        User storage user = Users[_userAccountAddress];
+        uint[] memory createdAssets = user.createdAssets;
+        return (createdAssets, createdAssets.length);
+    }
+
+    function getAccountOwnedAssets(address _userAccountAddress) public view returns(uint[] memory, uint) {
+
+        User storage user = Users[_userAccountAddress];
+        uint[] memory ownedAssets = user.ownedAssets;
+        return (ownedAssets, ownedAssets.length);
+    }
+
+    function getAccountTransactions(address _userAccountAddress) public view returns(uint[] memory, uint) {
+
+        User storage user = Users[_userAccountAddress];
+        uint[] memory transactions = user.transactions;
+        return (transactions, transactions.length);
+    }
 
     function createAccount(string memory _centralDBID) public {
 

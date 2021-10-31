@@ -7,34 +7,79 @@ import {GiCardRandom, GiBearFace, GiClockwork,
     GiVendingMachine, GiSofa, GiClothes, GiWatch} from 'react-icons/gi';
 import { BiWorld } from "react-icons/bi";
 
+const numToCatMap = [
+    "Art",
+    "Music",
+    "Domain Names",
+    "Virtual Worlds",
+    "Collectibles",
+    "Sports",
+    "Documents",
+    "Utility"
+]
+
 export const renderAssetCategories = (categories) => {
     return(
         categories.map((c) => {
 
             var icon;
 
-            if(c === "Art")
+            if(c === "Art" || c == 0)
                 icon = <FaPalette/>
-            else if(c === "Music")
+            else if(c === "Music" || c == 1)
                 icon = <FaMusic/>
-            else if(c === "Domain Names")
+            else if(c === "Domain Names" || c == 2)
                 icon = <GrDomain/>
-            else if(c === "Virtual Worlds")
+            else if(c === "Virtual Worlds" || c == 3)
                 icon = <BiWorld/>
-            else if(c === "Trading Cards")
+            else if(c === "Trading Cards" || c == 4)
                 icon = <GiCardRandom/>
-            else if(c === "Collectibles")
+            else if(c === "Collectibles" || c == 5)
                 icon = <GiBearFace/>
-            else if(c === "Sports")
+            else if(c === "Sports" || c == 6)
                 icon = <FaFootballBall/>
-            else if(c === "Documents")
+            else if(c === "Documents" || c == 7)
                 icon = <span className='fa fa-file'/>
-            else if(c === "Utility")
+            else if(c === "Utility" || c == 8)
                 icon = <FaWallet/>
 
             return(
                     <Badge className='new-item-badge' pill bg="light" text="dark">
-                        <span>{icon}</span>{" "+c}
+                        <span>{icon}</span>{" "+ c}
+                    </Badge>
+            )
+        })
+    );
+}
+
+export const renderAssetCategoriesFromIds = (categories) => {
+    return(
+        categories.map((c) => {
+
+            var icon;
+
+            if(c === "Art" || c == 0)
+                icon = <FaPalette/>
+            else if(c === "Music" || c == 1)
+                icon = <FaMusic/>
+            else if(c === "Domain Names" || c == 2)
+                icon = <GrDomain/>
+            else if(c === "Virtual Worlds" || c == 3)
+                icon = <BiWorld/>
+            else if(c === "Trading Cards" || c == 4)
+                icon = <GiCardRandom/>
+            else if(c === "Collectibles" || c == 5)
+                icon = <GiBearFace/>
+            else if(c === "Sports" || c == 6)
+                icon = <FaFootballBall/>
+            else if(c === "Documents" || c == 7)
+                icon = <span className='fa fa-file'/>
+            else if(c === "Utility" || c == 8)
+                icon = <FaWallet/>
+
+            return(
+                    <Badge className='new-item-badge' pill bg="light" text="dark">
+                        <span>{icon}</span>{" "+ numToCatMap[parseInt(c)]}
                     </Badge>
             )
         })
