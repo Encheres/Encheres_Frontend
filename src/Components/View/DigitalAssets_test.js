@@ -47,14 +47,14 @@ class DigitalAsset extends Component {
         const auctionStartprice = 2;
         const accounts  = await window.web3.eth.getAccounts();
         const account = accounts[0];
-        const end_time = Math.floor(Date.now()/100);
+        const end_time = Date.now() + 10000;
+        const auctionCreationTime = Date.now();
 
-        let data = {_nftId:nft_id, _ownerAccount:account, _ownerId:1,_auctionEndTime:end_time, _auctionStartPrice:auctionStartprice};
+        let data = {_nftId:nft_id, _ownerAccount:account, _ownerId:1,_auctionEndTime:end_time, _auctionCreationTime:auctionCreationTime, _auctionStartPrice:auctionStartprice};
 
         if(auction_contract){
-            // 
             const res = await auction_contract.methods.CreateAuction(data._nftId, data._ownerAccount, data._ownerId, 
-                data._auctionEndTime, data._auctionStartPrice).send({from:account});
+                data._auctionEndTime, data._auctionCreationTime, data._auctionStartPrice).send({from:account});
             
             if(res&& res.status===true){
                 console.log(res);
@@ -94,10 +94,10 @@ class DigitalAsset extends Component {
         const nft_id = 1;
         const bid_price = 3; // take care of conversion from wei to ethers, and also for floats
         const bidder_id = 2;
-
+        const bidTime = Date.now();
         const { account_address } = this.state;
         if(auction_contract){
-            const res = await auction_contract.methods.BidAuction(nft_id, bid_price, bidder_id, account_address).send({from:account_address, 
+            const res = await auction_contract.methods.BidAuction(nft_id, bid_price, bidder_id, account_address, bidTime).send({from:account_address, 
                 value: window.web3.utils.toBN(bid_price*1000000000000000)});
             console.log(res);
         }
@@ -106,7 +106,8 @@ class DigitalAsset extends Component {
     endAuction = async () => {
         const { auction_contract } = this.state;
         const nft_id = 3;
-        const res = await auction_contract.methods.EndAuction(nft_id).send({from:this.state.account_address});
+        const end_time = Date.now();
+        const res = await auction_contract.methods.EndAuction(nft_id, end_time).send({from:this.state.account_address});
         console.log(res);
     }
 

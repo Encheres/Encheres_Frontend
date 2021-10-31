@@ -60,9 +60,9 @@ contract Auctions{
         uint auctionCurrentBid
     );
 
-    function CreateAuction(uint _nftId, address payable _ownerAccount, uint _ownerId, uint256 _auctionEndTime, uint _auctionStartPrice) public payable{
+    function CreateAuction(uint _nftId, address payable _ownerAccount, uint _ownerId, uint256 _auctionEndTime, uint256 _auctionCreationTime, uint _auctionStartPrice ) public payable{
         require(_nftId >= 0, "Invalid NFT ID");
-        require(_auctionEndTime > block.timestamp, "Invalid auction endtime. Your auction must end in future"); //  block.timestamp is a substitute for now/ current time
+        require(_auctionEndTime > _auctionCreationTime, "Invalid auction endtime. Your auction must end in future"); //  block.timestamp is a substitute for now/ current time
         require(_auctionStartPrice > 0, "Invalid auction start price. Your auction must start with a positive price");
         bool isIdPresent = false;
         for(uint i = 0; i < keysCount; i++){
@@ -86,13 +86,13 @@ contract Auctions{
         emit auctionCreated(_nftId, _ownerId, _auctionEndTime, _auctionStartPrice);
     }
 
-    function BidAuction(uint _nftId, uint _auctionCurrentBid, uint _auctionCurrentBidder, address payable _auctionBuyer) public payable{
+    function BidAuction(uint _nftId, uint _auctionCurrentBid, uint _auctionCurrentBidder, address payable _auctionBuyer, uint256 _bidTime) public payable{
         require(_nftId >= 0, "Invalid nftId");
         require(_auctionCurrentBid > 0, "Invalid bid amount");
         require(_auctionCurrentBidder >= 0, "Invalid bidder id");
         require(_auctionBuyer != address(0), "Invalid bidder wallet address"); // address(0) is a substitute for null address
         require(auctionMap[_nftId].auctionEnded == false, "Auction has ended");
-        require(block.timestamp<=auctionMap[_nftId].auctionEndTime, "Auction has ended");
+        require(_bidTime<=auctionMap[_nftId].auctionEndTime, "Auction has ended");
         require(_auctionCurrentBid>=auctionMap[_nftId].auctionStartPrice, "Bid amount must be greater than start price");
 
         if(!auctionMap[_nftId].bidStarted){
@@ -111,11 +111,10 @@ contract Auctions{
         emit bidCreated(_nftId, _auctionCurrentBidder, _auctionCurrentBid);
     }
 
-    function EndAuction(uint _nftId) public payable{
+    function EndAuction(uint _nftId, uint256 _endTime) public payable{
         require(_nftId >= 0, "Invalid nftId");
         require(auctionMap[_nftId].auctionEnded == false, "Auction has already ended");
-        // return block.timestamp;
-        require(block.timestamp>auctionMap[_nftId].auctionEndTime, "Auction has not ended yet");
+        require(_endTime>=auctionMap[_nftId].auctionEndTime, "Auction has not ended yet");
         auctionMap[_nftId].auctionEnded = true;
         if(auctionMap[_nftId].bidStarted){
             auctionMap[_nftId].auctionBuyer.transfer(auctionMap[_nftId].auctionCurrentBid); // transfer the highest bid amount to the auction buyer
