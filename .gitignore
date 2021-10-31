@@ -29,4 +29,4 @@ package*
 .eslintric
 .env
 /migrations
-/src/abis2
+/src/abis_2
