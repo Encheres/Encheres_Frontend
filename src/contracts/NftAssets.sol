@@ -9,13 +9,13 @@ contract NftAsset is ERC721 {
     uint public assetsCount = 0;
 
     struct Asset {
-        uint tokenId;
-        address creator;
-        string assetFileHash;
-        string name;
-        string description;
-        uint[] categories;
-        string royality;
+        uint tokenId; // NFT asset ID
+        address creator; // Creator of NFT 
+        string assetFileHash; // NFT Asset file hash hosted on IPFS
+        string name; // Unique name for NFT
+        string description; // Description of NFT asset properties
+        uint[] categories; // categories to which NFT belongs
+        string royality; // royality for NFT creator
     }
 
     mapping (uint => Asset) public assets;
@@ -81,6 +81,24 @@ contract NftAsset is ERC721 {
         _transfer(_from, _to, _tokenId);
 
         emit OwnershipTransfered(_from, _to, _tokenId);
+    }
+
+    function getAssetCategories(uint _tokenId) public view returns(uint[] memory, uint){
+
+        // Check for existence of token.
+        require(_exists(_tokenId));
+
+        Asset storage asset = assets[_tokenId];
+        uint[] memory categories = asset.categories;
+        return (categories, categories.length);
+    }
+
+    function getAccountCreatedAssets() public view returns (uint[] memory, uint) {
+        return account.getAccountCreatedAssets(msg.sender);
+    }
+
+    function getAccountOwnedAssets() public view returns (uint[] memory, uint) {
+        return account.getAccountOwnedAssets(msg.sender);
     }
 
 }
