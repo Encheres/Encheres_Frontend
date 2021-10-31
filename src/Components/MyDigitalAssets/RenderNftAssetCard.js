@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardSubtitle, CardText } from "reactstrap";
 import { Image } from 'react-bootstrap';
 import { renderAssetCategoriesFromIds } from '../FrequentComponents/Asset';
-import '../View/View.css'
+import '../View/View.css';
+import './MyDigitalAssets.css';
 
 export class RenderNftAssetCard extends Component{
     constructor(props){
@@ -16,7 +18,7 @@ export class RenderNftAssetCard extends Component{
         const asset = this.props.asset
         return(
             <div className='col-10 col-sm-6 col-md-5 col-lg-3'>
-                <Card id="asset-card-detail">
+                <Card id="digital-asset-card">
                     <Image className="new-item-image" rounded
                         src={"https://ipfs.infura.io/ipfs/"+asset.assetFileHash}
                     />
@@ -47,7 +49,9 @@ export class RenderNftAssetCard extends Component{
                                 id='single-asset-purchase-button' 
                                 style={{marginRight: 10}}
                             >
+                                <Link style={{color: 'white', textDecoration: 'none'}} to={`/digital-assets/${asset.tokenId}`}>
                                     View Details
+                                </Link>
                             </Button>
                             <Button 
                                 id='single-asset-purchase-button' 

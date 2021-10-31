@@ -21,6 +21,7 @@ import TermsConditions from "./TermsConditions/TermsConditions";
 import LiveAuctionRoom from "./LiveAuctionRoom/LiveAuctionRoom";
 import PendingShipment from "./PendingShipments/PendingShipment";
 import MyDigitalAssets from "./MyDigitalAssets/MyDigitalAssets";
+import NftAssetDetails from "./MyDigitalAssets/RenderNftAssetDetails";
 import { connect } from "react-redux";
 
 function PrivateRoute({ userAuth, children, ...rest }) {
@@ -53,6 +54,10 @@ class Main extends Component {
 
   renderPhysicalAssetDetail = ({ match }) => {
     return <SingleAssetDetail itemId={match.params.assetId} />;
+  };
+
+  renderDigitalAssetDetail = ({ match }) => {
+    return <NftAssetDetails nftAssetId={match.params.nftAssetId} />
   };
 
   render() {
@@ -127,6 +132,12 @@ class Main extends Component {
             exact
             path="/my-digital-assets"
             component={() => <MyDigitalAssets/>}
+          />
+          {/* Nft Asset Details */}{" "}
+          <Route
+            exact
+            path="/digital-assets/:nftAssetId"
+            component={this.renderDigitalAssetDetail}
           />
           {/* View Live Auctions List */}{" "}
           <Route

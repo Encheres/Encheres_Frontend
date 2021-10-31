@@ -1,7 +1,7 @@
 import React, {Component, useState} from 'react';
 import Loading from '../loading';
 import { RenderNftAssetCard } from './RenderNftAssetCard';
-import { Button, Card, CardBody, CardSubtitle, CardText, Collapse } from "reactstrap";
+import { Button } from "reactstrap";
 import swal from 'sweetalert';
 import '../View/View.css'
 
@@ -149,7 +149,9 @@ class MyDigitalAssets extends Component {
 
         for (var i = 0; i < assetsCount; i++) {
             const asset = await this.state.nftasset_contract.methods.assets(ownedAssets[i]).call()
-        
+            const categories = await this.state.nftasset_contract.methods.getAssetCategories(asset.tokenId).call()
+            asset.categories = categories[0];
+            
             this.setState({
                 ownedAssets: [...this.state.ownedAssets, asset]
             })
