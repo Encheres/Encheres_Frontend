@@ -34,3 +34,14 @@
     border: solid 2px gray;
     padding: 5px;
 }
+
+.modal-content{
+    background-color: rgb(34,34,66);
+}
+.digital_modal_header{
+    color: #fff;
+}
+.close{
+    background-color: red;
+    color: white;
+}

@@ -8,6 +8,7 @@ import '../View/View.css'
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3';
 import NftAsset from '../../abis_2/NftAsset.json';
+import AuctionContract from '../../abis_2/Auctions.json';
 import Datetime from 'react-datetime';
 
 class MyDigitalAssets extends Component {
@@ -31,7 +32,10 @@ class MyDigitalAssets extends Component {
             selected_asset:'',
             errors:{
                 base_price: '',
-                date_time: ''
+                date_time: '',
+                owner_account: '',
+                nftId: '',
+                ownerId:''
             }
         }
     }
@@ -62,10 +66,13 @@ class MyDigitalAssets extends Component {
         const networkId = await web3.eth.net.getId()
 
         const networkDataNft = NftAsset.networks[networkId]
+        const networkDataAuction = AuctionContract.networks[networkId]
 
-        if(networkDataNft) {
+
+        if(networkDataNft && networkDataAuction){
             const nftasset_contract = new web3.eth.Contract(NftAsset.abi, networkDataNft.address)
-            this.setState({ nftasset_contract })
+            const auction_contract = new web3.eth.Contract(AuctionContract.abi, networkDataAuction.address)
+            this.setState({ nftasset_contract, auction_contract })
         } else {
             swal({
                 title: "OOPS!!",
@@ -182,13 +189,49 @@ class MyDigitalAssets extends Component {
         let errors = {};
         let formIsValid = true;
         const { auctionEndTime, auctionStartPrice,ownerAccount,
-            _ownerId, nftId,_auctionCreationTime} = data;
-        if(!auctionStartPrice){
+            _ownerId, nftId} = data;
+        let base_price_error = '', date_time_error = '', owner_account_error = '', nftId_error = '', ownerId_error:'';
+        if(!auctionStartPrice|| auctionStartPrice<=0){
             formIsValid = false;
-            errors["base_price"] = "Base Price is required";
+            base_price_error = 'Base Price must be a positive value';
+        }
+        if(!auctionEndTime){
+            formIsValid = false;
+            date_time_error = 'Auction End Time must be selected';
+        }
+        if(!ownerAccount){
+            formIsValid = false;
+            owner_account_error = 'Unable to fetch details of user account. Please ensure that metamask is connected to our website';
         }
 
-        return formIsValid;
+        if(!nftId){
+            formIsValid = false;
+            nftId_error = 'Invalid Item';
+        }
+
+        if(!_ownerId){
+            formIsValid = false;
+            ownerId_error = 'You must login to continue';
+        }
+        const formErrors = {
+            base_price:base_price_error,
+            date_time: date_time_error,
+            owdner_account: owner_account_error,
+            nftId: nftId_error,
+            ownerId: ownerId_error
+        }
+        this.setState({
+            errors:{
+                ...errors,
+                ...formErrors
+            }
+        })
+
+        if(!formIsValid){
+            console.log(formErrors);
+        }
+
+        return {formIsValid, ...formErrors};
     }
 
     createAuction = async (data) => {
@@ -196,14 +239,6 @@ class MyDigitalAssets extends Component {
             // await this.loadWeb3();
             // await this.loadContract();
             const { auction_contract, account_address } = this.state;
-            // const nft_id = 3;
-            // const auctionStartprice = 2;
-            // const accounts  = await window.web3.eth.getAccounts();
-            // const account = accounts[0];
-            // const end_time = Date.now() + 10000;
-            // const auctionCreationTime = Date.now();
-
-            // let data = {_nftId:nft_id, _ownerAccount:account, _ownerId:1,_auctionEndTime:end_time, _auctionCreationTime:auctionCreationTime, _auctionStartPrice:auctionStartprice};
 
             if(auction_contract){
                 const res = await auction_contract.methods.CreateAuction(data._nftId, data._ownerAccount, data._ownerId, 
@@ -239,6 +274,7 @@ class MyDigitalAssets extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
         const { selected_asset, base_price, date_time, account_address} = this.state;
+        
         // form data according to the contract need
         const data = {
             _auctionEndTime: Date.parse(date_time),
@@ -249,8 +285,8 @@ class MyDigitalAssets extends Component {
             _auctionCreationTime: Date.now()
         };
 
-        let isValid = this.validateData(data);
-        if(isValid){
+        let validationData = this.validateData(data);
+        if(validationData.formIsValid){
             this.createAuction(data);
         }
 
