@@ -16,7 +16,7 @@ import RenderError from '../FrequentComponents/RenderError';
 import './winnings.css'
 
 import Web3 from 'web3';
-import Account from '../../abis_1/Account.json';
+import Account from '../../abis/Account.json';
 class Winnings extends Component{
 
     constructor(props){

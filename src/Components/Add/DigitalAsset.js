@@ -17,7 +17,7 @@ import "./Add.css";
 
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3';
-import NftAsset from '../../abis_1/NftAsset.json';
+import NftAsset from '../../abis/NftAsset.json';
 
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });

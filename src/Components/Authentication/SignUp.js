@@ -13,7 +13,7 @@ import {addressValidation} from '../FrequentComponents/AddressForm';
 import {handleSignUp} from '../../apis_redux/actions/auth.js';
 
 import Web3 from 'web3';
-import Account from '../../abis_1/Account.json';
+import Account from '../../abis/Account.json';
 class SignUp extends Component {
     
     constructor(props){

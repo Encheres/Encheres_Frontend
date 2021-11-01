@@ -7,8 +7,8 @@ import '../View/View.css'
 
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3';
-import NftAsset from '../../abis_2/NftAsset.json';
-import AuctionContract from '../../abis_2/Auctions.json';
+import NftAsset from '../../abis/NftAsset.json';
+import AuctionContract from '../../abis/Auctions.json';
 import Datetime from 'react-datetime';
 
 class MyDigitalAssets extends Component {

@@ -8,7 +8,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { renderAssetCategoriesFromIds } from '../FrequentComponents/Asset';
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3';
-import NftAsset from '../../abis_1/NftAsset.json';
+import NftAsset from '../../abis/NftAsset.json';
 
 class NftAssetDetails extends Component {
 
