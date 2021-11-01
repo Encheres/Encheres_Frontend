@@ -1,14 +1,14 @@
 import React, {Component, useState} from 'react';
 import Loading from '../loading';
 import { RenderNftAssetCard } from './RenderNftAssetCard';
-import { Button } from "reactstrap";
+import { Row, Button, Modal, ModalHeader, ModalBody, Form, ModalFooter  } from "reactstrap";
 import swal from 'sweetalert';
 import '../View/View.css'
 
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3';
-import NftAsset from '../../abis_1/NftAsset.json';
-
+import NftAsset from '../../abis_2/NftAsset.json';
+import Datetime from 'react-datetime';
 
 class MyDigitalAssets extends Component {
 
@@ -24,9 +24,16 @@ class MyDigitalAssets extends Component {
             createdAssets: [],
             ownedAssetsLoading: true,
             ownedAssets: [],
-            created: true
+            created: true,
+            base_price:'',
+            date_time:'',
+            modal_open: false,
+            selected_asset:'',
+            errors:{
+                base_price: '',
+                date_time: ''
+            }
         }
-
     }
 
     async loadWeb3() {
@@ -171,6 +178,134 @@ class MyDigitalAssets extends Component {
         this.setState({ownedAssetsLoading: false})
     }
 
+    validateData = (data) => {
+        let errors = {};
+        let formIsValid = true;
+        const { auctionEndTime, auctionStartPrice,ownerAccount,
+            _ownerId, nftId,_auctionCreationTime} = data;
+        if(!auctionStartPrice){
+            formIsValid = false;
+            errors["base_price"] = "Base Price is required";
+        }
+
+        return formIsValid;
+    }
+
+    createAuction = async (data) => {
+        try{
+            // await this.loadWeb3();
+            // await this.loadContract();
+            const { auction_contract, account_address } = this.state;
+            // const nft_id = 3;
+            // const auctionStartprice = 2;
+            // const accounts  = await window.web3.eth.getAccounts();
+            // const account = accounts[0];
+            // const end_time = Date.now() + 10000;
+            // const auctionCreationTime = Date.now();
+
+            // let data = {_nftId:nft_id, _ownerAccount:account, _ownerId:1,_auctionEndTime:end_time, _auctionCreationTime:auctionCreationTime, _auctionStartPrice:auctionStartprice};
+
+            if(auction_contract){
+                const res = await auction_contract.methods.CreateAuction(data._nftId, data._ownerAccount, data._ownerId, 
+                    data._auctionEndTime, data._auctionCreationTime, data._auctionStartPrice).send({from:account_address});
+                
+                if(res&& res.status===true){
+                    console.log(res);
+                console.log('Auction Created');    
+                }
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+
+    toggleModal = (e) => {
+        e.preventDefault();
+        const data= e.target.data;
+        if(data){
+            this.setState({
+                selected_asset:data, 
+                modal_open: !this.state.modal_open
+            })
+        }else{
+            this.setState({
+                selected_asset:'',
+                modal_open: !this.state.modal_open
+            })
+        }
+    }
+
+    handleSubmit = async (e) => {
+        e.preventDefault();
+        const { selected_asset, base_price, date_time, account_address} = this.state;
+        // form data according to the contract need
+        const data = {
+            _auctionEndTime: Date.parse(date_time),
+            _auctionStartPrice: base_price,
+            _ownerAccount:account_address,
+            _ownerId:1,
+            _nftId:selected_asset.tokenId,
+            _auctionCreationTime: Date.now()
+        };
+
+        let isValid = this.validateData(data);
+        if(isValid){
+            this.createAuction(data);
+        }
+
+    }
+
+    renderModal = () =>{
+        return(
+            <>
+            <Modal isOpen={this.state.modal_open} 
+               toggle={() => this.toggleModal()}
+               className='modal-dialog modal-dialog-centered modal-lg'
+               backdrop='static'
+               >
+                <ModalHeader className='digital_modal_header' toggle={() => this.toggleModal()}>Sell Digital Asset</ModalHeader>
+                <ModalBody>
+                    <Form className="login_form">
+                        <Row className="form_input_row form_grp">
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label className="form_input_label">Initial Price (in ethers)</Form.Label>
+                                <input name="base_price" className="form_input_field form-control" type="number" value={this.state.base_price} placeholder="Initial price in ETH" onChange={this.handleInputChange} min={0} step={'any'}/>
+                                <div className="invalid__feedback">{this.state.errors.base_price}</div>
+                            </Form.Group>
+                        </Row>
+
+                        <Row className="form_input_row form_grp">
+                            <Form.Group className="mb-3" controlId="itemPrice">
+                            <Form.Label className="form_input_label">Auction end Date and Time</Form.Label>
+                                <Datetime initialValue={this.state.date_time}
+                                    inputProps={{
+                                        className:"form_input_field form-control date_time_input",
+                                        placeholder: "End Date and Time"
+                                    }} 
+                                isValidDate={this.dateValidate}
+                                    onChange={(d) => {
+                                        this.setState({
+                                            date_time: d
+                                        })
+                                    }}/>
+                            
+                                <div className='invalid__feedback'>{this.state.errors.date_time}</div>
+                            </Form.Group>
+                        </Row>
+                        
+                    </Form>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleSubmit} color='info'>Sell Asset</Button>
+                    <Button color='danger' onClick={() => this.toggleModal()}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
+            </>
+        )
+    }
+
     render(){
 
         if((!this.state.created && this.state.ownedAssetsLoading) || (this.state.created && this.state.createdAssetsLoading)){
@@ -239,13 +374,14 @@ class MyDigitalAssets extends Component {
                         {
                             this.state.created ?
                             this.state.createdAssets.map((asset) => 
-                                <RenderNftAssetCard asset={asset} />
+                                <RenderNftAssetCard asset={asset} onSellClick={this.toggleModal}/>
                             ) :
                             this.state.ownedAssets.map((asset) => 
                                 <RenderNftAssetCard asset={asset} />
                             )
                         }
                     </div>
+                    {this.renderModal()}
                 </div>
             )
         }   
