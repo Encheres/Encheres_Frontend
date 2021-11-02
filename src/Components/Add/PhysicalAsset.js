@@ -18,7 +18,7 @@ import {GiBearFace, GiClockwork,
 
 import { connect } from "react-redux";
 import {PostPhysicalAsset} from '../../apis_redux/actions/physicalAsset';
-
+import { ipfs_base_url } from '../../apis_redux/apis/encheres';
 import {addressValidation} from '../FrequentComponents/AddressForm';
 import swal from 'sweetalert';
 
@@ -897,7 +897,7 @@ class PhysicalAsset extends Component {
                                     <span style={{ marginLeft: 10, color: "cyan" }}>
                                         {(!this.state.assetVideoHash) ? 
                                             "Not Available" : 
-                                            <a style={{textDecoration: 'none', color: 'cyan'}} href={'https://ipfs.infura.io/ipfs/'+this.state.assetVideoHash}>Link</a>}
+                                            <a style={{textDecoration: 'none', color: 'cyan'}} href={ipfs_base_url+this.state.assetVideoHash}>Link</a>}
                                     </span>
                                 </CardSubtitle>
                                 <CardSubtitle tag="h6" className="new-item-preview-price">

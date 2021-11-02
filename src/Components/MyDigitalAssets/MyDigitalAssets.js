@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import Loading from '../loading';
 import { RenderNftAssetCard } from './RenderNftAssetCard';
 import { Row, Button, Modal, ModalHeader, ModalBody, Form, ModalFooter  } from "reactstrap";
@@ -111,14 +111,17 @@ class MyDigitalAssets extends Component {
     }
 
     async componentDidMount(){
-        
-        this.setState({createdAssetsLoading: true});
-        await this.loadWeb3();
-        await this.integrateMetamaskAccount();
-        await this.loadSmartContracts();
-        await this.loadCreatedAssets();
-        this.setState({createdAssetsLoading: false})
+        try{
 
+            this.setState({createdAssetsLoading: true});
+            await this.loadWeb3();
+            await this.integrateMetamaskAccount();
+            await this.loadSmartContracts();
+            await this.loadCreatedAssets();
+            this.setState({createdAssetsLoading: false})
+        }catch(err){
+            console.log(err)
+        }
     }
 
     async loadCreatedAssets(){
@@ -170,7 +173,9 @@ class MyDigitalAssets extends Component {
                 ownedAssets: [...this.state.ownedAssets, asset]
             })
         }
+    }
 
+    loaduserId = async()=>{
     }
 
     async onCreatedSelect(){
@@ -190,7 +195,7 @@ class MyDigitalAssets extends Component {
         let formIsValid = true;
         const { auctionEndTime, auctionStartPrice,ownerAccount,
             _ownerId, nftId} = data;
-        let base_price_error = '', date_time_error = '', owner_account_error = '', nftId_error = '', ownerId_error:'';
+        let base_price_error = '', date_time_error = '', owner_account_error = '', nftId_error = '', ownerId_error = '';
         if(!auctionStartPrice|| auctionStartPrice<=0){
             formIsValid = false;
             base_price_error = 'Base Price must be a positive value';
@@ -255,18 +260,26 @@ class MyDigitalAssets extends Component {
     }
 
 
-    toggleModal = (e) => {
-        e.preventDefault();
-        const data= e.target.data;
+    toggleModal = (data) => {
+        console.log(data); 
+        this.setState({
+            createdAssetsLoading:false
+        });
+
+        
+        // e.preventDefault();
+        // // console.log(e);
+        // console.log(e.target.data);
+        
+        // const data= e.target.data;
         if(data){
-            this.setState({
-                selected_asset:data, 
-                modal_open: !this.state.modal_open
+            this.setState({   selected_asset:data.tokenId, 
+        //         modal_open: !this.state.modal_open
             })
         }else{
             this.setState({
-                selected_asset:'',
-                modal_open: !this.state.modal_open
+        //         selected_asset:'',
+        //         modal_open: !this.state.modal_open
             })
         }
     }
@@ -275,7 +288,7 @@ class MyDigitalAssets extends Component {
         e.preventDefault();
         const { selected_asset, base_price, date_time, account_address} = this.state;
         
-        // form data according to the contract need
+        // form data according to the contract needs -> owner_id, nftId
         const data = {
             _auctionEndTime: Date.parse(date_time),
             _auctionStartPrice: base_price,
@@ -344,6 +357,7 @@ class MyDigitalAssets extends Component {
 
     render(){
 
+        
         if((!this.state.created && this.state.ownedAssetsLoading) || (this.state.created && this.state.createdAssetsLoading)){
             return(
                 <Loading type='spokes' color='white' />
@@ -351,6 +365,7 @@ class MyDigitalAssets extends Component {
         }
         else if((this.state.created && this.state.createdAssets.length === 0) || (!this.state.created && this.state.ownedAssets.length === 0)){
             return(
+                <>
                 <div className='container-fluid asset-container'>
                     <div className='row justify-content-center mt-4 mb-4'>
                         <h3 className='col-12 rainbow-lr new-item-heading'>
@@ -381,10 +396,20 @@ class MyDigitalAssets extends Component {
                             </h4>
                     </div>
                 </div>
+                <div>
+                    {/* {this.renderModal()} */}
+                </div>
+                </>
             );
+        }
+        else if(this.state.modal_open){
+            return (
+                <>{this.renderModal()}</>
+            )
         }
         else{
             return(
+                <>
                 <div className='container-fluid asset-container'>
                     <div className='row justify-content-center mt-4 mb-4'>
                         <h3 className='col-12 rainbow-lr new-item-heading'>
@@ -417,8 +442,11 @@ class MyDigitalAssets extends Component {
                             )
                         }
                     </div>
-                    {this.renderModal()}
                 </div>
+                <div>
+                    {/* {this.renderModal()} */}
+                </div>
+                </>
             )
         }   
         

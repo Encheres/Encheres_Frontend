@@ -23,6 +23,7 @@ import PendingShipment from "./PendingShipments/PendingShipment";
 import MyDigitalAssets from "./MyDigitalAssets/MyDigitalAssets";
 import NftAssetDetails from "./MyDigitalAssets/RenderNftAssetDetails";
 import { connect } from "react-redux";
+import TestingDigitalAsset from './View/DigitalAssets_test';
 
 function PrivateRoute({ userAuth, children, ...rest }) {
   let auth = userAuth;
@@ -66,6 +67,7 @@ class Main extends Component {
         <Header />
         <Switch>
           {" "}
+          <Route exact path='/testing' component={TestingDigitalAsset} />
           {/*Authentication*/} <Route exact path="/signup" component={SignUp} />{" "}
           <Route exact path="/login" component={Login} />{" "}
           <Route exact path="/forgot_password" component={ForgotPassword} />{" "}
