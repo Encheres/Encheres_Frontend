@@ -28,5 +28,4 @@ package*
 .vscode/*
 .eslintric
 .env
-/migrations
 /src/abis
