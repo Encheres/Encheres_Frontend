@@ -10,7 +10,9 @@ import { categoryList, customSelectStyles } from '../../variables';
 import Select from 'react-select'
 import InfiniteScroll from "react-infinite-scroll-component";
 import RenderError from '../FrequentComponents/RenderError';
-import { Button } from "reactstrap";
+import { ipfs_base_url } from '../../apis_redux/apis/encheres';
+import {Card, CardText, CardBody, CardSubtitle, Button } from "reactstrap";
+import {Badge, Image} from 'react-bootstrap';
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3';
 import swal from 'sweetalert';
@@ -115,14 +117,12 @@ class ViewDigitalAsset extends Component {
     async componentDidMount(){
         try{
             await this.props.FetchPhysicalAssets(0)
-            this.setState({createdAssetsLoading: true});
             await this.loadWeb3();
             await this.integrateMetamaskAccount();
             await this.loadSmartContracts();
             await this.getAuctionsList();
             this.setState({createdAssetsLoading: false})
-
-            // await this.props.FetchPhysicalAssets(0)
+            await this.fetchAssets();
 
             if(this.props.physicalAsset.assets.length){
                 this.setState({
@@ -157,52 +157,31 @@ class ViewDigitalAsset extends Component {
                 nft_id: asset[0],
                 name: asset[1],
                 description: asset[2],
-                asserFileHash: asset[3],
+                assetFileHash: asset[3],
                 royality: asset[4],
                 category: asset[5],
             }
             digitalAssets.push(assetData);
-            this.setState({
+            await this.setState({
                 digitalAssets, 
                 fetched_count: this.state.fetched_count + 1 
             })
-            // this.props.fetchItem(asset.item_id)
+            console.log(digitalAssets)
         } 
     }
 
     fetchAssets = async () => {
+        console.log("In")
         const {auctions_list, fetched_count} = this.state;
         if(fetched_count>=auctions_list.length){
+            console.log("returninh")
             return;
         }else{
+            console.log("fetching")
             const id = auctions_list[fetched_count];
             await this.fetchDigitalAsset(id);
         }
 
-    }
-
-    async fetchMoreAssets(){
-        this.setState({
-            page: this.state.page+1
-        })
-
-        if(this.state.filter){
-            await this.props.FetchFilteredPhysicalAssets(this.state.page, this.state.category)
-        }
-        else{
-            await this.props.FetchPhysicalAssets(this.state.page);
-        }
-
-        if(this.props.physicalAsset.assets.length){
-            var tempAssets = this.state.assets;
-            for(var i=0;i<this.props.physicalAsset.assets.length;i++){
-                tempAssets.push(this.props.physicalAsset.assets[i]);
-            }
-    
-            this.setState({
-                assets: tempAssets
-            })
-        }
     }
 
     handleMultiSelectChange = async category => {
@@ -249,6 +228,46 @@ class ViewDigitalAsset extends Component {
         }
     }
 
+    renderItems = () => {
+        const {digitalAssets} = this.state;
+        if(digitalAssets.length){
+            return digitalAssets.map((asset, index) => {
+                return (
+                    <div className='col-10 col-sm-6 col-md-5 col-lg-3' key={index}>
+                        <Card id="digital-asset-card">
+                            <Image className="new-item-image" rounded
+                                src={ipfs_base_url+asset.assetFileHash}
+                            />
+                            <CardBody>
+                                <CardSubtitle
+                                    tag="h5"
+                                    className="mt-3 mb-3 new-item-card-subtitle"
+                                    id="new-item-card-username"
+                                >
+                                    {asset.name}
+                                </CardSubtitle>
+                                <CardText id="new-item-card-info" className="mb-4">
+                                    {asset.description}
+                                </CardText>
+                                <div style={{display: 'flex', justifyContent: 'center'}} className='mt-4'>
+                                    <Button 
+                                        id='single-asset-purchase-button' 
+                                        style={{marginRight: 10}}
+                                    >
+                                        <Link style={{color: 'white', textDecoration: 'none'}} to={`/digital-assets/${asset.tokenId}`}>
+                                            View Details
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </div>
+                )
+            })
+        }
+    }
+
+                    
 
     render(){
 
@@ -307,39 +326,29 @@ class ViewDigitalAsset extends Component {
                     </div>
                     <div 
                         className={'row justify-content-center '+cardContainerStyle}>
-                        {
-                            this.state.assets.length 
-                            ?
-                            <InfiniteScroll
-                                className={'row justify-content-center'}
-                                dataLength={this.state.assets.length}
-                                next={() => this.fetchMoreAssets()}
-                                hasMore={this.props.physicalAsset.assets.length ? true : false}
-                                loader={<h4 style={{color: 'white'}}>Loading...</h4>}
-                                endMessage={
-                                    <h3 className='col-12 rainbow-lr new-item-heading'>
-                                        No More Assets Currently On Sale :(
-                                        <br/>
-                                        <br/>
-                                        Check Back Soon!!
-                                    </h3>
-                                }
-                                >
-                                {this.state.assets.map((asset) => < RenderPhysicalAssets 
-                                    asset={asset}  
-                                    placeBid = {this.props.UpdatePhysicalAsset}
-                                    auth = {this.props.auth}
-                                    assetStatus = {this.props.physicalAsset}
-                                />)}
+                        {this.state.digitalAssets? <InfiniteScroll
+                            className={'row justify-content-center'}
+                            dataLength={this.state.digitalAssets.length}
+                            next={this.fetchAssets}
+                            hasMore={this.state.fetched_count<this.state.auctions_list.length}
+                            loader = {<h4 style={{color:'white'}}>Loading...</h4>}
+                            endMessage={
+                                <h3 className='col-12 rainbow-lr new-item-heading'>
+                                    No more item on sale
+                                </h3>
+                            }
+                            >
+                                {this.renderItems()}
+
                             </InfiniteScroll>
-                            :
-                            <h3 className='col-12 rainbow-lr new-item-heading'>
+                        :<>
+                        <h3 className='col-12 rainbow-lr new-item-heading'>
                                 No Assets Currently On Sale :(
                                 <br/>
                                 <br/>
                                 Check Back Soon!!
                             </h3>
-                        }
+                        </>}
                     </div>
                 </div>
             );
