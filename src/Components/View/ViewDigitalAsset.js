@@ -11,6 +11,11 @@ import Select from 'react-select'
 import InfiniteScroll from "react-infinite-scroll-component";
 import RenderError from '../FrequentComponents/RenderError';
 import { Button } from "reactstrap";
+import detectEthereumProvider from '@metamask/detect-provider'
+import Web3 from 'web3';
+import swal from 'sweetalert';
+import AuctionContract from '../../abis/Auctions.json';
+import NftAssetContract from '../../abis/NftAsset.json';
 import '../View/View.css'
 
 
@@ -25,21 +30,155 @@ class ViewDigitalAsset extends Component {
             assets: [],
             filter: false,
             dropDownOpen: false,
-            category: []
+            account_address:'',
+            account_integrated: false,
+            auction_contract:'',
+            nftasset_contract:'',
+            auctions_list:'',
+            category: [],
+            createdAssetsLoading: true,
+            fetched_count:0,
+            digitalAssets:[]
         }
 
         this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this)
     }
-
-    async componentDidMount(){
-
-        await this.props.FetchPhysicalAssets(0)
-
-        if(this.props.physicalAsset.assets.length){
-            this.setState({
-                assets: this.props.physicalAsset.assets
+    async loadWeb3() {
+        if (window.web3) {
+          window.web3 = new Web3(window.ethereum)
+          await window.ethereum.enable()
+          console.log(window.web3)
+        }
+        else if (window.web3) {
+          window.web3 = new Web3(window.web3.currentProvider)
+        }
+        else {
+            swal({
+                title: "OOPS!!",
+                text: 'Non-Ethereum browser detected. You should consider trying MetaMask!',
+                icon: "error"
             })
         }
+    }
+
+    async loadSmartContracts() {
+       
+        const web3 = window.web3
+
+        // Network ID
+        const networkId = await web3.eth.net.getId()
+        const networkDataAuction = AuctionContract.networks[networkId]
+        const networkDataNft = NftAssetContract.networks[networkId]
+
+
+        if(networkDataAuction && networkDataNft){
+            const auction_contract = new web3.eth.Contract(AuctionContract.abi, networkDataAuction.address)
+            const nftasset_contract = new web3.eth.Contract(NftAssetContract.abi, networkDataNft.address)
+            this.setState({auction_contract, nftasset_contract })
+        } else {
+            swal({
+                title: "OOPS!!",
+                text: 'contract not deployed to detected network.',
+                icon: "error"
+            })
+        }
+    }
+
+    integrateMetamaskAccount = async()=>{
+        try{
+            const provider = await detectEthereumProvider();
+            if(!provider){
+                swal({
+                    title: "OOPS!!",
+                    text: "Please use a browser with MetaMask installed in it",
+                    icon: "error"
+                })
+                return;
+            }
+              
+            const accounts = await provider.request({ method: 'eth_requestAccounts' });
+            this.setState({
+                account_address: accounts[0],
+                account_integrated:true
+            })
+            console.log(accounts[0])
+
+        }catch(err){
+            swal({
+                title: "OOPS!!",
+                text: "Metamask Account Integration failed",
+                icon: "error"
+            })
+        }  
+    }
+
+    async componentDidMount(){
+        try{
+            await this.props.FetchPhysicalAssets(0)
+            this.setState({createdAssetsLoading: true});
+            await this.loadWeb3();
+            await this.integrateMetamaskAccount();
+            await this.loadSmartContracts();
+            await this.getAuctionsList();
+            this.setState({createdAssetsLoading: false})
+
+            // await this.props.FetchPhysicalAssets(0)
+
+            if(this.props.physicalAsset.assets.length){
+                this.setState({
+                    assets: this.props.physicalAsset.assets
+                })
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+    
+    getAuctionsList = async () => {
+        try{
+            const { auction_contract } = this.state;
+            if(auction_contract){
+                const auctions_list = await auction_contract.methods.GetAvaliableAuctionsList().call();
+                console.log(auctions_list);
+                this.setState({
+                    auctions_list
+                })
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    fetchDigitalAsset = async (id) => {
+        const { nftasset_contract, digitalAssets } = this.state;
+        if(nftasset_contract){
+            const asset = await nftasset_contract.methods.getAssetDetails(id).call();
+            const assetData = {
+                nft_id: asset[0],
+                name: asset[1],
+                description: asset[2],
+                asserFileHash: asset[3],
+                royality: asset[4],
+                category: asset[5],
+            }
+            digitalAssets.push(assetData);
+            this.setState({
+                digitalAssets, 
+                fetched_count: this.state.fetched_count + 1 
+            })
+            // this.props.fetchItem(asset.item_id)
+        } 
+    }
+
+    fetchAssets = async () => {
+        const {auctions_list, fetched_count} = this.state;
+        if(fetched_count>=auctions_list.length){
+            return;
+        }else{
+            const id = auctions_list[fetched_count];
+            await this.fetchDigitalAsset(id);
+        }
+
     }
 
     async fetchMoreAssets(){

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import Loading from '../loading';
 import { RenderNftAssetCard } from './RenderNftAssetCard';
-import { Row, Button, Modal, ModalHeader, ModalBody, Form, ModalFooter  } from "reactstrap";
+import { Row, Button, Modal, ModalHeader, ModalBody, ModalFooter  } from "reactstrap";
+import Form from 'react-bootstrap/Form';
 import swal from 'sweetalert';
 import '../View/View.css'
 
@@ -30,12 +31,15 @@ class MyDigitalAssets extends Component {
             date_time:'',
             modal_open: false,
             selected_asset:'',
+            creator:'',
+            royality:'',
             errors:{
                 base_price: '',
                 date_time: '',
                 owner_account: '',
                 nftId: '',
-                ownerId:''
+                creator: '',
+                royality: ''
             }
         }
     }
@@ -190,40 +194,71 @@ class MyDigitalAssets extends Component {
         this.setState({ownedAssetsLoading: false})
     }
 
+    toggleModal = (data) => {
+        if(data){
+            this.setState({   selected_asset:data,
+                creator: data.creator,
+                royality: data.royality, 
+                modal_open: !this.state.modal_open,
+            })
+        }else{
+            this.setState({
+                selected_asset:'',
+                creator: '',
+                royality: '',
+                modal_open: !this.state.modal_open
+            })
+        }
+    }
+
+    handleInputChange = (event) => {
+        const {name, value} = event.target;
+        this.setState({
+            [name]:value
+        })
+    }
+
     validateData = (data) => {
         let errors = {};
         let formIsValid = true;
-        const { auctionEndTime, auctionStartPrice,ownerAccount,
-            _ownerId, nftId} = data;
-        let base_price_error = '', date_time_error = '', owner_account_error = '', nftId_error = '', ownerId_error = '';
-        if(!auctionStartPrice|| auctionStartPrice<=0){
+        const {_nftId, _ownerAccount, _auctionEndTime, _auctionCreationTime, _auctionStartPrice,  _creatorAccount, _royality} = data;
+        let nftId_error = '', owner_account_error = '',  date_time_error = '', base_price_error = '',  creator_account_error = '', royality_error = '';
+        if(!_nftId){
+            nftId_error = 'Invalid NFT Id';
             formIsValid = false;
-            base_price_error = 'Base Price must be a positive value';
         }
-        if(!auctionEndTime){
-            formIsValid = false;
-            date_time_error = 'Auction End Time must be selected';
-        }
-        if(!ownerAccount){
+        
+        if(!_ownerAccount){
             formIsValid = false;
             owner_account_error = 'Unable to fetch details of user account. Please ensure that metamask is connected to our website';
         }
 
-        if(!nftId){
+        if(!_auctionEndTime|| _auctionEndTime<=0|| _auctionEndTime<=_auctionCreationTime){
             formIsValid = false;
-            nftId_error = 'Invalid Item';
+            date_time_error = 'Enter a valid future auction end time';
+        }
+        
+        if(!_auctionStartPrice|| _auctionStartPrice<=0){
+            formIsValid = false;
+            base_price_error = 'Base Price must be a positive value';
         }
 
-        if(!_ownerId){
+        if(!_creatorAccount){
             formIsValid = false;
-            ownerId_error = 'You must login to continue';
+            creator_account_error = 'Unable to fetch details of creator of asset';
+        }
+
+        if(_royality<0){
+            formIsValid = false;
+            royality_error = 'Royality cannot be negative';
         }
         const formErrors = {
             base_price:base_price_error,
             date_time: date_time_error,
             owdner_account: owner_account_error,
             nftId: nftId_error,
-            ownerId: ownerId_error
+            creator_account: creator_account_error,
+            royality: royality_error
         }
         this.setState({
             errors:{
@@ -233,25 +268,53 @@ class MyDigitalAssets extends Component {
         })
 
         if(!formIsValid){
-            console.log(formErrors);
+            console.log({formErrors});
         }
 
         return {formIsValid, ...formErrors};
     }
 
+    dateValidate = (current) =>{
+        const event_date = new Date(current._d);
+        const now_date = new Date();
+        if(Date.parse(event_date)<=Date.parse(now_date))
+            return false;
+        return true;
+    }
+
+    handleSubmit = async (e) => {
+        e.preventDefault();
+        const { selected_asset, base_price, date_time, account_address, creator, royality} = this.state;
+        
+        // form data according to the contract needs -> owner_id, nftId
+        const data = {
+            _nftId:selected_asset.tokenId,
+            _ownerAccount:account_address,
+            _auctionEndTime: Date.parse(date_time),
+            _auctionCreationTime: Date.now(),
+            _auctionStartPrice: window.web3.utils.toBN(base_price* window.web3.utils.toBN("1000000000000000000")),
+            _creatorAccount: creator,
+            _royality: royality,
+        };
+
+        let validationData = this.validateData(data);
+        if(validationData.formIsValid){
+            console.log("Valid data");
+            this.createAuction(data);
+        }
+    }
+
     createAuction = async (data) => {
         try{
-            // await this.loadWeb3();
-            // await this.loadContract();
             const { auction_contract, account_address } = this.state;
 
             if(auction_contract){
-                const res = await auction_contract.methods.CreateAuction(data._nftId, data._ownerAccount, data._ownerId, 
-                    data._auctionEndTime, data._auctionCreationTime, data._auctionStartPrice).send({from:account_address});
+                const res = await auction_contract.methods.CreateAuction(data._nftId, data._ownerAccount, data._auctionEndTime, 
+                    data._auctionCreationTime, data._auctionStartPrice, data._creatorAccount, data._royality).send({from:account_address});
                 
                 if(res&& res.status===true){
                     console.log(res);
-                console.log('Auction Created');    
+                    console.log('Auction Created');    
                 }
             }
         }catch(err){
@@ -259,53 +322,8 @@ class MyDigitalAssets extends Component {
         }
     }
 
-
-    toggleModal = (data) => {
-        console.log(data); 
-        this.setState({
-            createdAssetsLoading:false
-        });
-
-        
-        // e.preventDefault();
-        // // console.log(e);
-        // console.log(e.target.data);
-        
-        // const data= e.target.data;
-        if(data){
-            this.setState({   selected_asset:data.tokenId, 
-        //         modal_open: !this.state.modal_open
-            })
-        }else{
-            this.setState({
-        //         selected_asset:'',
-        //         modal_open: !this.state.modal_open
-            })
-        }
-    }
-
-    handleSubmit = async (e) => {
-        e.preventDefault();
-        const { selected_asset, base_price, date_time, account_address} = this.state;
-        
-        // form data according to the contract needs -> owner_id, nftId
-        const data = {
-            _auctionEndTime: Date.parse(date_time),
-            _auctionStartPrice: base_price,
-            _ownerAccount:account_address,
-            _ownerId:1,
-            _nftId:selected_asset.tokenId,
-            _auctionCreationTime: Date.now()
-        };
-
-        let validationData = this.validateData(data);
-        if(validationData.formIsValid){
-            this.createAuction(data);
-        }
-
-    }
-
     renderModal = () =>{
+        if(this.state.modal_open){
         return(
             <>
             <Modal isOpen={this.state.modal_open} 
@@ -353,11 +371,12 @@ class MyDigitalAssets extends Component {
 
             </>
         )
+        }else return (
+            <></>
+        )
     }
 
     render(){
-
-        
         if((!this.state.created && this.state.ownedAssetsLoading) || (this.state.created && this.state.createdAssetsLoading)){
             return(
                 <Loading type='spokes' color='white' />
@@ -397,19 +416,14 @@ class MyDigitalAssets extends Component {
                     </div>
                 </div>
                 <div>
-                    {/* {this.renderModal()} */}
                 </div>
                 </>
             );
         }
-        else if(this.state.modal_open){
-            return (
-                <>{this.renderModal()}</>
-            )
-        }
         else{
             return(
                 <>
+                {this.renderModal()}
                 <div className='container-fluid asset-container'>
                     <div className='row justify-content-center mt-4 mb-4'>
                         <h3 className='col-12 rainbow-lr new-item-heading'>
@@ -444,7 +458,7 @@ class MyDigitalAssets extends Component {
                     </div>
                 </div>
                 <div>
-                    {/* {this.renderModal()} */}
+                    
                 </div>
                 </>
             )
