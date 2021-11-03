@@ -159,7 +159,7 @@ class NftAssetDetails extends Component {
                     <Card id="digital-asset-card-detail">
                         <CardBody>
                             <CardSubtitle tag="h5" className="mb-4 new-item-preview-price">
-                                Properties <span className='fa fa-tags' />
+                                <span className='fa fa-tags' /> Properties 
                             </CardSubtitle>
                             <div>
                                 {
@@ -167,7 +167,7 @@ class NftAssetDetails extends Component {
                                 }
                             </div>
                             <CardSubtitle tag="h5" className="mb-4 new-item-preview-price">
-                                Details <span className='fa fa-bars' />
+                                <span className='fa fa-bars' /> Details 
                             </CardSubtitle>
                             <CardSubtitle tag="h6" className="new-item-preview-price">
                                 Contract Address{"  "}
@@ -197,7 +197,7 @@ class NftAssetDetails extends Component {
                                 </span>
                             </CardSubtitle>
                             <CardSubtitle tag="h5" className="mt-4 mb-4 new-item-preview-price">
-                                Ownsership <span className='fa fa-certificate' />
+                                <span className='fa fa-certificate' /> Ownsership 
                             </CardSubtitle>
                             <CardSubtitle tag="h6" className="new-item-preview-price">
                                 Creator{"  "}

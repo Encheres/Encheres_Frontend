@@ -34,17 +34,6 @@ export class RenderNftAssetCard extends Component{
                         <CardText id="new-item-card-info" className="mb-4">
                             {asset.description}
                         </CardText>
-                        <div>
-                            {
-                                renderAssetCategoriesFromIds(asset.categories)
-                            }
-                        </div>
-                        <CardSubtitle tag="h6" className="new-item-preview-price">
-                            Creator Royality{"  "}
-                            <span style={{ marginLeft: 10, color: "cyan" }}>
-                                {asset.royality+'%'}
-                            </span>
-                        </CardSubtitle>
                         <div style={{display: 'flex', justifyContent: 'center'}} className='mt-4'>
                             <Button 
                                 id='single-asset-purchase-button' 

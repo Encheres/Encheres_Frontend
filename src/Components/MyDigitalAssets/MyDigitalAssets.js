@@ -190,7 +190,7 @@ class MyDigitalAssets extends Component {
         let formIsValid = true;
         const { auctionEndTime, auctionStartPrice,ownerAccount,
             _ownerId, nftId} = data;
-        let base_price_error = '', date_time_error = '', owner_account_error = '', nftId_error = '', ownerId_error:'';
+        let base_price_error = '', date_time_error = '', owner_account_error = '', nftId_error = '', ownerId_error = '';
         if(!auctionStartPrice|| auctionStartPrice<=0){
             formIsValid = false;
             base_price_error = 'Base Price must be a positive value';
