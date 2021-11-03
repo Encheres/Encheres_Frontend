@@ -14,7 +14,7 @@ import { BiWorld } from "react-icons/bi";
 import swal from 'sweetalert';
 import preview from "../../assets/images/nft.jpg";
 import "./Add.css";
-
+import { ipfs_base_url } from '../../apis_redux/apis/encheres';
 import detectEthereumProvider from '@metamask/detect-provider'
 import Web3 from 'web3';
 import NftAsset from '../../abis/NftAsset.json';
@@ -488,7 +488,7 @@ class DigitalAsset extends Component {
                         <div className="col-11 col-sm-8 col-md-4 col-lg-3">
                             <Card id="new-item-card">
                                 <Image className="new-item-image" rounded
-                                    src={this.state.assetFileHash===""?preview:"https://ipfs.infura.io/ipfs/"+this.state.assetFileHash}
+                                    src={this.state.assetFileHash===""?preview:ipfs_base_url+this.state.assetFileHash}
                                 />
                             <CardBody>
                                 <CardSubtitle

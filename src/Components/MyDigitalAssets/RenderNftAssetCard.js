@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardSubtitle, CardText } from "reactstrap";
 import { Image } from 'react-bootstrap';
 import { renderAssetCategoriesFromIds } from '../FrequentComponents/Asset';
+import {ipfs_base_url} from '../../apis_redux/apis/encheres'
 import '../View/View.css';
 import './MyDigitalAssets.css';
 
@@ -21,7 +22,7 @@ export class RenderNftAssetCard extends Component{
             <div className='col-10 col-sm-6 col-md-5 col-lg-3'>
                 <Card id="digital-asset-card">
                     <Image className="new-item-image" rounded
-                        src={"https://ipfs.infura.io/ipfs/"+asset.assetFileHash}
+                        src={ipfs_base_url+asset.assetFileHash}
                     />
                     <CardBody>
                         <CardSubtitle
