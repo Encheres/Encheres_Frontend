@@ -7,7 +7,7 @@ import {
 
 const INITIAL_STATE = {
   loading: true,
-  payload: null,
+  payload: [],
   errors: null,
 };
 
@@ -17,7 +17,7 @@ const auction_list_reducer = (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
     case GET_AUCTION_LIST:
       return { ...state, payload: action.payload, loading: false };
-	case GET_FILTERED_AUCTION:
+    case GET_FILTERED_AUCTION:
       return { ...state, payload: action.payload, loading: false };
     case GET_AUCTION_LIST_ERROR:
       return { ...state, payload: null, errors: "error", loading: false };

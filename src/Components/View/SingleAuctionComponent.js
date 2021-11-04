@@ -1,9 +1,4 @@
 import React, { Component } from "react";
-import { FaPalette, FaMusic, FaFootballBall, FaWallet } from "react-icons/fa";
-import { GrDomain } from "react-icons/gr";
-import { GiCardRandom, GiBearFace } from "react-icons/gi";
-import { Badge } from "react-bootstrap";
-import { BiWorld } from "react-icons/bi";
 import { Accordion, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./auctionlist.css";
@@ -12,8 +7,14 @@ import { renderPhysicalAssetCategories } from "../FrequentComponents/Asset";
 class SingleAuctionComponent extends Component {
   constructor(props) {
     super();
+    this.state = {
+      type: 1 /* 0 = live , 1 = upcomming , 2 = past */,
+    };
   }
-  componentDidMount() {}
+
+  componentDidMount() {
+    this.setState({ type: this.props.type });
+  }
 
   render = () => {
     return (
@@ -44,7 +45,38 @@ class SingleAuctionComponent extends Component {
                 style={{ display: "flex", width: "70%" }}
               >
                 <div className="responsive-margin">
-                  {this.props.auctionName}
+                  {this.state.type === 0 ? (
+                    <span
+                      style={{
+                        padding: "7px",
+                        background: "yellow",
+                        color: "red",
+                        height: "35px",
+                      }}
+                    >
+                      Live
+                    </span>
+                  ) : this.state.type === 1 ? (
+                    <span
+                      style={{
+                        padding: "7px",
+                        background: "green",
+                        color: "white",
+                      }}
+                    >
+                      Upcomming
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        padding: "7px",
+                        background: "grey",
+                        color: "white",
+                      }}
+                    >
+                      Past
+                    </span>
+                  )}
                 </div>
                 <div className="responsive-margin">{this.props.time}</div>
               </div>
@@ -83,20 +115,32 @@ class SingleAuctionComponent extends Component {
             </div>
 
             <div>
-              <h6 style={{ marginBottom: "0px" }}>Description : </h6>
+              <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
+                Description :{" "}
+              </h6>
               {this.props.description}
             </div>
             <div style={{ marginTop: "5px" }}>
-              <h6 style={{ marginBottom: "0px" }}>Address : </h6>
+              <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
+                Address :{" "}
+              </h6>
               {this.props.addressLine1}
               <br />
-              <h6 style={{ marginBottom: "0px", marginTop: "3px" }}>
+              <h6
+                style={{
+                  marginBottom: "0px",
+                  marginTop: "3px",
+                  fontWeight: "bold",
+                }}
+              >
                 Location :{" "}
               </h6>
               {this.props.city} <br />
               {this.props.postalCode},{this.props.state}
               <br />
-              <h6 style={{ display: "inline" }}>Contact No.</h6>
+              <h6 style={{ display: "inline", fontWeight: "bold" }}>
+                Contact No.
+              </h6>
               {" " + this.props.organizer_contact}
             </div>
           </div>
