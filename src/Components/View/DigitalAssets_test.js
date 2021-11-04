@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
 import AuctionContract from '../../abis/Auctions.json';
+import {Row, Modal, ModalHeader, ModalBody, ModalFooter, Button} from 'reactstrap';
+import Form from 'react-bootstrap/Form';
+import Datetime from 'react-datetime';
+import './testing.css'
 // add functionality to return money back, when person outbidded
 
 class DigitalAsset extends Component {
@@ -9,7 +13,87 @@ class DigitalAsset extends Component {
         this.state = {
             account_address: '',
             auction_contract:'',
+            base_price:'',
+            date_time:'',
+            modal_open: false,
+            errors:{
+                base_price: '',
+                date_time: ''
+            }
         }
+    }
+
+    handleInputChange = (event) => {
+        const {name, value} = event.target;
+        this.setState({
+            [name]:value
+        })
+    }
+
+    dateValidate(current){
+        const event_date = new Date(current._d);
+        const now_date = new Date();
+        if(Date.parse(event_date)<=Date.parse(now_date))
+            return false;
+        return true;
+    }
+
+
+
+    toggleModal = () => {
+        this.setState({
+            modal_open: !this.state.modal_open
+        })
+    }
+
+    renderModal = () =>{
+        return(
+            <>
+            <Modal isOpen={this.state.modal_open} 
+               toggle={() => this.toggleModal()}
+               className='modal-dialog modal-dialog-centered modal-lg'
+               backdrop='static'
+               >
+                <ModalHeader className='digital_modal_header' toggle={() => this.toggleModal()}>Sell Digital Asset</ModalHeader>
+                <ModalBody>
+                    <Form className="login_form">
+                        <Row className="form_input_row form_grp">
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label className="form_input_label">Initial Price (in ethers)</Form.Label>
+                                <input name="base_price" className="form_input_field form-control" type="number" value={this.state.base_price} placeholder="Initial price in ETH" onChange={this.handleInputChange} min={0} step={'any'}/>
+                                <div className="invalid__feedback">{this.state.errors.base_price}</div>
+                            </Form.Group>
+                        </Row>
+
+                        <Row className="form_input_row form_grp">
+                            <Form.Group className="mb-3" controlId="itemPrice">
+                            <Form.Label className="form_input_label">Auction end Date and Time</Form.Label>
+                                <Datetime initialValue={this.state.date_time}
+                                    inputProps={{
+                                        className:"form_input_field form-control date_time_input",
+                                        placeholder: "End Date and Time"
+                                    }} 
+                                isValidDate={this.dateValidate}
+                                    onChange={(d) => {
+                                        this.setState({
+                                            date_time: d
+                                        })
+                                    }}/>
+                            
+                                <div className='invalid__feedback'>{this.state.errors.date_time}</div>
+                            </Form.Group>
+                        </Row>
+                        
+                    </Form>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleSubmit} color='info'>Sell Asset</Button>
+                    <Button color='danger' onClick={() => this.toggleModal()}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
+            </>
+        )
     }
 
     loadWeb3 = async () => {
@@ -140,8 +224,9 @@ class DigitalAsset extends Component {
 
     render(){
         return(
-            <div>
-                <button className='' onClick={this.handleSubmit}>Click Here</button>
+            <div className='test_div'>
+                <button className='' onClick={this.toggleModal}>Click Here</button>
+                {this.renderModal()}
             </div>
         )
     }
