@@ -1,27 +1,18 @@
 import React, { Component } from "react";
-import { Button, Container, Row, Col } from "reactstrap";
+import { Button } from "reactstrap";
 import SingleAuctionComponent from "./SingleAuctionComponent";
 import "./auctionlist.css";
 import { Accordion } from "react-bootstrap";
 import Select from "react-select";
 // redux stuff
 import { connect } from "react-redux";
-
-import {
-  GiCardRandom,
-  GiBearFace,
-  GiClockwork,
-  GiVendingMachine,
-  GiSofa,
-  GiClothes,
-  GiWatch,
-} from "react-icons/gi";
 import {
   get_auction_list,
   get_filtered_auction,
 } from "../../apis_redux/actions/auction_list";
 import Loading from "../loading";
-
+import InfiniteScroll from "react-infinite-scroll-component";
+import Error from "../FrequentComponents/RenderError";
 const styles = {
   multiValue: (styles) => {
     return {
@@ -51,9 +42,11 @@ class Auctionlist extends Component {
       selectedTag: [],
       selectedTime: "",
       customer_id: "not loaded",
+      page: 0,
+      data: [],
+      filter: false,
     };
   }
-  componentDidUpdate = () => { };
   componentDidMount = () => {
     this.clearFilterButtonHandler();
   };
@@ -71,18 +64,61 @@ class Auctionlist extends Component {
     });
   };
   buttonPressHandler = () => {
-    let tagsarr = this.onlyValuesarray(this.state.selectedTag);
     /*
       tags , page , time
     */
-    this.props.get_filtered_auction({
-      tags: tagsarr,
-      time: this.state.selectedTime,
-      page: 10,
-    });
+    this.setState({ page: 0, data: [], filter: true });
+    this.clearFilterButtonHandler();
   };
-  clearFilterButtonHandler = () => {
-    this.props.getAllAuctions(10);
+  componentDidUpdate() {
+    console.log("props", this.props);
+    console.log("state", this.state);
+  }
+  clearFilterButtonHandler = async () => {
+    if (this.state.filter) {
+      //with filters
+      const tosend = {
+        tags: this.onlyValuesarray(this.state.selectedTag),
+        time: this.state.selectedTime.value,
+        page: this.state.page,
+      };
+      await this.props.get_filtered_auction(tosend);
+      console.log("send : ", tosend);
+      if (!this.props.auctionlist.loading && !this.props.auctionlist.errors) {
+        this.setState({
+          data: [this.state.data, this.props.auctionlist.payload.data].flat(),
+        });
+      }
+    } else {
+      //without filters
+      await this.props.getAllAuctions(this.state.page);
+      if (!this.props.auctionlist.loading && !this.props.auctionlist.errors) {
+        this.setState({
+          data: [this.state.data, this.props.auctionlist.payload.data].flat(),
+        });
+      }
+    }
+  };
+  whatTime = () => {
+    const now = new Date();
+    const abhi = now.toISOString();
+  };
+  fetchMoreAssets = () => {
+    this.setState({ page: this.state.page + 1 });
+    this.clearFilterButtonHandler();
+  };
+  isMorefunc = () => {
+    if (this.props.auctionlist.loading) {
+      return false;
+    } else if (this.props.auctionlist.errors) {
+      return false;
+    } else {
+      if (this.props.auctionlist.payload.data.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   };
   ui = () => {
     return (
@@ -91,16 +127,43 @@ class Auctionlist extends Component {
           <div style={{ marginTop: "10px" }}>
             <h5 style={{ color: "white" }}>Select Tags</h5>
             <Select
+              onMenuOpen={() =>
+                this.setState({
+                  dropDownOpen: true,
+                })
+              }
+              onMenuClose={() =>
+                this.setState({
+                  dropDownOpen: false,
+                })
+              }
               styles={styles}
               closeMenuOnSelect={false}
               isMulti
               options={this.state.options}
               onChange={(e) => {
                 this.setState({ selectedTag: e });
+                if (this.state.selectedTag.length || this.state.selectedTime) {
+                  this.setState({ filter: true });
+                } else {
+                  this.setState({ filter: false });
+                }
               }}
+              value={this.state.selectedTag}
             />
             <h5 style={{ color: "white" }}>Select time</h5>
             <Select
+              value={this.state.selectedTime}
+              onMenuOpen={() =>
+                this.setState({
+                  dropDownOpen: true,
+                })
+              }
+              onMenuClose={() =>
+                this.setState({
+                  dropDownOpen: false,
+                })
+              }
               styles={styles}
               closeMenuOnSelect={true}
               options={[
@@ -109,7 +172,13 @@ class Auctionlist extends Component {
                 { value: "Upcomming", label: "Upcomming" },
               ]}
               onChange={(e) => {
-                this.setState({ selectedTime: e.value });
+                this.setState({ selectedTime: e });
+
+                if (this.state.selectedTag.length || this.state.selectedTime) {
+                  this.setState({ filter: true });
+                } else {
+                  this.setState({ filter: false });
+                }
               }}
             />
             <div
@@ -125,24 +194,60 @@ class Auctionlist extends Component {
               >
                 Filter
               </Button>
-              <Button color="danger">Clear Filters</Button>
-            </div>
-          </div>
-          <Accordion defaultActiveKey="0" style={{ marginTop: "50px" }}>
-            {!this.props.auctionlist.payload ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  color: "white",
-                  height: "25vh",
+              <Button
+                color="danger"
+                onClick={() => {
+                  this.setState({
+                    selectedTag: [],
+                    selectedTime: "",
+                    filter: false,
+                  });
                 }}
               >
-                <span style={{ fontSize: "xx-large" }}> No value loaded </span>
-              </div>
-            ) : (
-              this.props.auctionlist.payload.data.map((element, index) => {
+                Clear Filters
+              </Button>
+            </div>
+          </div>
+          <InfiniteScroll
+            dataLength={this.state.data.length}
+            next={() => this.fetchMoreAssets()}
+            hasMore={
+              this.props.auctionlist.payload.data.length > 0 ? true : false
+            }
+            // loader={<Loading />}
+            endMessage={
+              <h3 className="col-12 rainbow-lr new-item-heading">
+                No More auctions :(
+                <br />
+                <br />
+                Check Back Soon!!
+              </h3>
+            }
+          >
+            <Accordion
+              defaultActiveKey="0"
+              style={{ marginTop: "50px" }}
+              onScroll={this.handleScroll}
+            >
+              {this.state.data.map((element, index) => {
+                const now = new Date();
+                const abhi = now.toISOString();
+                let whichtype = 2;
+                const one = new Date(abhi);
+                const two = new Date(element.event_date_time);
+                if (element.completed === true) {
+                  //past
+                  //console.log(index, "past");
+                  whichtype = 2;
+                } else if (two > one) {
+                  //upcomming
+                  whichtype = 1;
+                  //console.log(index, "upcomming");
+                } else {
+                  whichtype = 0;
+                  //console.log(index, "live");
+                }
+
                 return (
                   <SingleAuctionComponent
                     auctionName={element._id}
@@ -158,17 +263,24 @@ class Auctionlist extends Component {
                     city={element.pickup_point.city}
                     postalCode={element.pickup_point.postalCode}
                     state={element.pickup_point.state}
+                    type={whichtype}
                   />
                 );
-              })
-            )}
-          </Accordion>
+              })}
+            </Accordion>
+          </InfiniteScroll>
         </div>
       </section>
     );
   };
   render = () => {
-    return this.props.auctionlist.loading ? <Loading color='white' /> : <> {this.ui()} </>;
+    if (this.props.auctionlist.loading) {
+      return <Loading />;
+    } else if (this.props.auctionlist.errors) {
+      return <Error />;
+    } else {
+      return <>{this.ui()}</>;
+    }
   };
 }
 
