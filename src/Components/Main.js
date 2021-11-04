@@ -11,6 +11,7 @@ import ContactUs from './Contactus/Contactus';
 import SignUp from './Authentication/SignUp';
 import Login from './Authentication/Login';
 import Home from './Home/Home'
+import UserProfile from './UserProfile/UserProfile';
 class Main extends Component {
   
   componentDidMount(){
@@ -27,7 +28,7 @@ class Main extends Component {
           <Route exact path='/signup' component={SignUp} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/home' component={Home} />
-
+          <Route exact path='/profile' component={UserProfile} />
           {/*Contact us page*/}
           <Route exact path='/contact-us' component={() => <ContactUs />} />
 
