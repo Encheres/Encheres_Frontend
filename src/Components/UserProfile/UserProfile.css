@@ -1,0 +1,50 @@
+.textlayout {
+    margin: 10px;
+    text-align: center;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.showlayout {
+    text-align: center ;
+}
+
+#pfp {
+    height: 150px;
+    width: 150px;
+    position: relative;
+    padding-bottom: 100px;
+    align-items: center;
+    border: white;
+    border-radius: 0.3em;
+}
+
+#options btn-group-vertical {
+    background-color: aliceblue;
+}
+
+.row div {
+    text-align: center;
+}
+
+button {
+    width: max-content;
+}
+
+div .btn-group-vertical {
+    width: 60%;
+    border-radius: 0;
+    align-items: flex-end;
+}
+
+div .btn-group-vertical:hover {
+    color: #03091f;
+}
+div .btn-dark { 
+    background-color: #03091f;
+    
+}
+
+div .btn-dark {
+    background: linear-gradient(to right, #A44BC7, cyan, blue, violet);
+}
