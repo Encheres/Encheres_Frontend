@@ -1,12 +1,12 @@
 .textlayout {
     margin: 10px;
-    text-align: center;
+    text-align: center; 
     padding-left: 50px;
     padding-right: 50px;
 }
 
 .showlayout {
-    text-align: center ;
+    text-align: center ; 
 }
 
 #pfp {
@@ -24,7 +24,7 @@
 }
 
 .row div {
-    text-align: center;
+    /* text-align: center; */
 }
 
 button {

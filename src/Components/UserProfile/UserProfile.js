@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Button, Container, Row, Col} from "reactstrap";
 import "./UserProfile.css";
 import Form from 'react-bootstrap/Form';
@@ -12,15 +14,46 @@ class UserProfile extends Component{
                 <div className='container'>
                     <div className='row'>
                         <div className='col-md-6'>
-                            <div id='pfp'></div>
-                           <div className = 'btn-group-vertical'>
-                               <button type = 'button' className = 'btn btn-dark btn-lg'>User details</button>
-                               <button type = 'button' className = 'btn btn-dark btn-lg'>My Winnings</button>
-                               <button type = 'button' className = 'btn btn-dark btn-lg'>Account</button>
-                               <button type = 'button' className = 'btn btn-dark btn-lg'>Terms and Conditions</button>
-                               <button type = 'button' className = 'btn btn-dark btn-lg'>Log-out</button>
-                            </div>  
-                        </div>   
+                           <div id='pfp'></div>
+                           {
+                               this.props.userId==this.props.user ?
+                                <div className = 'btn-group-vertical'>
+                                <button type = 'button' className = 'btn btn-dark btn-lg'>User details</button>
+                                <button type = 'button' className = 'btn btn-dark btn-lg'>
+                                    <Link style={{color: 'white', textDecoration: 'none'}}
+                                        to={`/my-digital-assets`}>
+                                        My Digital Assets
+                                    </Link>
+                                    </button>
+                                <button type = 'button' className = 'btn btn-dark btn-lg'>
+                                    <Link style={{color: 'white', textDecoration: 'none'}}
+                                        to={`/my-winnings`}>
+                                        My Winnings
+                                    </Link>
+                                    </button>
+                                    <button type = 'button' className = 'btn btn-dark btn-lg'>
+                                    <Link style={{color: 'white', textDecoration: 'none'}}
+                                        to={`/pending-shipment`}>
+                                        Pending Shipments
+                                    </Link>
+                                    </button>
+                                <button type = 'button' className = 'btn btn-dark btn-lg'>Account</button>
+                                <button type = 'button' className = 'btn btn-dark btn-lg'>
+                                    <Link style={{color: 'white', textDecoration: 'none'}}
+                                        to={`/terms_and_conditions`}>
+                                        Encheres Terms and Conditions
+                                    </Link>
+                                    </button>
+                                <button type = 'button' className = 'btn btn-dark btn-lg'>
+                                <Link style={{color: 'white', textDecoration: 'none'}}
+                                        to={`/logout`}>
+                                        Log-out
+                                    </Link>
+                                </button>
+                                </div> :
+                                <></> 
+                           }
+                        </div> 
                         <div className='col-md-6'></div>
                     </div>    
                 </div> 
@@ -30,4 +63,10 @@ class UserProfile extends Component{
     }
 }
 
-export default UserProfile;
+const mapStateToProps = (state, ownprops) => {
+    return {
+      userId: state.auth.userId
+    };
+};
+
+export default connect(mapStateToProps, {})(UserProfile);

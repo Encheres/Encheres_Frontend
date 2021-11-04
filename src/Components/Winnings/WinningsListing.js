@@ -336,11 +336,17 @@ class Winnings extends Component{
                         </div>
                         <div className='col-6 col-md-4 col-lg-2'>
                             <h6 className='winning-card-label rainbow-lr'>From </h6>
-                            <h6 className='mr-4 winning-card-detail'>@{asset.owner.name}</h6>
+                            <Link className='winning-card-link' 
+                                to={`/profile/${asset.owner._id}`}>
+                                <h6 className='winning-card-detail'>@{asset.owner.name}</h6>
+                            </Link>
                         </div>
                         <div className='col-6 col-md-4 col-lg-2'>
                             <h6 className='winning-card-label rainbow-lr'>To </h6>
-                            <h6 className='winning-card-detail'>@{asset.bidder.name}</h6>
+                            <Link className='winning-card-link' 
+                                to={`/profile/${asset.bidder._id}`}>
+                                <h6 className='winning-card-detail'>@{asset.bidder.name}</h6>
+                            </Link>
                         </div>
                         <div className='col-12 col-md-4 col-lg-2'>
                             {transactionButton}

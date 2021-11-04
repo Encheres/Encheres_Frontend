@@ -62,6 +62,10 @@ class Main extends Component {
     return <NftAssetDetails nftAssetId={match.params.nftAssetId} />
   };
 
+  renderProfile = ({match}) => {
+    return <UserProfile user={match.params.userId} />
+  };
+
   render() {
     return (
       <div>
@@ -155,7 +159,7 @@ class Main extends Component {
             component={LiveAuctionRoom}
           />
           <Route exact path="/my-winnings" component={() => <Winnings />} />
-          <Route exact path="/profile" component={() => <UserProfile />} />
+          <Route exact path="/profile/:userId" component={this.renderProfile} />
           <Redirect to="home" />
         </Switch>{" "}
         <Footer />
