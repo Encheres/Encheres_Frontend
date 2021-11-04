@@ -1,64 +1,57 @@
 import React, { Component } from "react";
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBCardImage,
-  MDBRow,
-  MDBCol,
-} from "mdb-react-ui-kit";
+import { Card } from "reactstrap";
+import { Link } from "react-router-dom";
+import moment from "moment";
+
 class SingleShipment extends Component {
+  
   render = () => {
+    const order = this.props.order;
+    console.log(order)
     return (
-      <MDBCard
-        style={{
-          maxWidth: "70%",
-          boxShadow: "5px 5px 9px 0px rgb(255, 255, 255)",
-          background: "#222242",
-          color: "white",
-          margin: "50px",
-        }}
-      >
-        <MDBRow className="g-0">
-          <MDBCol md="4">
-            <MDBCardImage
-              src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.jpg"
-              alt="Product"
-              fluid
-              style={{
-                width: "100%",padding:'5px',borderRadius : '15px',objectFit:'contain',
-              }}
-            />
-          </MDBCol>
-          <MDBCol md="8">
-            <MDBCardBody style={{display:'flex',height:'100%'}}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-evenly",
-                  width: "100%",
-                }}
-              >
-                <div>
-                  <h1>Iphone X</h1>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <div style={{ width: "50%" }}>Seller</div>
-                  <div style={{ width: "50%" }}>Buyer</div>
-                </div>
-                <div>
-                  <p>Address</p>
-                  <p>Contact No : {"7347504481"}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <div style={{ width: "50%" }}>Price</div>
-                  <div style={{ width: "50%" }}>quantity</div>
-                </div>
-              </div>
-            </MDBCardBody>
-          </MDBCol>
-        </MDBRow>
-      </MDBCard>
+      <Card className='col-10 col-sm-6 col-md-5 col-lg-3' id='winning-card'>
+        <div>
+            <h6 className='winning-card-label rainbow-lr'>Asset</h6>
+            <Link className='winning-card-link' 
+                to={`/view/independent-physical-assets/${order.item_id}`}>
+                <h6 className='winning-card-detail'>@{order.item_id}</h6>
+            </Link>
+        </div>
+        <div>
+            <h6 className='winning-card-label rainbow-lr'>Recepient</h6>
+            <Link className='winning-card-link' 
+                to={`/profile/${order.buyer_details.profile}`}>
+                <h6 className='mt-2 winning-card-detail'>@Profile</h6>
+            </Link>
+        </div>
+        <div>
+            <div className='mt-2 winning-card-detail '>
+                <h6>
+                    <span className='fa fa-address-card' style={{marginRight: 10}} />
+                    {
+                      order.buyer_details.address.addressLine1+', '+order.buyer_details.address.city+', '+
+                      order.buyer_details.address.state+', '+order.buyer_details.address.country
+                    }
+                </h6>
+            </div>                     
+        </div>
+        <div>
+            <div className='mt-2 winning-card-detail '>
+                <h6>
+                    <span className='fa fa-phone-square' style={{marginRight: 10}} />
+                    {order.buyer_details.contact_number}
+                </h6>
+            </div>                     
+        </div>
+        <div>
+            <div className='mt-2 winning-card-detail '>
+                <h6>
+                    <span className='fa fa-history' style={{marginRight: 10}} />
+                    {moment(order.createdAt).format('MMMM Do YYYY, h:mm A')}
+                </h6>
+            </div>                     
+        </div>
+      </Card>
     );
   };
 }

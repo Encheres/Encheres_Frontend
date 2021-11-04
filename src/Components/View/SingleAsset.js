@@ -13,6 +13,7 @@ import RenderError from '../FrequentComponents/RenderError';
 import { FaEthereum } from 'react-icons/fa';
 import './View.css'
 import swal from 'sweetalert';
+import { Link } from 'react-router-dom';
 
 class SingleAssetDetail extends React.Component{
 
@@ -202,8 +203,9 @@ class SingleAssetDetail extends React.Component{
                                     @{asset.owner.name} Sold asset to @{asset.bidder.name}
                                 </CardText>
             }
-
+            
             return(
+                
                 <div className='container'>
                     <div className='row justify-content-center mt-4 mb-4'>
                         <h3 className='col-12 rainbow-lr new-item-heading'>
@@ -300,23 +302,34 @@ class SingleAssetDetail extends React.Component{
                                         
                                         <div className='mt-4' id='single-asset-purchase-button-container'>
                                             {
-                                                asset.bids && moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
+                                                !this.props.auth.isSignedIn ? 
                                                 <Button 
                                                     id='single-asset-purchase-button' 
-                                                    onClick={this.toggle}>
-                                                    <span><FaEthereum /> Make Offer </span>
+                                                    >
+                                                    <Link to={'/login'} style={{textDecoration: 'none', color: 'gray', fontWeight: 'bold'}}>
+                                                        <span> Login to Make Offer </span>
+                                                    </Link>
                                                 </Button> :
-                                                <div/>
+                                                <div>
+                                                    {asset.bids && moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
+                                                    <Button 
+                                                        id='single-asset-purchase-button' 
+                                                        onClick={this.toggle}>
+                                                        <span><FaEthereum /> Make Offer </span>
+                                                    </Button> :
+                                                    <div/>}
+                                                
+                                                
+                                                    {!asset.bids && moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
+                                                    <Button 
+                                                        onClick={() => this.onBuyRequest(asset.event_end_date_time)}
+                                                        id='single-asset-purchase-button'>
+                                                        <span><FaEthereum /> Buy Now </span>
+                                                    </Button> :
+                                                    <div/>}
+                                                </div>
                                             }
-                                            {
-                                                !asset.bids && moment(asset.event_end_date_time).diff(moment(new Date())) > 0 ?
-                                                <Button 
-                                                    onClick={() => this.onBuyRequest(asset.event_end_date_time)}
-                                                    id='single-asset-purchase-button'>
-                                                    <span><FaEthereum /> Buy Now </span>
-                                                </Button> :
-                                                <div/>
-                                            }
+                                            
                                             <Collapse isOpen={moment(asset.event_end_date_time).diff(moment(new Date())) > 0 && this.state.isOpen}>
                                                 <div className='mt-4 row col-12'>
                                                     <div className='col-10'>

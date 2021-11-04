@@ -24,6 +24,7 @@ import MyDigitalAssets from "./MyDigitalAssets/MyDigitalAssets";
 import NftAssetDetails from "./MyDigitalAssets/RenderNftAssetDetails";
 import { connect } from "react-redux";
 import TestingDigitalAsset from './View/DigitalAssets_test';
+import UserProfile from "./UserProfile/UserProfile";
 
 function PrivateRoute({ userAuth, children, ...rest }) {
   let auth = userAuth;
@@ -59,6 +60,10 @@ class Main extends Component {
 
   renderDigitalAssetDetail = ({ match }) => {
     return <NftAssetDetails nftAssetId={match.params.nftAssetId} />
+  };
+
+  renderProfile = ({match}) => {
+    return <UserProfile user={match.params.userId} />
   };
 
   render() {
@@ -154,6 +159,7 @@ class Main extends Component {
             component={LiveAuctionRoom}
           />
           <Route exact path="/my-winnings" component={() => <Winnings />} />
+          <Route exact path="/profile/:userId" component={this.renderProfile} />
           <Redirect to="home" />
         </Switch>{" "}
         <Footer />

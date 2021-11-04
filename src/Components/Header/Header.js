@@ -58,19 +58,21 @@ class Header extends Component {
                     <span className="NavBarLink fa fa-home fa-lg" /> Home
                   </NavLink>
                 </NavItem>
-                <UncontrolledDropdown nav inNavbar>
-                  <DropdownToggle nav caret>
-                    <span className="NavBarLink fa fa-plus-square fa-lg" /> Add
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem href="/create/live_auction">
-                      Live Auction
-                    </DropdownItem>
-                    <DropdownItem href="/create/independent-digital-assets">
-                      Independent Asset
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+                {this.props.signedIn ? 
+                  <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret>
+                      <span className="NavBarLink fa fa-plus-square fa-lg" /> Add
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                      <DropdownItem href="/create/live_auction">
+                        Live Auction
+                      </DropdownItem>
+                      <DropdownItem href="/create/independent-digital-assets">
+                        Independent Asset
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown> :
+                  <></>}
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret>
                     <span className="NavBarLink fa fa-shopping-cart fa-lg" />{" "}
@@ -84,23 +86,30 @@ class Header extends Component {
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <NavItem>
-                  <NavLink href="/pending-shipment">
-                    <span className="NavBarLink fa fa-truck fa-lg" /> Shipments
-                  </NavLink>
+                  {this.props.signedIn ? 
+                    <NavLink href="/pending-shipment">
+                      <span className="NavBarLink fa fa-truck fa-lg" /> Shipments
+                    </NavLink> : 
+                    <></>}   
                 </NavItem>
                 <NavItem>
-                  <NavLink href="/my-winnings">
-                    <span className="NavBarLink fa fa-trophy fa-lg" /> Winnings
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="">
-                    <span className="NavBarLink fa fa-search fa-lg" />
-                  </NavLink>
+                  {this.props.signedIn ? 
+                    <NavLink href="/my-winnings">
+                      <span className="NavBarLink fa fa-trophy fa-lg" /> Winnings
+                    </NavLink> :
+                    <></>}
                 </NavItem>
                 <NavItem>
                   {this.props.signedIn ? (
-                    <NavLink href="">
+                    <NavLink href="/logout">
+                      <span className="NavBarLink fa fa-sign-out fa-lg" />
+                    </NavLink>
+                  ) : <></>}
+                  
+                </NavItem>
+                <NavItem>
+                  {this.props.signedIn ? (
+                    <NavLink href={`/profile/${this.props.userId}`}>
                       <span className="NavBarLink fa fa-user-circle fa-lg" />
                     </NavLink>
                   ) : (
@@ -125,6 +134,7 @@ class Header extends Component {
 const mapStateToProps = (state, ownprops) => {
   return {
     signedIn: state.auth.isSignedIn,
+    userId: state.auth.userId
   };
 };
 
