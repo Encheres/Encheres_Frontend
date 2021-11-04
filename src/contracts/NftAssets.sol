@@ -101,4 +101,17 @@ contract NftAsset is ERC721 {
         return account.getAccountOwnedAssets(msg.sender);
     }
 
+    function getAssetDetails(uint _tokenId) public view returns (uint tokenId, string memory, string memory, string memory, string memory, uint[] memory){
+
+        // Check for existence of token.
+        require(_exists(_tokenId));
+        Asset storage asset = assets[_tokenId];
+        string memory name = asset.name;
+        string memory description = asset.description;
+        uint[] memory categories = asset.categories;
+        string memory assetFileHash = asset.assetFileHash;
+        string memory royality = asset.royality;
+        return (_tokenId, name, description, assetFileHash, royality, categories);
+    }
+
 }

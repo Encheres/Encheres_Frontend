@@ -24,6 +24,7 @@ import MyDigitalAssets from "./MyDigitalAssets/MyDigitalAssets";
 import NftAssetDetails from "./MyDigitalAssets/RenderNftAssetDetails";
 import { connect } from "react-redux";
 import TestingDigitalAsset from './View/DigitalAssets_test';
+import UserProfile from "./UserProfile/UserProfile";
 
 function PrivateRoute({ userAuth, children, ...rest }) {
   let auth = userAuth;
@@ -154,6 +155,7 @@ class Main extends Component {
             component={LiveAuctionRoom}
           />
           <Route exact path="/my-winnings" component={() => <Winnings />} />
+          <Route exact path="/profile" component={() => <UserProfile />} />
           <Redirect to="home" />
         </Switch>{" "}
         <Footer />
