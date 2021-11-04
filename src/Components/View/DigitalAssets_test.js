@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
-import AuctionContract from '../../abis_2/Auctions.json';
+import AuctionContract from '../../abis/Auctions.json';
 // add functionality to return money back, when person outbidded
 
 class DigitalAsset extends Component {

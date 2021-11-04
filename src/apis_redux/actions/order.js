@@ -15,6 +15,39 @@ export const addOrders = (orders) => ({
 	payload: orders,
 });
 
+export const FetchOrders = (page) => (dispatch) => {
+
+	const bearer = "Bearer " + localStorage.getItem("encheres_token");
+
+	dispatch(ordersLoading(true))
+	return fetch(devURL+`/seller-pending-orders?page=${page}`, {
+			method: "GET",
+			headers: {
+				Authorization: bearer
+			},
+		})
+	.then(
+		(response) => {
+			if (response.ok) {
+				return response;
+			} else {
+				var error = new Error(
+					"Error " + response.status + ": " + response.statusText
+				);
+				error.response = response;
+				throw error;
+			}
+		},
+		(error) => {
+			var errmess = new Error(error.message);
+			throw errmess;
+		}
+	)
+	.then((response) => response.json())
+	.then((orders) => dispatch(addOrders(orders)))
+	.catch((error) => dispatch(ordersFailed(error.message)));
+}
+
 export const PostOrder = (order) => (dispatch) => {
     
 	const bearer = "Bearer " + localStorage.getItem("encheres_token");
