@@ -125,9 +125,9 @@ contract Auctions{
         emit auctionEnded(_nftId,  auctionMap[_nftId].auctionCurrentBid, auctionMap[_nftId].ownerAccount);
     }
 
-    function GetAuctionDetails(uint _nftId) public view returns(address payable, uint256, uint, uint, bool, bool){
+    function GetAuctionDetails(uint _nftId) public view returns(address payable, uint256, uint, uint, bool, bool, address payable){
         require(_nftId >= 0, "Invalid nftId");
-        return (auctionMap[_nftId].ownerAccount, auctionMap[_nftId].auctionEndTime, auctionMap[_nftId].auctionStartPrice, auctionMap[_nftId].auctionCurrentBid, auctionMap[_nftId].auctionEnded, auctionMap[_nftId].bidStarted);
+        return (auctionMap[_nftId].ownerAccount, auctionMap[_nftId].auctionEndTime, auctionMap[_nftId].auctionStartPrice, auctionMap[_nftId].auctionCurrentBid, auctionMap[_nftId].auctionEnded, auctionMap[_nftId].bidStarted, auctionMap[_nftId].auctionBuyer);
     }
 
     function GetAvaliableAuctionsList() public view returns(uint[] memory){

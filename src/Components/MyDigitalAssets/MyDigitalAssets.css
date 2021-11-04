@@ -20,3 +20,32 @@
 .digital-asset-card-detail-container{
     margin-bottom: 100px;
 }
+
+.sale_badge_digital_asset{
+    background-color: #23a400 !important;
+    color: #fff;
+    border-radius: 1rem;
+    padding: .7rem;
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+.Item_bid_section{
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.timer_div_asset{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.digital_asset_bid_div{
+    margin-top:0.3rem;
+    margin-bottom: 1rem;
+    text-align:right;
+}
+
+.digital_asset_bid_btn{
+    margin-top:0.4rem;
+}
