@@ -1,13 +1,18 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {renderAssetCategories} from '../FrequentComponents/Asset'
-import {Image} from 'react-bootstrap';
-import {Card, CardText, CardBody, Collapse,
-    CardSubtitle, Button, ListGroup, ListGroupItem} from "reactstrap";
-import preview from "../../assets/images/nft.jpg";
+import Loading from '../loading';
+import { connect } from 'react-redux';
+import { FetchPhysicalAssets, FetchFilteredPhysicalAssets, 
+    UpdatePhysicalAsset } from '../../apis_redux/actions/physicalAsset';
+import { fetchItem } from '../../apis_redux/actions/item';
+import RenderPhysicalAssets from './PhysicalAssetListing';
+import { categoryList, customSelectStyles } from '../../variables';
+import Select from 'react-select'
+import InfiniteScroll from "react-infinite-scroll-component";
+import RenderError from '../FrequentComponents/RenderError';
+import { Button } from "reactstrap";
 import '../View/View.css'
 
-var categories = ["Art", "Collectibles", "Music"];
 
 class ViewPhysicalAsset extends Component {
 
@@ -15,147 +20,210 @@ class ViewPhysicalAsset extends Component {
         super(props);
 
         this.state={
-            nftCategoryFilter: '',
-            isFilterOpen: false
+            page: 0,
+            bids: true,
+            assets: [],
+            filter: false,
+            dropDownOpen: false,
+            category: []
+        }
+
+        this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this)
+    }
+
+    async componentDidMount(){
+
+        await this.props.FetchPhysicalAssets(0)
+
+        if(this.props.physicalAsset.assets.length){
+            this.setState({
+                assets: this.props.physicalAsset.assets
+            })
         }
     }
 
-    toggleFilter(){
+    async fetchMoreAssets(){
         this.setState({
-            isFilterOpen: !this.state.isFilterOpen
+            page: this.state.page+1
         })
+
+        if(this.state.filter){
+            await this.props.FetchFilteredPhysicalAssets(this.state.page, this.state.category)
+        }
+        else{
+            await this.props.FetchPhysicalAssets(this.state.page);
+        }
+
+        if(this.props.physicalAsset.assets.length){
+            var tempAssets = this.state.assets;
+            for(var i=0;i<this.props.physicalAsset.assets.length;i++){
+                tempAssets.push(this.props.physicalAsset.assets[i]);
+            }
+    
+            this.setState({
+                assets: tempAssets
+            })
+        }
     }
 
-    handleChange = (nftCategoryFilter) => {
-        this.setState({ nftCategoryFilter });
-        console.log(`Option selected:`, nftCategoryFilter);
+    handleMultiSelectChange = async category => {
 
-    };
+        this.setState({
+            page: 0
+        })
 
-    renderAssets(){
-            return(
-                <div className='col-10 col-sm-6 col-md-5 col-lg-3'>
-                    <Card id="new-item-card">
-                            <Image className="new-item-image" rounded
-                                src={preview}
-                                onClick={() => alert("Clicked!!")}
-                            />
-                        <CardBody>
-                            <CardSubtitle
-                                tag="h5"
-                                className="mt-3 mb-3 new-item-card-subtitle"
-                                id="new-item-card-username"
-                            >
-                                {'Deslajd ed d'}
-                            </CardSubtitle>
-                            <CardText id="new-item-card-info" className="mb-4">
-                                {   
-                                    'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-                                }
-                            </CardText>
-                                <div>
-                                    {renderAssetCategories(categories)}
-                                </div>
-                            <div>
-                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                Price{"  "}
-                                <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    {'0.0000 ETH'}
-                                </span>
-                            </CardSubtitle>
-                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                Royality{"  "}
-                                <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    {'0%'}
-                                </span>
-                            </CardSubtitle>
-                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                Size{"  "}
-                                <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    {
-                                        '0 KB'
-                                    }
-                                </span>
-                            </CardSubtitle>
-                            </div>
-                            <div className="new-item-accountbox">
-                                <CardText id="new-item-card-account">
-                                    @{"john_bill123"}
-                                </CardText>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </div>
-                    
-            )
+        if(category.length === 0){
+            this.setState({
+                assets: [],
+                filter: false,
+                page: 0,
+                isFilterOpen: false
+            })
+    
+            await this.props.FetchPhysicalAssets(0)
+    
+            if(this.props.physicalAsset.assets.length){
+                this.setState({
+                    assets: this.props.physicalAsset.assets
+                })
+            }
+        }
+
+        this.setState({ category:category })
+        console.log(category)
     }
+
+    onFilterSubmit = async () => {
+
+        this.setState({
+            assets: [],
+            page:0,
+            filter: true
+        })
+
+        await this.props.FetchFilteredPhysicalAssets(0, this.state.category)
+
+        if(this.props.physicalAsset.assets.length){
+            this.setState({
+                assets: this.props.physicalAsset.assets
+            })
+        }
+    }
+
 
     render(){
-        return(
-            <div className='container-fluid asset-container'>
-                <div className='row justify-content-center mt-4 mb-4'>
-                    <h3 className='col-12 rainbow-lr new-item-heading'>
-                        VIEW INDEPENDENT ASSETS
-                    </h3>
-                    <div className='col-12 new-item-card-button-div mt-4'>
-                        <Button 
-                            className='mt-2 new-item-card-button'>
-                            <Link style={{color: 'white', textDecoration: 'none'}} to='/create/independent-digital-assets'>
-                                DIGITAL
-                            </Link>
-                        </Button>
-                        <Button
-                            className='mt-2 new-item-card-button' onClick={() => this.toggleFilter()}>
-                            FILTER
-                        </Button>
-                        <Button 
-                            disabled
-                            className='mt-2 new-item-card-button'>
-                            PHYSICAL
-                        </Button>
-                    </div>
-                </div>
-                <div className='row justify-content-center'>
-                    <div className='mt-4 col-6 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2'>
-                        <Collapse isOpen={this.state.isFilterOpen}>
-                            <Card>
-                                <CardBody style={{padding: 0}}>
-                                    <ListGroup>
-                                        <ListGroupItem className='asset-filter' tag="button" action>Art</ListGroupItem>
-                                        <ListGroupItem className='asset-filter' tag="button" action>Music</ListGroupItem>
-                                        <ListGroupItem className='asset-filter' tag="button" action>Domain Names</ListGroupItem>
-                                        <ListGroupItem className='asset-filter' tag="button" action>Virtual Worlds</ListGroupItem>
-                                        <ListGroupItem className='asset-filter' tag="button" action>Trading Cards</ListGroupItem>
-                                        <ListGroupItem className='asset-filter'tag="button" action>Collectibles</ListGroupItem>
-                                        <ListGroupItem className='asset-filter' tag="button" action>Sports</ListGroupItem>
-                                        <ListGroupItem className='asset-filter'tag="button" action>Documents</ListGroupItem>
-                                        <ListGroupItem className='asset-filter'tag="button" action>Utility</ListGroupItem>
-                                        <ListGroupItem className='asset-filter'tag="button" action>On Auction</ListGroupItem>
-                                        <ListGroupItem className='asset-filter'tag="button" action>Fixed Price</ListGroupItem>
-                                    </ListGroup> 
-                                </CardBody>
-                            </Card>
-                        </Collapse>
-                    </div>
-                </div>
-                <div className='row justify-content-center'>
-                    <div className>
 
+        if(this.props.physicalAsset.isLoading && !this.state.assets.length){
+            return(
+                <Loading type='spokes' color='white' />
+            );
+        }
+        else if(this.props.physicalAsset.errMess){
+            return(
+                <RenderError error={this.props.physicalAsset.errMess} />
+            );
+        }
+        else {
+            
+            var cardContainerStyle = this.state.dropDownOpen ? "asset-card-container" : "";
+            return(
+                <div className='container-fluid asset-container'>
+                    <div className='row justify-content-center mt-4 mb-4'>
+                        <h3 className='col-12 rainbow-lr new-item-heading'>
+                            VIEW INDEPENDENT ASSETS
+                        </h3>
+                        <div className='col-12 new-item-card-button-div mt-4'>
+                            <Button 
+                                className='mt-2 new-item-card-button'>
+                                <Link style={{color: 'white', textDecoration: 'none'}} to='/view/independent-digital-assets'>
+                                    DIGITAL
+                                </Link>
+                            </Button>
+                            <Button
+                                className='mt-2 new-item-card-button' onClick={() => this.onFilterSubmit()}>
+                                FILTER
+                            </Button>
+                            <Button 
+                                disabled
+                                className='mt-2 new-item-card-button'>
+                                PHYSICAL
+                            </Button>
+                        </div>
+                        <div className='mt-4 mb-3 col-10 col-sm-8 col-md-7 col-lg-4 asset-filter'>
+                            <Select isMulti name="category" 
+                                onMenuOpen={() => this.setState({
+                                    dropDownOpen: true
+                                })}
+                                onMenuClose={() => this.setState({
+                                    dropDownOpen: false
+                                })}
+                                styles={customSelectStyles}
+                                options={categoryList} className="basic-multi-select" 
+                                value={this.state.category} 
+                                onChange={this.handleMultiSelectChange} 
+                                classNamePrefix="select"
+                            />
+                        </div>
                     </div>
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
-                    {this.renderAssets()}
+                    <div 
+                        className={'row justify-content-center '+cardContainerStyle}>
+                        {
+                            this.state.assets.length 
+                            ?
+                            <InfiniteScroll
+                                className={'row justify-content-center'}
+                                dataLength={this.state.assets.length}
+                                next={() => this.fetchMoreAssets()}
+                                hasMore={this.props.physicalAsset.assets.length ? true : false}
+                                loader={<h4 style={{color: 'white'}}>Loading...</h4>}
+                                endMessage={
+                                    <h3 className='col-12 rainbow-lr new-item-heading'>
+                                        No More Assets Currently On Sale :(
+                                        <br/>
+                                        <br/>
+                                        Check Back Soon!!
+                                    </h3>
+                                }
+                                >
+                                {this.state.assets.map((asset) => < RenderPhysicalAssets 
+                                    asset={asset}  
+                                    placeBid = {this.props.UpdatePhysicalAsset}
+                                    auth = {this.props.auth}
+                                    assetStatus = {this.props.physicalAsset}
+                                />)}
+                            </InfiniteScroll>
+                            :
+                            <h3 className='col-12 rainbow-lr new-item-heading'>
+                                No Assets Currently On Sale :(
+                                <br/>
+                                <br/>
+                                Check Back Soon!!
+                            </h3>
+                        }
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
+        
     }
 }
 
-export default ViewPhysicalAsset;
+const  mapStateToProps = (state) => {
+    return{
+        auth: state.auth,
+        physicalAsset: state.physicalAsset,
+        item: state.item
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    
+    return {
+        FetchPhysicalAssets : (page) => dispatch(FetchPhysicalAssets(page)),
+        FetchFilteredPhysicalAssets: (page, categories) => dispatch(FetchFilteredPhysicalAssets(page, categories)),
+        UpdatePhysicalAsset: (assetId, updateAsset) => dispatch(UpdatePhysicalAsset(assetId, updateAsset)),
+        fetchItem: (itemId) => dispatch(fetchItem(itemId))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewPhysicalAsset);

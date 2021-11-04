@@ -1,0 +1,46 @@
+.accordion-button {
+  background-color: #222242 !important;
+  color: white !important;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.accordion-button::after {
+  background-color: white;
+  border-radius: 50%;
+}
+.responsive-margin {
+  /*
+
+                  width: "30%",
+                  display: "flex",
+                  justifyContent: "space-evenly",*/
+  width: 30%;
+  display: flex;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 500px) {
+  .responsive-flex {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .hi {
+    width: 100vw;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .responsive-names {
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+}
+.css-12jo7m5 {
+  color: white !important;
+}
+.css-1wnrcun-multiValue {
+  border-radius: 5555px !important;
+}
+.css-xb97g8 {
+  border-radius: 50% !important;
+}

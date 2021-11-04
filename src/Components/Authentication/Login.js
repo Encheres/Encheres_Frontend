@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
 import { Image } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import { valid_email } from '../../variables';
 import Lock from '../../assets/images/lock.jpg';
 import './styles.css'
+
+import {handleSignIn} from '../../apis_redux/actions/auth.js';
 
 class LoginForm extends Component{
     constructor(props){
@@ -20,14 +25,46 @@ class LoginForm extends Component{
 
     handleInputChange = (event) => {
         const {name, value} = event.target;
-        this.setState(prevState => ({
-            address: {
-                ...prevState.address,
-                [name]: value
-            },
-        }), ()=>{
-            this.props.handleAddressChange(this.state.address);
+        this.setState({
+            [name]:value
+        })
+    }
+
+    validateForm = ()=>{
+        const {email, password} = this.state;
+        let emailerror="", passworderror="", error = false;
+        if(!email ||email.match(valid_email)===null){
+            emailerror = "* Please enter a valid email address";
+            error = true;
+        }
+        if(!password ||password.length<6){
+            passworderror = "* Please enter a valid password";
+            error = true;
+        }
+        this.setState({
+            errors:{
+                email:emailerror,
+                password:passworderror,
+            }
         });
+        return error;
+    }
+
+    handleSubmit = async(e) =>{
+        e.preventDefault();
+        const {email, password} = this.state;
+        const data = { email, password}
+        const error = this.validateForm();
+        if(!error){
+            await this.props.handleSignIn(data);
+            if(this.props.auth.isSignedIn){
+                console.log("SignIn Successful");
+                this.props.history.push('/');
+            }else{
+                console.log(this.props.auth.error);
+            }
+
+        }
     }
 
     render(){
@@ -51,7 +88,7 @@ class LoginForm extends Component{
                                     <Col lg={6}>
                                     <Form className="login_form">
                                         <Row>
-                                            <h4 className="main_heading__form">Welcome Back, </h4>
+                                            <h4 className="main_heading__form light__blue">Welcome Back, </h4>
                                             <h4 className="main_heading_secondary"> Please login to continue</h4>
 
                                         </Row>
@@ -59,7 +96,7 @@ class LoginForm extends Component{
                                             <Form.Group controlId="formBasicEmail">
                                                 {/* <Form.Label className="form_input_label">Email address</Form.Label> */}
                                                 <input name="email" className="form_input_field form-control" type="email" value={this.state.email} placeholder="Email" onChange={this.handleInputChange} />
-                                                <div className="invalid__feedback">{}</div>
+                                                <div className="invalid__feedback">{this.state.errors.email}</div>
                                             </Form.Group>
                                         </Row>
 
@@ -67,7 +104,7 @@ class LoginForm extends Component{
                                             <Form.Group controlId="formBasicPassword">
                                                 {/* <Form.Label className="form_input_label">Password</Form.Label> */}
                                                 <input name="password" className="form_input_field form-control" type="password" value={this.state.password} placeholder="Password" onChange={this.handleInputChange} />
-                                                <div className="invalid__feedback">{}</div>
+                                                <div className="invalid__feedback">{this.state.errors.password}</div>
                                             </Form.Group>  
                                         </Row>
 
@@ -75,7 +112,13 @@ class LoginForm extends Component{
                                         <Button className="form__button pink_blue_gradiend_btn" type="submit" onClick={this.handleSubmit}>
                                             Login
                                         </Button>
-                                        
+                                        <br/>
+                                        <div class="form_direct_link">
+                                            <Link to="/forgot_password">Forgot Password?</Link>
+                                        </div>
+                                        <div class="form_direct_link">
+                                            <p className="text-muted ">Don't have an account? <Link to="/signup">Sign Up</Link></p>
+                                        </div>
                                     </Form>
                                     </Col>
                                 </Row>
@@ -91,4 +134,13 @@ class LoginForm extends Component{
 
     }
 };
-export default LoginForm;
+
+const mapStateToProps = (state, ownProps)=>{
+    return({
+        ...ownProps,
+        auth:state.auth
+    })
+
+}
+
+export default connect(mapStateToProps, {handleSignIn})(LoginForm);

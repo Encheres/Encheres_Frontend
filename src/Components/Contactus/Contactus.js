@@ -19,7 +19,7 @@ class Contactus extends Component {
         type: "",
         submissionError: null,
       },
-      validated: false,
+      validated: true,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,7 +40,7 @@ class Contactus extends Component {
       messageError = "",
       nameError = "",
       typeError = "",
-      error;
+      error = false;
     if (!email) {
       emailError = "Email is required";
       error = true;
@@ -70,28 +70,28 @@ class Contactus extends Component {
         type: typeError,
         name: nameError,
       },
+      validated: !error,
     }));
-    if (error) {
-      this.setState({
-        validated: false,
-      });
-    } else {
-      this.setState({ validated: true });
-    }
+    return !error;
   };
   handleSubmit(e) {
-    //e.preventDefault();
-    this.formValidation();
-    if (this.state.validated) {
+    e.preventDefault();
+    const resp = this.formValidation();
+    if (resp) {
       try {
+        console.log("trying");
         const { email, message, name, type } = this.state;
-        this.props.contactusform({ email, message, name, type });
+        this.props.contactusform({
+          email: email,
+          description: message,
+          name: name,
+          category: type,
+        });
         this.notifyS("Your response has been recorded successfully.");
       } catch (e) {
         this.notifyF("Some error occured.");
       }
     }
-    console.log(this.state);
   }
   componentDidMount() {
     if (this.props.auth) {
@@ -308,5 +308,5 @@ class Contactus extends Component {
 const mapStateToProps = (state) => {
   return { auth: state.auth.user };
 };
-// export default connect(mapStateToProps, {})(Contact);
-export default connect(mapStateToProps, { contactusform })(Contactus);
+
+export default connect(mapStateToProps, {contactusform})(Contactus);

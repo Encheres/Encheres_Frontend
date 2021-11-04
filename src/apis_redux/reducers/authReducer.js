@@ -1,13 +1,13 @@
 import {SIGN_IN, SIGN_OUT, SIGN_UP, AUTH_FAILED} from '../actions/actionTypes';
 const INITIAL_STATE = {
-    isSignedIn:localStorage.getItem('isSignedIn'),
-    userId:localStorage.getItem('userId'),
-    token: localStorage.getItem('token'),
+    isSignedIn:localStorage.getItem('encheres_isSignedIn'),
+    userId:localStorage.getItem('encheres_userId'),
+    token: localStorage.getItem('encheres_token'),
     error:null,
     message:null
 }
 
-/* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
+// eslint-disable-next-line
 export default (state=INITIAL_STATE, action) => {
     switch(action.type){
         case SIGN_UP:

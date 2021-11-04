@@ -1,0 +1,135 @@
+.live_auction_div{
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.item__name{
+    font-size: 2rem;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+}
+.image_carousel{
+    max-width: fit-content;
+    margin:1rem auto;   
+}
+.item_desc_title{
+    color: white;
+    margin-bottom: 10px !important;
+    margin-top: 10px !important;
+    font-weight: 500;
+}
+.blue_text_inline{
+    color: cyan;
+    margin-left: 1rem;
+}
+.title_row{
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.auction_status_buttons{
+    padding: 5px;
+    margin-right: 1rem;
+    background-color: rgb(8, 167, 8);
+}
+.auction_status_buttons:hover,.auction_status_buttons:active, .auction_status_buttons:focus {
+    background-color: rgb(8, 167, 8) !important;
+}
+.auction_status_buttons:disabled{
+    background-color: transparent !important;
+    color: white;
+
+}
+.text_para_auctionRoom{
+    color: grey;
+}
+.auction_details_div{
+    margin-top: 2rem;
+    border-top: 2px solid #666;
+    padding-top: 1rem;
+}
+.live_auction_details{
+    margin-top: 0.8rem;
+}
+.auction__heading{
+    text-align: center;
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+    size: 1.3rem;
+    text-transform: uppercase;
+}
+.auction_para_div{
+    margin-bottom: .8rem;
+
+}
+.auction_card_desc{
+    max-height: 90vh;
+    overflow-y: scroll;
+}
+.auction_bidding_input{
+    position: sticky;
+    margin-top: 3rem;
+    bottom: -3rem;
+    background-color: rgb(43 166 121);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    opacity: 0.9;
+}
+.auction_input_field{
+    margin-bottom: 1rem;
+}
+/*Chat Messages*/
+.chat__section__container{
+    max-width: 25rem;
+    margin: 0 auto;
+}
+.chat__section_div{
+    max-height: 60vh;
+    overflow-y: scroll;
+    border-top: 2px solid #666;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    scroll-behavior: smooth;
+}
+
+.chat_heading{
+    font-size: 1.8rem;
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+    color: rgb(0, 115, 255);
+    margin-bottom: 3rem;
+}
+.chat__notify{
+    text-align: center;
+    font-size: 1rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+
+}
+.message_div{
+    padding: .5rem;
+    /* margin-top: 1rem; */
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+}
+.general_box{
+    color: #fff;
+    background-color: rgb(221, 127, 255);
+}
+.warn_box{
+    color:black;
+    background-color: yellow;
+}
+.sold_box{
+    background-color: green;
+    color: #fff;
+}
+.start_box{
+    background-color: rgb(255, 0, 55);
+    color: white;
+}

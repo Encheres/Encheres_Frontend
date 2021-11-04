@@ -1,8 +1,47 @@
-.asset-filter{
-    color: grey !important;
-    background-color: #0B1126 !important;
-}
 
 .asset-container{
     margin-bottom: 100px;
+}
+
+.asset-card-container{
+    margin-top: 250px !important;
+}
+
+.asset-card-detail-container{
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+#asset-card-detail{
+    min-height: 540px;
+    max-height: 540px;
+    overflow-y: scroll;
+    border-radius: 25px ;
+    background-color: #0B1126;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    margin-top: 50px;
+}
+
+#single-asset-purchase-button-container{
+    text-align: center;
+    margin-bottom: 0;
+}
+
+#single-asset-purchase-button{
+    background-color: #0B1126;
+    border-radius: 40px;
+    border: solid 2px gray;
+    padding: 5px;
+}
+
+.modal-content{
+    background-color: rgb(34,34,66);
+}
+.digital_modal_header{
+    color: #fff;
+}
+.close{
+    background-color: red;
+    color: white;
 }

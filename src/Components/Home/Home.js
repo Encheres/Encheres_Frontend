@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
 import { Button, Container, Row, Col} from "reactstrap";
 import { Image } from 'react-bootstrap';
 import MainHeaderBackground from '../../assets/images/main_header_bg.jpg';
@@ -50,8 +51,38 @@ class Home extends Component{
                 <section className="new__section">
                     <Row>
                         <Col sm={12} md={6} className="image_col">
-                            <Image src={Buy_sell} alt = "buying ans selling image"  className="section__side__image section__image--left"/>
+                            <Image src={NFT_Img} alt = "nft-image"  className="section__side__image section__image--left"/>
                         </Col>
+                        <Col sm={12} md={6} className="text_col">
+                        <div className="section__heading--main">
+                            <h3 className="rainbow-lr">
+                                Create &amp; Trade NFT's
+                            </h3>
+                        </div>
+                    
+                        <div className="section__content">
+                            <p> 
+                            NFT (Non Fungible tokens) are unique digital assets whose ownership is completely yours.
+                            No third party to intervene. You can now create these NFT's at our Market places
+                            and can then also put them on auction. Our Platform uses ERC-721 standards to mint NFT's 
+                            and Ethereum Blockchain network to store them.
+                            </p>    
+                        </div>
+
+                        <div className='btn__section'>
+                            <Button className='new-item-card-button'>
+                                <Link style={{color: 'white', textDecoration: 'none'}} to='/view/independent-digital-assets'>
+                                    Explore NFT's
+                                </Link>
+                            </Button>            
+                        </div>
+
+                        </Col>
+                    </Row>
+                </section>
+
+                <section className="new__section">
+                    <Row>
                         <Col sm={12} md={6} className="text_col">
                         <div className="section__heading--main">
                             <h3 className="rainbow-lr">
@@ -61,98 +92,61 @@ class Home extends Component{
                     
                         <div className="section__content">
                             <p> 
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 
-                            1500s, when an unknown printer took a galley of type and scrambled it to 
-                            make a type specimen book. It has survived not only five centuries, but also
-                             the leap into electronic typesetting, remaining essentially unchanged. 
-                             It was popularised in the 1960s with the release of Letraset sheets 
-                             containing Lorem Ipsum passages, and more recently with desktop 
-                             publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                            Have you ever thought of a marketplace where you get access to trade both physical
+                            and digital assets at one place! Then you are at the right place. Here you can buy and 
+                            sell assets both physical and digital with wide variety of categorization. The best part
+                            is here you can trade assets at fixed price or allow bids to get profted from compeition of bidders. 
                             </p>    
                         </div>
 
                         <div className='btn__section'>
                             <Button className='new-item-card-button'>
-                                Explore Items
+                                <Link style={{color: 'white', textDecoration: 'none'}} 
+                                    to='/view/independent-physical-assets'>
+                                    Explore Assets 
+                                </Link>
                             </Button>            
                         </div>
-
+                        </Col>
+                        <Col sm={12} md={6} className="image_col">
+                            <Image src={Buy_sell} alt = "buying ans selling image"  className="section__side__image section__image--left"/>
                         </Col>
                     </Row>
                     </section>
 
                     <section className="new__section">
                     <Row>
+                        <Col sm={12} md={6} className="image_col">
+                            <Image src={Auction_img} alt = "auction-image"  className="section__side__image"/>
+                        </Col>
                         <Col sm={12} md={6} className="text_col">
                         <div className="section__heading--main">
                             <h3 className="rainbow-lr">
-                                Take part in Auctions
+                                Take part in Live Auctions
                             </h3>
                         </div>
                     
                         <div className="section__content">
                             <p> 
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 
-                            1500s, when an unknown printer took a galley of type and scrambled it to 
-                            make a type specimen book. It has survived not only five centuries, but also
-                             the leap into electronic typesetting, remaining essentially unchanged. 
-                             It was popularised in the 1960s with the release of Letraset sheets 
-                             containing Lorem Ipsum passages, and more recently with desktop 
-                             publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                            Are you the ones who loves to take part in live auctions a lot but can't get time 
+                            out from your busy schedules and have thought of getting a means to take part in auctions from home
+                            by any chnace ? or are you the auctioneer who wants to get advantage from wide variety 
+                            of competitive bidders reagardless of geographical limitations ? Then we've got you covered. 
                             </p>    
                         </div>
                         
                         <div className='btn__section'>
                             <Button className='new-item-card-button'>
-                                Explore Auctions
-                            </Button>            
-                        </div>
-
-                        </Col>
-                        <Col sm={12} md={6} className="image_col">
-                            <Image src={Auction_img} alt = "auction-image"  className="section__side__image"/>
-                        </Col>
-                    </Row>
-                    </section>
-
-
-                    <section className="new__section">
-                    <Row>
-                        <Col sm={12} md={6} className="image_col">
-                            <Image src={NFT_Img} alt = "nft-image"  className="section__side__image section__image--left"/>
-                        </Col>
-                        <Col sm={12} md={6} className="text_col">
-                        <div className="section__heading--main">
-                            <h3 className="rainbow-lr">
-                                Trade with NFT's
-                            </h3>
-                        </div>
-                    
-                        <div className="section__content">
-                            <p> 
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 
-                            1500s, when an unknown printer took a galley of type and scrambled it to 
-                            make a type specimen book. It has survived not only five centuries, but also
-                             the leap into electronic typesetting, remaining essentially unchanged. 
-                             It was popularised in the 1960s with the release of Letraset sheets 
-                             containing Lorem Ipsum passages, and more recently with desktop 
-                             publishing software like Aldus PageMaker including versions of Lorem Ipsum
-                            </p>    
-                        </div>
-
-                        <div className='btn__section'>
-                            <Button className='new-item-card-button'>
-                                Explore NFT's
+                                <Link style={{color: 'white', textDecoration: 'none'}} 
+                                    to='/view/auctions'>
+                                    Explore Live Auctions
+                                </Link>
                             </Button>            
                         </div>
 
                         </Col>
                     </Row>
                     </section>
-
 
                     <section className="new__section">
                     <Row>
@@ -165,14 +159,10 @@ class Home extends Component{
                     
                         <div className="section__content">
                             <p> 
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 
-                            1500s, when an unknown printer took a galley of type and scrambled it to 
-                            make a type specimen book. It has survived not only five centuries, but also
-                             the leap into electronic typesetting, remaining essentially unchanged. 
-                             It was popularised in the 1960s with the release of Letraset sheets 
-                             containing Lorem Ipsum passages, and more recently with desktop 
-                             publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                            For creation and storage of digital assets we use Blockchain network. This provides 
+                            excellent security and unhackable marketplace. The payment gateways for 
+                            both digital and physical assets also take place on Blockchain to add another 
+                            layer of great security.
                             </p>    
                         </div>
                         </Col>

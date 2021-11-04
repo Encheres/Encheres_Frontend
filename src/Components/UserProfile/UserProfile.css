@@ -34,10 +34,11 @@ button {
 div .btn-group-vertical {
     width: 60%;
     border-radius: 0;
+    align-items: flex-end;
 }
 
-.btn-group-vertical:hover {
-    background-color:#03091f !important;
+div .btn-group-vertical:hover {
+    color: #03091f;
 }
 div .btn-dark { 
     background-color: #03091f;

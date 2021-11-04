@@ -1,9 +1,10 @@
 import { record } from "../apis/encheres";
 import { CONTACT_US, FORM_FAILED } from "./actionTypes";
 
-export const contactusform = (contactus_detatils) => {
-  return async (dispatch, getState) => {
+export const contactusform = (contactus_detatils) => async (dispatch, getState) => {
+    console.log("inside contactus reducer");
     try {
+      console.log("sending the data of conntactus to db");
       const response = await record.post("/contactUs", contactus_detatils);
       console.log(response.data.message);
       dispatch({ type: CONTACT_US, payload: response.data });
@@ -20,4 +21,3 @@ export const contactusform = (contactus_detatils) => {
       dispatch({ type: FORM_FAILED, payload: { error: error } });
     }
   };
-};

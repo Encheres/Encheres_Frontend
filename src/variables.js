@@ -7,6 +7,9 @@ for(var i=0;i<countries.length;i++){
 }
 export const countryList =  newCountryList;
 
+// email verification regex
+export const valid_email = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i; 
+
 // Categories
 let nftCategories = []
 nftCategories.push("Art");
@@ -20,6 +23,19 @@ nftCategories.push("Documents");
 nftCategories.push("Utility");
 export const nftCategoryList = nftCategories;
 
+export const categoryList = [
+    {value:"Art", label:"Art"},
+    {value:"Antiques", label:"Antiques"},
+    {value:"Electronics", label:"Electronics"},
+    {value:"Vehicles", label:"Vehicles"},
+    {value:"Households", label:"Households"},
+    {value:"Collectibles", label:"Collectibles"},
+    {value:"Sports", label:"Sports"},
+    {value:"Fashion", label:"Fashion"},
+    {value:"Mini Items", label:"Mini Items"},
+    {value:"Real Estate", label:"Real Estate"},
+    {value:"Miscellaneous", label:"Miscellaneous"}
+]
 
 // SELECT Styles
 export const customSelectStyles = {

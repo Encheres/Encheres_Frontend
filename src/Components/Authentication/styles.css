@@ -3,14 +3,29 @@
     background-color: #0B1126;
     padding: 3rem;
     padding-top: 2.5rem;
+    margin-bottom: 3rem;
 }
+@media screen and (max-width: 400px) {
+    #singup_form_card{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+}
+
 .form_grp{
     margin-bottom: 1.5rem;
 }
 
+.form_heading_row{
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #fff;
+    font-weight: 450;
+}
 
-.form_input_label{
-    color: #ffff;
+.select__input-container, .form_input_label{
+    color: #ffff !important; 
 }
 
 .form_input_field, .select__control, .select__menu, .select__single-value{
@@ -41,4 +56,34 @@
     font-size: 1.5rem;
     color:#f76e43;
     margin-bottom: 1.4rem;
+}
+
+.form__text--para{
+    color: #fff;
+}
+.input_checkbox{
+    margin-right: .5rem;
+    margin-top:0.5rem;
+}
+.muted_text{
+    color:#6c757d;
+}
+.success_text{
+    color: #28a745;
+}
+.failed_text{
+    color: #dc3545;
+}
+.invalid__feedback{
+    color: cyan;
+}
+.light__blue{
+    color: cornflowerblue;
+}
+.text__small{
+    font-size: 1.2rem;
+}
+.form_direct_link{
+    margin-top: 0.8rem;
+    text-align: right;
 }
