@@ -12,6 +12,7 @@ const numToCatMap = [
     "Music",
     "Domain Names",
     "Virtual Worlds",
+    "Trading Cards",
     "Collectibles",
     "Sports",
     "Documents",

@@ -142,7 +142,7 @@ class ViewPhysicalAsset extends Component {
               >
                 FILTER
               </Button>
-              <Button disabled className="mt-2 new-item-card-button">
+              <Button className="mt-2 new-item-card-button selected_button_navigation">
                 PHYSICAL
               </Button>
             </div>
