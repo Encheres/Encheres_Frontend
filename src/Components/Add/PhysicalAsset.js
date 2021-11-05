@@ -67,7 +67,6 @@ class PhysicalAsset extends Component {
     constructor(props){
         super(props);
         this.state={
-
             assetImagesHash: [],
             assetVideoHash: "",
             name: "",
@@ -479,8 +478,7 @@ class PhysicalAsset extends Component {
                         </Button>
                         {" "}
                         <Button 
-                            disabled
-                            className='new-item-card-button'>
+                            className='new-item-card-button selected_button_navigation'>
                             PHYSICAL
                         </Button>
                     </div>
@@ -552,67 +550,67 @@ class PhysicalAsset extends Component {
                                 <div>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Art")}
-                                        bg={this.state.categories.indexOf("Art")>=0 ? "secondary": "light"}
+                                        bg={this.state.categories.indexOf("Art")>=0 ? "light": "secondary"}
                                     >
                                         <span><FaPalette/></span> Art
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Antiques")}
-                                        bg={this.state.categories.indexOf("Antiques")>=0 ? "secondary": "light"}
+                                        bg={this.state.categories.indexOf("Antiques")>=0 ? "light": "secondary"}
                                     >
                                         <span><GiClockwork/></span> Antiques
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Electronics")}
-                                        bg={this.state.categories.indexOf("Electronics")>=0 ? "secondary": "light"}
+                                        bg={this.state.categories.indexOf("Electronics")>=0 ? "light": "secondary"}
                                     >
                                         <span><GiVendingMachine/></span> Electronics
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Vehicles")} 
-                                        bg={this.state.categories.indexOf("Vehicles")>=0 ? "secondary": "light"}                             
+                                        bg={this.state.categories.indexOf("Vehicles")>=0 ? "light": "secondary"}                             
                                     >
                                         <span><FaCarSide/></span> Vehicles
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Households")}  
-                                        bg={this.state.categories.indexOf("Households")>=0 ? "secondary": "light"}                                                      
+                                        bg={this.state.categories.indexOf("Households")>=0 ? "light": "secondary"}                                                      
                                     >
                                         <span><GiSofa/></span> Households
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Collectibles")} 
-                                        bg={this.state.categories.indexOf("Collectibles")>=0 ? "secondary": "light"}                                                       
+                                        bg={this.state.categories.indexOf("Collectibles")>=0 ? "light": "secondary"}                                                       
                                     >
                                         <span><GiBearFace/></span> Collectibles
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Sports")} 
-                                        bg={this.state.categories.indexOf("Sports")>=0 ? "secondary": "light"}                                                       
+                                        bg={this.state.categories.indexOf("Sports")>=0 ? "light": "secondary"}                                                       
                                     >
                                         <span><FaFootballBall/></span> Sports
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Fashion")}  
-                                        bg={this.state.categories.indexOf("Fashion")>=0 ? "secondary": "light"}                                                      
+                                        bg={this.state.categories.indexOf("Fashion")>=0 ? "light": "secondary"}                                                      
                                     >
                                         <span><GiClothes/></span> Fashion
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Mini Items")}    
-                                        bg={this.state.categories.indexOf("Mini Items")>=0 ? "secondary": "light"}                                                    
+                                        bg={this.state.categories.indexOf("Mini Items")>=0 ? "light": "secondary"}                                                    
                                     >
                                         <span><GiWatch/></span> Mini Items
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Real Estate")}    
-                                        bg={this.state.categories.indexOf("Real Estate")>=0 ? "secondary": "light"}                                                    
+                                        bg={this.state.categories.indexOf("Real Estate")>=0 ? "light": "secondary"}                                                    
                                     >
                                         <span><FaBuilding/></span> Real Estate
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Miscellaneous")}    
-                                        bg={this.state.categories.indexOf("Miscellaneous")>=0 ? "secondary": "light"}                                                    
+                                        bg={this.state.categories.indexOf("Miscellaneous")>=0 ? "light": "secondary"}                                                    
                                     >
                                         <span><FaWallet/></span> Miscellaneous
                                     </Badge>

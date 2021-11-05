@@ -9,6 +9,7 @@ import Lock from '../../assets/images/lock.jpg';
 import './styles.css'
 
 import {handleSignIn} from '../../apis_redux/actions/auth.js';
+import swal from 'sweetalert';
 
 class LoginForm extends Component{
     constructor(props){
@@ -59,9 +60,11 @@ class LoginForm extends Component{
             await this.props.handleSignIn(data);
             if(this.props.auth.isSignedIn){
                 console.log("SignIn Successful");
+                swal("Login Successful", "", "success");
                 this.props.history.push('/');
             }else{
                 console.log(this.props.auth.error);
+                swal("Oops!", this.props.auth.error, "error");
             }
 
         }
