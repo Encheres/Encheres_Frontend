@@ -49,3 +49,6 @@
 .digital_asset_bid_btn{
     margin-top:0.4rem;
 }
+.special_btn_dis:disabled{
+    opacity: 0.9;
+}
