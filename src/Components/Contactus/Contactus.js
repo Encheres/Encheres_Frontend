@@ -1,9 +1,16 @@
 import React, { Component } from "react";
-import "./contactus.css";
 //redux stuff
 import { connect } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
+import { Image } from 'react-bootstrap';
 import { contactusform } from "../../apis_redux/actions/contactus";
+import ContactUsImage from "../../assets/images/contact.jpg";
+import Form from 'react-bootstrap/Form';
+import '../Authentication/styles.css'
+import swal from "sweetalert";
+import Select from 'react-select'
+import {customSelectStyles, contactOptions} from '../../variables'
+
 class Contactus extends Component {
   constructor(props) {
     super(props);
@@ -31,8 +38,6 @@ class Contactus extends Component {
       [name]: event.target.value,
     });
   }
-  notifyS = (message) => toast.success(message);
-  notifyF = (message) => toast.error(message);
 
   formValidation = () => {
     const { email, message, name, type } = this.state;
@@ -53,7 +58,7 @@ class Contactus extends Component {
       error = true;
     }
 
-    if (!type) {
+    if (!type||!type.value) {
       typeError = "A type is required";
       error = true;
     }
@@ -85,108 +90,23 @@ class Contactus extends Component {
           email: email,
           description: message,
           name: name,
-          category: type,
+          category: type.value,
         });
-        this.notifyS("Your response has been recorded successfully.");
+        swal("Thank you for contacting us", "We will get back to you soon", "success");
       } catch (e) {
-        this.notifyF("Some error occured.");
+        swal("Oops", "Something went wrong", "error");
       }
     }
   }
-  componentDidMount() {
-    if (this.props.auth) {
-      this.setState({
-        email: this.props.auth.email,
-      });
-    }
-  }
 
-  render = () => {
-    return (
+
+  renderUi = ()=>{
+    return(
       <section className="section-padding-100">
         <div className="container">
           <div className="row">
-            <div className="col-12">
-              <div className="section-heading text-center">
-                <div className="dream-dots justify-content-center aos-init">
-                  <span>Get in Touch</span>
-                </div>
-                <h2
-                  data-aos="fade-up"
-                  data-aos-delay={300}
-                  className="aos-init"
-                >
-                  Contact With Us
-                </h2>
-              </div>
-            </div>
+            
             <div className="contactus_main">
-              <div className="left">
-                <h2> We are here to help you</h2>
-                <div className="contact_left_small">
-                  <i
-                    className="fa fa-home fa-3x"
-                    style={{ padding: "5px" }}
-                  ></i>
-                  <div style={{ marginLeft: "8px" }}>
-                    <h5>Company Address</h5>
-                    <p>10, Mc Donald Avenue, Sunset Park, Newyork</p>
-                  </div>
-                </div>
-                <div className="contact_left_small">
-                  <i
-                    className="fa fa-envelope fa-3x"
-                    style={{ padding: "5px" }}
-                  ></i>
-                  <div style={{ marginLeft: "5px" }}>
-                    <h5>Email Address</h5>
-                    <p>info@yourdomain.com</p>
-                  </div>
-                </div>
-                <div className="contact_left_small">
-                  <i
-                    className="fa fa-phone fa-3x"
-                    style={{ padding: "5px" }}
-                  ></i>
-                  <div style={{ marginLeft: "13px" }}>
-                    <h5>Contact</h5>
-                    <p>+99 999 9999</p>
-                  </div>
-                </div>
-                <div className="sociallinks">
-                  <ul
-                    className="social-links"
-                    style={{ listStyle: "none", display: "flex" }}
-                  >
-                    <li style={{ marginRight: "12px" }}>
-                      <a href="#">
-                        <span className="fa fa-facebook-f" />
-                      </a>
-                    </li>
-                    <li style={{ marginRight: "12px" }}>
-                      <a href="#">
-                        <span className="fa fa-twitter" />
-                      </a>
-                    </li>
-                    <li style={{ marginRight: "12px" }}>
-                      <a href="#">
-                        <span className="fa fa-google-plus" />
-                      </a>
-                    </li>
-                    <li style={{ marginRight: "12px" }}>
-                      <a href="#">
-                        <span className="fa fa-linkedin" />
-                      </a>
-                    </li>
-                    <li style={{ marginRight: "12px" }}>
-                      <a href="#">
-                        <span className="fa fa-instagram" />
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="right">
                 <h1>Send Us Message</h1>
                 <div className="input-flex">
                   <div
@@ -241,27 +161,7 @@ class Contactus extends Component {
                     className="group aos-init"
                     style={{ marginRight: "10px" }}
                   >
-                    <select
-                      name="type"
-                      id="type"
-                      required
-                      style={{
-                        backgroundColor: "rgb(34, 34, 66)",
-                        color: "white",
-                      }}
-                      onChange={async (e) => {
-                        console.log(e.target[e.target.selectedIndex].text);
-                        this.setState({
-                          type: e.target[e.target.selectedIndex].text,
-                        });
-                      }}
-                    >
-                      <option value="">--Please choose an option--</option>
-                      <option value="complaint">Complaint</option>
-                      <option value="feedback">Feedback</option>
-                      <option value="help">Help</option>
-                    </select>
-
+                    
                     <div className="invalid__feedback">
                       {this.state.errors.type}
                     </div>
@@ -300,8 +200,92 @@ class Contactus extends Component {
               </div>
             </div>
           </div>
-        </div>
       </section>
+
+    )
+  }
+  componentDidMount() {
+    if (this.props.auth) {
+      this.setState({
+        email: this.props.auth.email,
+      });
+    }
+  }
+
+  handleTypeChange = val =>{
+    this.setState({
+      type: val
+    })
+  }
+
+  render = () => {
+    return (
+      <>
+        <Container>
+                <Row className="heading_section_row">
+                    <h3 className='section_heading rainbow-lr '>
+                        Contact Us
+                    </h3>
+                </Row>
+
+                <Row className="section_content">
+                    
+                    <Col md={12}>
+                        <Card id="singup_form_card">
+                            <CardBody>
+                                <CardText>
+                                <Row>
+                                    <Col lg={6}>
+                                        <Image src={ContactUsImage} className="login_image" alt="lock image" style={{height:'20rem'}} fluid/>
+                                    </Col>
+                                    <Col lg={6}>
+                                    
+                                        <Row>
+                                            <h4 className="main_heading__form light__blue"> Send Us Message </h4>
+                                        </Row>
+                                        <div>
+                                          <Form className="login_form">
+                                          <Row className="form_input_row form_grp">
+                                            <Form.Group controlId="formBasicEmail">
+                                                {/* <Form.Label className="form_input_label">Email</Form.Label> */}
+                                                <input name="email" className="form_input_field form-control" type="text" value={this.state.email} placeholder="Email" onChange={this.handleInputChange} />
+                                                <div className="invalid__feedback">{this.state.errors.email}</div>
+                                            </Form.Group>  
+                                          </Row>
+                                            
+                                          <Row className="form_input_row form_grp">
+                                            <Form.Group controlId="formBasicName">
+                                                <input name="name" className="form_input_field form-control" type="text" value={this.state.name} placeholder="Name" onChange={this.handleInputChange} />
+                                                <div className="invalid__feedback">{this.state.errors.name}</div>
+                                            </Form.Group>                  
+                                        </Row>
+                                        <Row className="form_input_row form_grp">
+                                          <Form.Group controlId="formBasicName">
+                                            <Select styles={customSelectStyles}  name="type" options={contactOptions} className="basic-multi-select form_input_field" value={this.state.type} onChange={this.handleTypeChange} classNamePrefix="select" placeholder="Select Option"/>
+                                            </Form.Group>
+                                        </Row>
+
+                                        <Row className="form_input_row form_grp">
+                                          <Form.Group controlId="formBasicName">
+                                          <textarea name="message" className="form_input_field form-control" type="text" value={this.state.message} placeholder="Message" onChange={this.handleInputChange}  rows={3}/>
+                                          </Form.Group>
+                                        </Row>
+
+                                        <Button className="form__button pink_blue_gradiend_btn" type="submit" onClick={this.handleSubmit}>
+                                            Send
+                                        </Button>
+                                          </Form>
+                                        </div>
+                                        
+                                    </Col>
+                                </Row>
+                                </CardText>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+      </>
     );
   };
 }
