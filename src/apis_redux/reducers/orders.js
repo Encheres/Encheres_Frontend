@@ -27,7 +27,7 @@ export default (
             return { ...state, orders: state.orders.concat(order), postFail: false, postFailMess: ''};
 
         case POST_FAIL:
-                return { ...state, postFail: true, postFailMess: action.payload}
+            return { ...state, postFail: true, postFailMess: action.payload}
 
         default:
             return state;

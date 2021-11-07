@@ -306,6 +306,7 @@ class DigitalAsset extends Component {
                     <h3 className="col-12 rainbow-lr new-item-heading">
                         ADD INDEPENDENT ASSET
                     </h3>
+<<<<<<< HEAD
                     <div className="new-item-card-button-div mt-4">
                         <Button disabled className="new-item-card-button">
                             DIGITAL (NFT)
@@ -318,6 +319,17 @@ class DigitalAsset extends Component {
                                 }}
                                 to="/create/independent-physical-assets"
                             >
+=======
+                    <div className='new-item-card-button-div mt-4'>
+                        <Button 
+                            className='new-item-card-button selected_button_navigation'>
+                            DIGITAL (NFT) 
+                        </Button>
+                        {" "}
+                        <Button 
+                            className='new-item-card-button'>
+                            <Link style={{color: 'white', textDecoration: 'none'}} to='/create/independent-physical-assets'>
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                 PHYSICAL
                             </Link>
                         </Button>
@@ -376,6 +388,7 @@ class DigitalAsset extends Component {
                                     Select Asset Categories
                                 </CardText>
                                 <div>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -390,12 +403,18 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Art", 0)}
+                                        bg={this.state.categories.indexOf("Art")>=0 ? "light":"secondary"}
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <FaPalette />
                                         </span>{" "}
                                         Art
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -410,12 +429,18 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Music", 1)}
+                                        bg={this.state.categories.indexOf("Music")>=0 ? "light":"secondary"}
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <FaMusic />
                                         </span>{" "}
                                         Music
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -430,12 +455,18 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Domain Names", 2)}
+                                        bg={this.state.categories.indexOf("Domain Names")>=0 ? "light":"secondary"}
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <GrDomain />
                                         </span>{" "}
                                         Domain Names
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -453,12 +484,18 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Virtual Worlds", 3)} 
+                                        bg={this.state.categories.indexOf("Virtual Worlds")>=0 ? "light":"secondary"}                             
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <BiWorld />
                                         </span>{" "}
                                         Virtual Worlds
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -473,12 +510,18 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Trading Cards", 4)}  
+                                        bg={this.state.categories.indexOf("Trading Cards")>=0 ? "light":"secondary"}                                                      
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <GiCardRandom />
                                         </span>{" "}
                                         Trading Cards
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -493,12 +536,18 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Collectibles", 5)} 
+                                        bg={this.state.categories.indexOf("Collectibles")>=0 ? "light":"secondary"}                                                       
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <GiBearFace />
                                         </span>{" "}
                                         Collectibles
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -513,12 +562,18 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Sports", 6)} 
+                                        bg={this.state.categories.indexOf("Sports")>=0 ? "light":"secondary"}                                                       
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <FaFootballBall />
                                         </span>{" "}
                                         Sports
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -533,10 +588,16 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Documents", 7)}  
+                                        bg={this.state.categories.indexOf("Documents")>=0 ? "light":"secondary"}                                                      
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span className="fa fa-file" />{" "}
                                         Documents
                                     </Badge>
+<<<<<<< HEAD
                                     <Badge
                                         className="new-item-badge"
                                         pill
@@ -551,6 +612,11 @@ class DigitalAsset extends Component {
                                                 ? "secondary"
                                                 : "light"
                                         }
+=======
+                                    <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Utility", 8)}    
+                                        bg={this.state.categories.indexOf("Utility")>=0 ? "light":"secondary"}                                                    
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     >
                                         <span>
                                             <FaWallet />

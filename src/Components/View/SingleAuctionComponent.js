@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import { Accordion, Button } from "react-bootstrap";
+import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./auctionlist.css";
 import { renderPhysicalAssetCategories } from "../FrequentComponents/Asset";
+import './auctionlist.css'
 
 class SingleAuctionComponent extends Component {
   constructor(props) {
     super();
     this.state = {
-      type: 1 /* 0 = live , 1 = upcomming , 2 = past */,
+      type: 1 /* 0 = live , 1 = upcoming , 2 = past */,
     };
   }
 
@@ -60,30 +62,26 @@ class SingleAuctionComponent extends Component {
               >
                 <div className="responsive-margin">
                   {this.state.type === 0 ? (
-                    <span
+                    <span className='auction_time_text'
                       style={{
-                        padding: "7px",
                         background: "yellow",
                         color: "red",
-                        height: "35px",
                       }}
                     >
                       Live
                     </span>
                   ) : this.state.type === 1 ? (
-                    <span
+                    <span className='auction_time_text'
                       style={{
-                        padding: "7px",
                         background: "green",
                         color: "white",
                       }}
                     >
-                      Upcomming
+                      Upcoming
                     </span>
                   ) : (
-                    <span
+                    <span className='auction_time_text'
                       style={{
-                        padding: "7px",
                         background: "grey",
                         color: "white",
                       }}
@@ -95,21 +93,36 @@ class SingleAuctionComponent extends Component {
                 <div className="responsive-margin">{this.props.time}</div>
               </div>
               <div className="responsive-buttons">
+                { this.props.type===0?
                 <Button
-                  variant="outline-primary"
+                  variant="primary"
                   style={{ marginRight: "10px" }}
                 >
-                  Enter
+                  
+                  <Link style={{color: 'white', textDecoration: 'none'}} to={`/view/auctions/${this.props.auctionName}`}>
+                    Enter Auction
+                  </Link>
                 </Button>
+<<<<<<< HEAD
                 {this.isUserCreator(this.props.organizerId)}
+=======
+                :<></>
+              }
+                <Button
+                  variant="danger"
+                  style={{ marginRight: "15px" }}
+                >
+                  View Details
+                </Button>
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
               </div>
             </div>
-            <div style={{ marginTop: "1px" }} className="responsive-margin hi">
+            {/* <div style={{ marginTop: "1px" }} className="responsive-margin hi">
               {this.props.organizerName}
-            </div>
+            </div> */}
           </div>
         </Accordion.Header>
-        <Accordion.Body style={{ backgroundColor: "white", color: "black" }}>
+        <Accordion.Body style={{ backgroundColor: "#bab8de", color: "black" }}>
           <div>
             <div
               style={{
@@ -118,22 +131,23 @@ class SingleAuctionComponent extends Component {
                 backgroundColor: "#0B1126",
                 padding: "9px",
                 marginBottom: "15px",
+                paddingTop: "18px",
               }}
             >
               {renderPhysicalAssetCategories(this.props.tags)}
             </div>
-
-            <div>
-              <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
-                Description :{" "}
-              </h6>
-              {this.props.description}
-            </div>
+            
             <div style={{ marginTop: "5px" }}>
               <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
-                Address :{" "}
+                Start Time:{" "}
               </h6>
-              {this.props.addressLine1}
+              {this.props.time}
+              
+              <br/>
+              <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
+                Pickup Point Address:{" "}
+              </h6>
+              {this.props.addressLine1}{this.props.addressLine2?<> , {this.props.addressLine2}</>:<></>}
               <br />
               <h6
                 style={{
@@ -144,8 +158,17 @@ class SingleAuctionComponent extends Component {
               >
                 Location :{" "}
               </h6>
-              {this.props.city} <br />
-              {this.props.postalCode},{this.props.state}
+              {this.props.city}, {this.props.state}, {this.props.country} <br />
+              <h6
+                style={{
+                  marginBottom: "0px",
+                  marginTop: "3px",
+                  fontWeight: "bold",
+                }}
+              >
+                Postal Code :{" "}
+              </h6>
+              {this.props.postalCode}
               <br />
               <h6 style={{ display: "inline", fontWeight: "bold" }}>
                 Contact No.

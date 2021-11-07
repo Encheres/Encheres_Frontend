@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Loading from "../loading";
@@ -21,6 +22,30 @@ import swal from "sweetalert";
 import AuctionContract from "../../abis/Auctions.json";
 import NftAssetContract from "../../abis/NftAsset.json";
 import "../View/View.css";
+=======
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import Loading from '../loading';
+import { connect } from 'react-redux';
+import { FetchPhysicalAssets, FetchFilteredPhysicalAssets, 
+    UpdatePhysicalAsset } from '../../apis_redux/actions/physicalAsset';
+import { fetchItem } from '../../apis_redux/actions/item';
+import { categoryList, customSelectStyles } from '../../variables';
+import Select from 'react-select'
+import InfiniteScroll from "react-infinite-scroll-component";
+import RenderError from '../FrequentComponents/RenderError';
+import { ipfs_base_url } from '../../apis_redux/apis/encheres';
+import {Card, CardText, CardBody, CardSubtitle, Button } from "reactstrap";
+import {Image} from 'react-bootstrap';
+import detectEthereumProvider from '@metamask/detect-provider'
+import Web3 from 'web3';
+import swal from 'sweetalert';
+import AuctionContract from '../../abis/Auctions.json';
+import NftAssetContract from '../../abis/NftAsset.json';
+import '../View/View.css'
+import {renderAssetCategoriesFromIds} from '../FrequentComponents/Asset'
+
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
 
 class ViewDigitalAsset extends Component {
     constructor(props) {
@@ -47,12 +72,22 @@ class ViewDigitalAsset extends Component {
     }
     async loadWeb3() {
         if (window.web3) {
+<<<<<<< HEAD
             window.web3 = new Web3(window.ethereum);
             await window.ethereum.enable();
             console.log(window.web3);
         } else if (window.web3) {
             window.web3 = new Web3(window.web3.currentProvider);
         } else {
+=======
+          window.web3 = new Web3(window.ethereum)
+          await window.ethereum.enable()
+        }
+        else if (window.web3) {
+          window.web3 = new Web3(window.web3.currentProvider)
+        }
+        else {
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
             swal({
                 title: "OOPS!!",
                 text: "Non-Ethereum browser detected. You should consider trying MetaMask!",
@@ -105,10 +140,16 @@ class ViewDigitalAsset extends Component {
             });
             this.setState({
                 account_address: accounts[0],
+<<<<<<< HEAD
                 account_integrated: true,
             });
             console.log(accounts[0]);
         } catch (err) {
+=======
+                account_integrated:true
+            })
+        }catch(err){
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
             swal({
                 title: "OOPS!!",
                 text: "Metamask Account Integration failed",
@@ -169,6 +210,7 @@ class ViewDigitalAsset extends Component {
                 category: asset[5],
             };
             digitalAssets.push(assetData);
+<<<<<<< HEAD
             await this.setState({
                 digitalAssets,
                 fetched_count: this.state.fetched_count + 1,
@@ -185,6 +227,23 @@ class ViewDigitalAsset extends Component {
             return;
         } else {
             console.log("fetching");
+=======
+            this.setState({
+                digitalAssets, 
+                fetched_count: this.state.fetched_count + 1 
+            });
+            
+            console.log(digitalAssets);
+            
+        } 
+    }
+
+    fetchAssets = async () => {
+        const {auctions_list, fetched_count} = this.state;
+        if(fetched_count>=auctions_list.length){
+            return;
+        }else{
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
             const id = auctions_list[fetched_count];
             await this.fetchDigitalAsset(id);
         }
@@ -255,10 +314,19 @@ class ViewDigitalAsset extends Component {
                                 >
                                     {asset.name}
                                 </CardSubtitle>
+<<<<<<< HEAD
                                 <CardText
                                     id="new-item-card-info"
                                     className="mb-4"
                                 >
+=======
+                                <div>
+                                {
+                                    renderAssetCategoriesFromIds(asset.category)
+                                }
+                            </div>
+                                <CardText id="new-item-card-info" className="mb-4">
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                     {asset.description}
                                 </CardText>
                                 <div
@@ -272,6 +340,7 @@ class ViewDigitalAsset extends Component {
                                         id="single-asset-purchase-button"
                                         style={{ marginRight: 10 }}
                                     >
+<<<<<<< HEAD
                                         <Link
                                             style={{
                                                 color: "white",
@@ -279,6 +348,9 @@ class ViewDigitalAsset extends Component {
                                             }}
                                             to={`/digital-assets/${asset.tokenId}`}
                                         >
+=======
+                                        <Link style={{color: 'white', textDecoration: 'none'}} to={`/digital-assets/${asset.nft_id}`}>
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                             View Details
                                         </Link>
                                     </Button>
@@ -306,11 +378,17 @@ class ViewDigitalAsset extends Component {
                         <h3 className="col-12 rainbow-lr new-item-heading">
                             VIEW INDEPENDENT ASSETS
                         </h3>
+<<<<<<< HEAD
                         <div className="col-12 new-item-card-button-div mt-4">
                             <Button
                                 disabled
                                 className="mt-2 new-item-card-button"
                             >
+=======
+                        <div className='col-12 new-item-card-button-div mt-4'>
+                            <Button 
+                                className='mt-2 new-item-card-button selected_button_navigation'>
+>>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                 DIGITAL
                             </Button>
                             <Button
