@@ -66,7 +66,6 @@ class PhysicalAsset extends Component {
     constructor(props){
         super(props);
         this.state={
-
             assetImagesHash: [],
             assetVideoHash: "",
             name: "",

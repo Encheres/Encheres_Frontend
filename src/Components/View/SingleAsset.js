@@ -14,6 +14,7 @@ import { FaEthereum } from 'react-icons/fa';
 import './View.css'
 import swal from 'sweetalert';
 import { Link } from 'react-router-dom';
+import {ipfs_base_url} from '../../apis_redux/apis/encheres'
 
 class SingleAssetDetail extends React.Component{
 
@@ -183,7 +184,7 @@ class SingleAssetDetail extends React.Component{
             var showcaseElement;
             for(var i=0;i<asset.asset.images.length;i++){
                 showcaseElement = {
-                    src: "https://ipfs.infura.io/ipfs/"+asset.asset.images[i],
+                    src: ipfs_base_url+asset.asset.images[i],
                     altText: "Slide "+i.toString(),
                     key: i.toString()
                 }
@@ -242,7 +243,7 @@ class SingleAssetDetail extends React.Component{
                                                 <span style={{ marginLeft: 10, color: "cyan" }}>
                                                     {(!asset.asset.assetVideoHash) ? 
                                                         "Not Available" : 
-                                                        <a style={{textDecoration: 'none', color: 'cyan'}} href={'https://ipfs.infura.io/ipfs/'+asset.assetVideoHash}>Link</a>}
+                                                        <a style={{textDecoration: 'none', color: 'cyan'}} href={ipfs_base_url+asset.assetVideoHash}>Link</a>}
                                                 </span>
                                             </CardSubtitle>
                                         </div>
