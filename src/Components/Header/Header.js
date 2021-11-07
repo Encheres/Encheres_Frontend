@@ -7,14 +7,10 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  NavbarText,
-  Breadcrumb,
-  BreadcrumbItem,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/Encheres.png";
@@ -47,16 +43,18 @@ class Header extends Component {
             dark
             expand="md"
           >
-            <NavbarBrand href="/">
-              <img src={Logo} height="70" width="70" alt="Encheres" />
-            </NavbarBrand>
+            <LinkContainer to="/">
+              <NavbarBrand>
+                <img src={Logo} height="70" width="70" alt="Encheres" />
+              </NavbarBrand>
+            </LinkContainer>
             <NavbarToggler onClick={this.toggleNav} />
             <Collapse isOpen={this.state.isNavOpen} navbar>
               <Nav className="navbar-link" navbar>
                 <NavItem>
-                  <NavLink className="" href="/home">
+                  <Link to="/home" className="nav-link" >
                     <span className="NavBarLink fa fa-home fa-lg" /> Home
-                  </NavLink>
+                  </Link>
                 </NavItem>
                 {this.props.signedIn ? 
                   <UncontrolledDropdown nav inNavbar>
@@ -64,12 +62,13 @@ class Header extends Component {
                       <span className="NavBarLink fa fa-plus-square fa-lg" /> Add
                     </DropdownToggle>
                     <DropdownMenu right>
-                      <DropdownItem href="/create/live_auction">
-                        Live Auction
-                      </DropdownItem>
-                      <DropdownItem href="/create/independent-digital-assets">
-                        Independent Asset
-                      </DropdownItem>
+                      <LinkContainer to='/create/live_auction'>
+                        <DropdownItem> Live Auction </DropdownItem>
+                      </LinkContainer>
+
+                      <LinkContainer to='/create/independent-digital-assets'>
+                        <DropdownItem> Independent Asset </DropdownItem>
+                      </LinkContainer>
                     </DropdownMenu>
                   </UncontrolledDropdown> :
                   <></>}
@@ -79,49 +78,51 @@ class Header extends Component {
                     View
                   </DropdownToggle>
                   <DropdownMenu right>
-                    <DropdownItem href="/view/auctions">Auctions</DropdownItem>
-                    <DropdownItem href="/view/independent-digital-assets">
-                      Independent Assets
-                    </DropdownItem>
+                    <LinkContainer to='/view/auctions'>
+                      <DropdownItem>Auctions</DropdownItem>
+                    </LinkContainer>
+                    <LinkContainer to='/view/independent-digital-assets'>
+                      <DropdownItem> Independent Assets </DropdownItem>
+                    </LinkContainer>
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <NavItem>
                   {this.props.signedIn ? 
-                    <NavLink href="/pending-shipment">
+                    <Link to="/pending-shipment" className='nav-link'>
                       <span className="NavBarLink fa fa-truck fa-lg" /> Shipments
-                    </NavLink> : 
+                    </Link> : 
                     <></>}   
                 </NavItem>
                 <NavItem>
                   {this.props.signedIn ? 
-                    <NavLink href="/my-winnings">
+                    <Link to="/my-winnings" className='nav-link'>
                       <span className="NavBarLink fa fa-trophy fa-lg" /> Winnings
-                    </NavLink> :
+                    </Link> :
                     <></>}
                 </NavItem>
                 <NavItem>
                   {this.props.signedIn ? (
-                    <NavLink href="/logout">
+                    <Link to="/logout" className='nav-link'>
                       <span className="NavBarLink fa fa-sign-out fa-lg" />
-                    </NavLink>
+                    </Link>
                   ) : <></>}
                   
                 </NavItem>
                 <NavItem>
                   {this.props.signedIn ? (
-                    <NavLink href={`/profile/${this.props.userId}`}>
+                    <Link to={`/profile/${this.props.userId}`} className='nav-link'>
                       <span className="NavBarLink fa fa-user-circle fa-lg" />
-                    </NavLink>
+                    </Link>
                   ) : (
-                    <NavLink href="/login">
+                    <Link to="/login" className='nav-link'>
                       <span className="NavBarLink fa fa-sign-in fa-lg" />
-                    </NavLink>
+                    </Link>
                   )}
                 </NavItem>
                 <NavItem>
-                  <NavLink className="" href="/contact-us">
+                  <Link to="/contact-us" className='nav-link'>
                     <span className="NavBarLink fa fa-question-circle fa-lg" />
-                  </NavLink>
+                  </Link>
                 </NavItem>
               </Nav>
             </Collapse>

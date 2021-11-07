@@ -4,7 +4,6 @@ import AuctionContract from '../../abis/Auctions.json';
 import {Row, Modal, ModalHeader, ModalBody, ModalFooter, Button} from 'reactstrap';
 import Form from 'react-bootstrap/Form';
 import Datetime from 'react-datetime';
-import './testing.css'
 // add functionality to return money back, when person outbidded
 
 class DigitalAsset extends Component {

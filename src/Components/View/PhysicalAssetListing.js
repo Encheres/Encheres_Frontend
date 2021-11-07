@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {Card, CardBody, UncontrolledCarousel, CardSubtitle, Button} from 'reactstrap';
 import { renderPhysicalAssetCategories } from '../FrequentComponents/Asset';
 import { CountdownTimer } from '../FrequentComponents/CountdownTimer';
+import {ipfs_base_url} from '../../apis_redux/apis/encheres';
 import './View.css'
 
 class RenderPhysicalAssets extends React.Component{
@@ -24,7 +25,7 @@ class RenderPhysicalAssets extends React.Component{
         var showcaseElement;
         for(var i=0;i<asset.asset.images.length;i++){
             showcaseElement = {
-                src: "https://ipfs.infura.io/ipfs/"+asset.asset.images[i],
+                src: ipfs_base_url+asset.asset.images[i],
                 altText: "Slide "+i.toString(),
                 key: i.toString()
             }

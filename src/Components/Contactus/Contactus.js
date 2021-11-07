@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import "./contactus.css";
+import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
+import { Image } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import Select from 'react-select';
+import ContactUsImage from '../../assets/images/contactUs.jpg';
+import { customSelectStyles, contactOptions } from "../../variables";
 //redux stuff
 import { connect } from "react-redux";
 import { contactusform } from "../../apis_redux/actions/contactus";
@@ -101,9 +106,9 @@ class Contactus extends Component {
           name: name,
           category: type,
         });
-        this.notifyS("Your response has been recorded successfully.");
+        
       } catch (e) {
-        this.notifyF("Some error occured.");
+        
       }
     }
   }
