@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import { valid_email } from '../../variables';
 import Lock from '../../assets/images/lock.jpg';
 import './styles.css'
-
+import swal from 'sweetalert';
 import {handleSignIn} from '../../apis_redux/actions/auth.js';
 
 class LoginForm extends Component{
@@ -59,8 +59,10 @@ class LoginForm extends Component{
             await this.props.handleSignIn(data);
             if(this.props.auth.isSignedIn){
                 console.log("SignIn Successful");
+                swal("Login Successful", "", "success");
                 this.props.history.push('/');
             }else{
+                swal("Oops", this.props.auth.error, "error");
                 console.log(this.props.auth.error);
             }
 

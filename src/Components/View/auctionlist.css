@@ -44,3 +44,14 @@
 .css-xb97g8 {
   border-radius: 50% !important;
 }
+
+.input_div_auctionList{
+  margin-bottom: 1.5rem;
+}
+.auction_time_text{
+  padding:7px;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  border-radius: 0.8rem;
+  height: 35px;
+}

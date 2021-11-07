@@ -6,13 +6,12 @@ import { Accordion } from "react-bootstrap";
 import Select from "react-select";
 // redux stuff
 import { connect } from "react-redux";
-import {
-  get_auction_list,
-  get_filtered_auction,
-} from "../../apis_redux/actions/auction_list";
+import { get_auction_list, get_filtered_auction} from "../../apis_redux/actions/auction_list";
 import Loading from "../loading";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Error from "../FrequentComponents/RenderError";
+import {categoryList} from '../../variables'
+
 const styles = {
   multiValue: (styles) => {
     return {
@@ -20,25 +19,13 @@ const styles = {
       backgroundColor: "#222242",
       color: "red",
     };
-  },
+  }
 };
+
 class Auctionlist extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      options: [
-        { value: "Art", label: "Art" },
-        { value: "Antiques", label: "Antiques" },
-        { value: "Electronics", label: "Electronics" },
-        { value: "Vehicles", label: "Vehicles" },
-        { value: "Households", label: "Households" },
-        { value: "Collectibles", label: "Collectibles" },
-        { value: "Sports", label: "Sports" },
-        { value: "Fashion", label: "Fashion" },
-        { value: "Real Estate", label: "Real Estate" },
-        { value: "Miscellaneous", label: "Miscellaneous" },
-        { value: "Mini Items", label: "Mini Items" },
-      ],
       selectedTag: [],
       selectedTime: "",
       customer_id: "not loaded",
@@ -70,10 +57,7 @@ class Auctionlist extends Component {
     this.setState({ page: 0, data: [], filter: true });
     this.clearFilterButtonHandler();
   };
-  componentDidUpdate() {
-    console.log("props", this.props);
-    console.log("state", this.state);
-  }
+  
   clearFilterButtonHandler = async () => {
     if (this.state.filter) {
       //with filters
@@ -122,67 +106,76 @@ class Auctionlist extends Component {
   };
   ui = () => {
     return (
-      <section style={{ paddingTop: "100px" }}>
-        <div className="container">
-          <div style={{ marginTop: "10px" }}>
-            <h5 style={{ color: "white" }}>Select Tags</h5>
-            <Select
-              onMenuOpen={() =>
-                this.setState({
-                  dropDownOpen: true,
-                })
-              }
-              onMenuClose={() =>
-                this.setState({
-                  dropDownOpen: false,
-                })
-              }
-              styles={styles}
-              closeMenuOnSelect={false}
-              isMulti
-              options={this.state.options}
-              onChange={(e) => {
-                this.setState({ selectedTag: e });
-                if (this.state.selectedTag.length || this.state.selectedTime) {
-                  this.setState({ filter: true });
-                } else {
-                  this.setState({ filter: false });
+      <div className='container container-fluid asset-container'>
+          <div className='row justify-content-center mt-4 mb-4'>
+              <h3 className='col-12 rainbow-lr new-item-heading'>
+                VIEW AUCTIONS
+              </h3>
+          </div>
+          <div className="input_div_auctionList">
+              <h5 style={{ color: "white" }}>Select Tags</h5>
+              <Select
+                onMenuOpen={() =>
+                  this.setState({
+                    dropDownOpen: true,
+                  })
                 }
-              }}
-              value={this.state.selectedTag}
-            />
-            <h5 style={{ color: "white" }}>Select time</h5>
-            <Select
-              value={this.state.selectedTime}
-              onMenuOpen={() =>
-                this.setState({
-                  dropDownOpen: true,
-                })
-              }
-              onMenuClose={() =>
-                this.setState({
-                  dropDownOpen: false,
-                })
-              }
-              styles={styles}
-              closeMenuOnSelect={true}
-              options={[
-                { value: "Past", label: "Past" },
-                { value: "Live", label: "Live" },
-                { value: "Upcomming", label: "Upcomming" },
-              ]}
-              onChange={(e) => {
-                this.setState({ selectedTime: e });
+                onMenuClose={() =>
+                  this.setState({
+                    dropDownOpen: false,
+                  })
+                }
+                styles={styles}
+                closeMenuOnSelect={false}
+                isMulti
+                placeholder="Select Tags"
+                options={categoryList}
+                onChange={(e) => {
+                  this.setState({ selectedTag: e });
+                  if (this.state.selectedTag.length || this.state.selectedTime) {
+                    this.setState({ filter: true });
+                  } else {
+                    this.setState({ filter: false });
+                  }
+                }}
+                value={this.state.selectedTag}
+              />
+          </div>
+          <div className="input_div_auctionList">
+              <h5 style={{ color: "white" }}>Select time</h5>
+              <Select
+                value={this.state.selectedTime}
+                onMenuOpen={() =>
+                  this.setState({
+                    dropDownOpen: true,
+                  })
+                }
+                onMenuClose={() =>
+                  this.setState({
+                    dropDownOpen: false,
+                  })
+                }
+                styles={styles}
+                placeholder="Select Auction time"
+                closeMenuOnSelect={true}
+                options={[
+                  { value: "Past", label: "Past" },
+                  { value: "Live", label: "Live" },
+                  { value: "Upcoming", label: "Upcoming" },
+                ]}
+                onChange={(e) => {
+                  this.setState({ selectedTime: e });
 
-                if (this.state.selectedTag.length || this.state.selectedTime) {
-                  this.setState({ filter: true });
-                } else {
-                  this.setState({ filter: false });
-                }
-              }}
-            />
-            <div
-              style={{
+                  if (this.state.selectedTag.length || this.state.selectedTime) {
+                    this.setState({ filter: true });
+                  } else {
+                    this.setState({ filter: false });
+                  }
+                }}
+              />
+          </div>
+            
+          <div style={{
                 marginTop: "15px",
                 display: "flex",
                 justifyContent: "center",
@@ -192,8 +185,9 @@ class Auctionlist extends Component {
                 className="new-item-card-button"
                 onClick={this.buttonPressHandler}
               >
-                Filter
+                Apply Filters
               </Button>
+
               <Button
                 color="danger"
                 onClick={() => {
@@ -206,8 +200,8 @@ class Auctionlist extends Component {
               >
                 Clear Filters
               </Button>
-            </div>
           </div>
+
           <InfiniteScroll
             dataLength={this.state.data.length}
             next={() => this.fetchMoreAssets()}
@@ -237,15 +231,12 @@ class Auctionlist extends Component {
                 const two = new Date(element.event_date_time);
                 if (element.completed === true) {
                   //past
-                  //console.log(index, "past");
                   whichtype = 2;
                 } else if (two > one) {
                   //upcomming
                   whichtype = 1;
-                  //console.log(index, "upcomming");
                 } else {
                   whichtype = 0;
-                  //console.log(index, "live");
                 }
 
                 return (
@@ -260,9 +251,11 @@ class Auctionlist extends Component {
                     description="Description"
                     tags={element.tags}
                     addressLine1={element.pickup_point.addressLine1}
+                    addressLine2={element.pickup_point.addressLine2}
                     city={element.pickup_point.city}
                     postalCode={element.pickup_point.postalCode}
-                    state={element.pickup_point.state}
+                    state={element.pickup_point.addressState}
+                    country={element.pickup_point.country}
                     type={whichtype}
                   />
                 );
@@ -270,7 +263,6 @@ class Auctionlist extends Component {
             </Accordion>
           </InfiniteScroll>
         </div>
-      </section>
     );
   };
   render = () => {

@@ -8,6 +8,7 @@ import ForgotPassImg from '../../assets/images/reset_password.jpg';
 import './styles.css'
 
 import {handleResetPassword} from '../../apis_redux/actions/auth.js';
+import swal from 'sweetalert';
 
 class ResetPassword extends Component{
     constructor(props){
@@ -71,10 +72,12 @@ class ResetPassword extends Component{
                 this.setState({
                     error:this.props.resetPass.error
                 })
+                swal("Oops!", this.props.resetPass.error, "error");
             }else{
                 this.setState({
                     message:this.props.resetPass.message
                 })
+                swal("Success!", "Password has been reset successfully", "success");
             }
         }
     }

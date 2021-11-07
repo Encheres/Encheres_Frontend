@@ -8,6 +8,7 @@ import { customSelectStyles, contactOptions } from "../../variables";
 //redux stuff
 import { connect } from "react-redux";
 import { contactusform } from "../../apis_redux/actions/contactus";
+import swal from "sweetalert";
 class Contactus extends Component {
   constructor(props) {
     super(props);
@@ -106,8 +107,9 @@ class Contactus extends Component {
           name: name,
           category: type,
         });
-        
+        swal("Thank you for contacting us", "We will get back to you soon", "success");
       } catch (e) {
+        swal("Error", "Something went wrong", "error");
         
       }
     }
