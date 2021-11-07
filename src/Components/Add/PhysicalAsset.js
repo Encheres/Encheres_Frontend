@@ -39,7 +39,6 @@ var demoShowcaseCarousel = [
         altText: "Slide 2",
         key: "2"
     },
-    ,
     {
         src: "https://ipfs.infura.io/ipfs/QmNMAB8Lfi13Jva6PQvF7CLo8qH6erUYrT3Z86paEBfoP6",
         altText: "Slide 3",

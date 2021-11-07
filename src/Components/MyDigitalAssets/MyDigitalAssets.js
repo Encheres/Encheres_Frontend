@@ -314,10 +314,22 @@ class MyDigitalAssets extends Component {
                 
                 if(res&& res.status===true){
                     console.log(res);
+                    swal({
+                        title: "Success",
+                        text: "Auction created successfully",
+                        icon: "success",
+                    }, ()=>{
+                        this.toggleModal();
+                    })
                     console.log('Auction Created');    
                 }
             }
         }catch(err){
+            swal({
+                title: "Error",
+                text: "Unable to create auction",
+                icon: "error",
+            })
             console.log(err);
         }
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import {Card, CardBody, UncontrolledCarousel, CardSubtitle, CardText, Button, Collapse} from 'reactstrap';
+import {Card, CardBody, UncontrolledCarousel, CardSubtitle, Button} from 'reactstrap';
 import { renderPhysicalAssetCategories } from '../FrequentComponents/Asset';
 import { CountdownTimer } from '../FrequentComponents/CountdownTimer';
 import {ipfs_base_url} from '../../apis_redux/apis/encheres'

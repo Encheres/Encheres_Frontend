@@ -31,12 +31,28 @@ class Contactus extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  componentDidMount() {
+    if (this.props.auth) {
+      this.setState({
+        email: this.props.auth.email,
+      });
+    }
+  }
+
+
   handleInputChange(event) {
     const target = event.target;
     const name = target.name;
     this.setState({
       [name]: event.target.value,
     });
+  }
+
+  handleTypeChange = val =>{
+    this.setState({
+      type: val
+    })
   }
 
   formValidation = () => {
@@ -59,12 +75,12 @@ class Contactus extends Component {
     }
 
     if (!type||!type.value) {
-      typeError = "A type is required";
+      typeError = "Type is required";
       error = true;
     }
 
     if (!name) {
-      nameError = "A Name is required ";
+      nameError = "Name is required ";
       error = true;
     }
 
@@ -78,7 +94,8 @@ class Contactus extends Component {
       validated: !error,
     }));
     return !error;
-  };
+  };  
+
   handleSubmit(e) {
     e.preventDefault();
     const resp = this.formValidation();
@@ -97,125 +114,6 @@ class Contactus extends Component {
         swal("Oops", "Something went wrong", "error");
       }
     }
-  }
-
-
-  renderUi = ()=>{
-    return(
-      <section className="section-padding-100">
-        <div className="container">
-          <div className="row">
-            
-            <div className="contactus_main">
-                <h1>Send Us Message</h1>
-                <div className="input-flex">
-                  <div
-                    className="group aos-init"
-                    style={{ marginRight: "10px" }}
-                  >
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      required
-                      value={this.state.email}
-                      placeholder="Email"
-                      onChange={this.handleInputChange}
-                    />
-                    <span className="highlight" />
-                    <span className="bar" />
-
-                    <div className="invalid__feedback">
-                      {this.state.errors.email}
-                    </div>
-                  </div>
-                  <div
-                    className="group aos-init"
-                    style={{ marginRight: "10px" }}
-                  >
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      required
-                      value={this.state.name}
-                      placeholder="Name"
-                      onChange={this.handleInputChange}
-                    />
-                    <span className="highlight" />
-                    <span className="bar" />
-
-                    <div className="invalid__feedback">
-                      {this.state.errors.name}
-                    </div>
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignContent: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div
-                    className="group aos-init"
-                    style={{ marginRight: "10px" }}
-                  >
-                    
-                    <div className="invalid__feedback">
-                      {this.state.errors.type}
-                    </div>
-                    <span className="highlight" />
-                    <span className="bar" />
-                    <br />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="group aos-init">
-                    <textarea
-                      name="message"
-                      id="message"
-                      required
-                      placeholder="Feedback"
-                      onChange={this.handleInputChange}
-                    />
-                    <span className="highlight" />
-                    <span className="bar" />
-
-                    <div className="invalid__feedback">
-                      {this.state.errors.message}
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="col-12 text-center aos-init"
-                  data-aos-delay={700}
-                  data-aos="fade-in"
-                >
-                  <button class="btn-hover color-7" onClick={this.handleSubmit}>
-                    Send
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-      </section>
-
-    )
-  }
-  componentDidMount() {
-    if (this.props.auth) {
-      this.setState({
-        email: this.props.auth.email,
-      });
-    }
-  }
-
-  handleTypeChange = val =>{
-    this.setState({
-      type: val
-    })
   }
 
   render = () => {
@@ -249,25 +147,27 @@ class Contactus extends Component {
                                             <Form.Group controlId="formBasicEmail">
                                                 {/* <Form.Label className="form_input_label">Email</Form.Label> */}
                                                 <input name="email" className="form_input_field form-control" type="text" value={this.state.email} placeholder="Email" onChange={this.handleInputChange} />
-                                                <div className="invalid__feedback">{this.state.errors.email}</div>
+                                                <div id='new-item-form-error' className="invalid__feedback">{this.state.errors.email}</div>
                                             </Form.Group>  
                                           </Row>
                                             
                                           <Row className="form_input_row form_grp">
                                             <Form.Group controlId="formBasicName">
                                                 <input name="name" className="form_input_field form-control" type="text" value={this.state.name} placeholder="Name" onChange={this.handleInputChange} />
-                                                <div className="invalid__feedback">{this.state.errors.name}</div>
+                                                <div id='new-item-form-error' className="invalid__feedback">{this.state.errors.name}</div>
                                             </Form.Group>                  
                                         </Row>
                                         <Row className="form_input_row form_grp">
                                           <Form.Group controlId="formBasicName">
-                                            <Select styles={customSelectStyles}  name="type" options={contactOptions} className="basic-multi-select form_input_field" value={this.state.type} onChange={this.handleTypeChange} classNamePrefix="select" placeholder="Select Option"/>
-                                            </Form.Group>
+                                            <Select styles={customSelectStyles}  name="type" options={contactOptions} className="basic-multi-select form_input_field" value={this.state.type} onChange={this.handleTypeChange} classNamePrefix="select" placeholder="Select Type"/>
+                                            <div id='new-item-form-error'>{this.state.errors.type}</div>
+                                          </Form.Group>
                                         </Row>
 
                                         <Row className="form_input_row form_grp">
                                           <Form.Group controlId="formBasicName">
-                                          <textarea name="message" className="form_input_field form-control" type="text" value={this.state.message} placeholder="Message" onChange={this.handleInputChange}  rows={3}/>
+                                            <textarea name="message" className="form_input_field form-control" type="text" value={this.state.message} placeholder="Message" onChange={this.handleInputChange}  rows={3}/>
+                                            <div id='new-item-form-error'>{this.state.errors.message}</div>
                                           </Form.Group>
                                         </Row>
 
