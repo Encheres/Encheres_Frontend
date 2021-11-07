@@ -27,17 +27,50 @@ class Auctionlist extends Component {
     super(props);
     this.state = {
       options: [
-        { value: "Art", label: "Art" },
-        { value: "Antiques", label: "Antiques" },
-        { value: "Electronics", label: "Electronics" },
-        { value: "Vehicles", label: "Vehicles" },
-        { value: "Households", label: "Households" },
-        { value: "Collectibles", label: "Collectibles" },
-        { value: "Sports", label: "Sports" },
-        { value: "Fashion", label: "Fashion" },
-        { value: "Real Estate", label: "Real Estate" },
-        { value: "Miscellaneous", label: "Miscellaneous" },
-        { value: "Mini Items", label: "Mini Items" },
+        {
+          value: "Art",
+          label: "Art",
+        },
+        {
+          value: "Antiques",
+          label: "Antiques",
+        },
+        {
+          value: "Electronics",
+          label: "Electronics",
+        },
+        {
+          value: "Vehicles",
+          label: "Vehicles",
+        },
+        {
+          value: "Households",
+          label: "Households",
+        },
+        {
+          value: "Collectibles",
+          label: "Collectibles",
+        },
+        {
+          value: "Sports",
+          label: "Sports",
+        },
+        {
+          value: "Fashion",
+          label: "Fashion",
+        },
+        {
+          value: "Real Estate",
+          label: "Real Estate",
+        },
+        {
+          value: "Miscellaneous",
+          label: "Miscellaneous",
+        },
+        {
+          value: "Mini Items",
+          label: "Mini Items",
+        },
       ],
       selectedTag: [],
       selectedTime: "",
@@ -48,11 +81,12 @@ class Auctionlist extends Component {
     };
   }
   componentDidMount = () => {
+    //start
     this.clearFilterButtonHandler();
+    console.log("props", this.props);
+    console.log("state", this.state);
   };
-  isUserCreator = () => {
-    return this.props.auth.userId; //equate to orgamixer id.
-  };
+
   convertTimetoUserLocation = (s) => {
     return new Date(s).toLocaleString(undefined, {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -65,67 +99,82 @@ class Auctionlist extends Component {
   };
   buttonPressHandler = () => {
     /*
-      tags , page , time
-    */
-    this.setState({ page: 0, data: [], filter: true });
+          tags , page , time
+        */
+    this.setState({
+      page: 0,
+      data: [],
+      filter: true,
+    });
     this.clearFilterButtonHandler();
   };
-  componentDidUpdate() {
+  componentDidUpdate = () => {
     console.log("props", this.props);
     console.log("state", this.state);
-  }
+  };
   clearFilterButtonHandler = async () => {
     if (this.state.filter) {
       //with filters
+      console.log("with filters");
       const tosend = {
         tags: this.onlyValuesarray(this.state.selectedTag),
         time: this.state.selectedTime.value,
         page: this.state.page,
       };
-      await this.props.get_filtered_auction(tosend);
-      console.log("send : ", tosend);
-      if (!this.props.auctionlist.loading && !this.props.auctionlist.errors) {
-        this.setState({
-          data: [this.state.data, this.props.auctionlist.payload.data].flat(),
-        });
-      }
+      /*   const res = await this.props.get_filtered_auction(tosend);
+      const _auction = await res.auctionlist;
+      const __auction_payload = await _auction.payload;
+      const __auction_data = await __auction_payload;
+     */
+      this.setState({
+        data: [
+          this.state.data.flat(),
+          this.props.auctionlist.payload.flat(),
+        ].flat(),
+      });
     } else {
+      console.log("without filters");
       //without filters
+      //const res = await this.props.getAllAuctions(this.state.page);
+      //const _auction = await res.auctionlist;
+      //const __auction_payload = await _auction.payload;
+      //const __auction_data = await __auction_payload;
       await this.props.getAllAuctions(this.state.page);
-      if (!this.props.auctionlist.loading && !this.props.auctionlist.errors) {
-        this.setState({
-          data: [this.state.data, this.props.auctionlist.payload.data].flat(),
-        });
-      }
+      const _final_data = await this.props.auctionlist.payload;
+      this.setState({
+        data: [this.state.data.flat(), _final_data.flat()].flat(),
+      });
+      console.log(this.props.auctionlist.payload);
     }
   };
-  whatTime = () => {
-    const now = new Date();
-    const abhi = now.toISOString();
-  };
+
   fetchMoreAssets = () => {
-    this.setState({ page: this.state.page + 1 });
+    this.setState({
+      page: this.state.page + 1,
+    });
     this.clearFilterButtonHandler();
-  };
-  isMorefunc = () => {
-    if (this.props.auctionlist.loading) {
-      return false;
-    } else if (this.props.auctionlist.errors) {
-      return false;
-    } else {
-      if (this.props.auctionlist.payload.data.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
   };
   ui = () => {
     return (
-      <section style={{ paddingTop: "100px" }}>
+      <section
+        style={{
+          paddingTop: "100px",
+        }}
+      >
         <div className="container">
-          <div style={{ marginTop: "10px" }}>
-            <h5 style={{ color: "white" }}>Select Tags</h5>
+          <div
+            style={{
+              marginTop: "10px",
+            }}
+          >
+            <h5
+              style={{
+                color: "white",
+              }}
+            >
+              {" "}
+              Select Tags{" "}
+            </h5>{" "}
             <Select
               onMenuOpen={() =>
                 this.setState({
@@ -142,16 +191,29 @@ class Auctionlist extends Component {
               isMulti
               options={this.state.options}
               onChange={(e) => {
-                this.setState({ selectedTag: e });
+                this.setState({
+                  selectedTag: e,
+                });
                 if (this.state.selectedTag.length || this.state.selectedTime) {
-                  this.setState({ filter: true });
+                  this.setState({
+                    filter: true,
+                  });
                 } else {
-                  this.setState({ filter: false });
+                  this.setState({
+                    filter: false,
+                  });
                 }
               }}
               value={this.state.selectedTag}
-            />
-            <h5 style={{ color: "white" }}>Select time</h5>
+            />{" "}
+            <h5
+              style={{
+                color: "white",
+              }}
+            >
+              {" "}
+              Select time{" "}
+            </h5>{" "}
             <Select
               value={this.state.selectedTime}
               onMenuOpen={() =>
@@ -167,20 +229,35 @@ class Auctionlist extends Component {
               styles={styles}
               closeMenuOnSelect={true}
               options={[
-                { value: "Past", label: "Past" },
-                { value: "Live", label: "Live" },
-                { value: "Upcomming", label: "Upcomming" },
+                {
+                  value: "Past",
+                  label: "Past",
+                },
+                {
+                  value: "Live",
+                  label: "Live",
+                },
+                {
+                  value: "Upcomming",
+                  label: "Upcomming",
+                },
               ]}
               onChange={(e) => {
-                this.setState({ selectedTime: e });
+                this.setState({
+                  selectedTime: e,
+                });
 
                 if (this.state.selectedTag.length || this.state.selectedTime) {
-                  this.setState({ filter: true });
+                  this.setState({
+                    filter: true,
+                  });
                 } else {
-                  this.setState({ filter: false });
+                  this.setState({
+                    filter: false,
+                  });
                 }
               }}
-            />
+            />{" "}
             <div
               style={{
                 marginTop: "15px",
@@ -192,8 +269,8 @@ class Auctionlist extends Component {
                 className="new-item-card-button"
                 onClick={this.buttonPressHandler}
               >
-                Filter
-              </Button>
+                Filter{" "}
+              </Button>{" "}
               <Button
                 color="danger"
                 onClick={() => {
@@ -204,21 +281,23 @@ class Auctionlist extends Component {
                   });
                 }}
               >
-                Clear Filters
-              </Button>
-            </div>
-          </div>
+                Clear Filters{" "}
+              </Button>{" "}
+            </div>{" "}
+          </div>{" "}
           <InfiniteScroll
             dataLength={this.state.data.length}
             next={() => this.fetchMoreAssets()}
             hasMore={
-              this.props.auctionlist.payload.data.length > 0 ? true : false
+              this.props.auctionlist.payload !== null &&
+              this.props.auctionlist.payload.length > 0
+                ? true
+                : false
             }
             // loader={<Loading />}
             endMessage={
               <h3 className="col-12 rainbow-lr new-item-heading">
-                No More auctions :(
-                <br />
+                No More auctions: ( <br />
                 <br />
                 Check Back Soon!!
               </h3>
@@ -226,7 +305,9 @@ class Auctionlist extends Component {
           >
             <Accordion
               defaultActiveKey="0"
-              style={{ marginTop: "50px" }}
+              style={{
+                marginTop: "50px",
+              }}
               onScroll={this.handleScroll}
             >
               {this.state.data.map((element, index) => {
@@ -256,6 +337,7 @@ class Auctionlist extends Component {
                     time={this.convertTimetoUserLocation(
                       element.event_date_time
                     )}
+                    organizerId={element.organizer}
                     organizerName="Organizer Name"
                     description="Description"
                     tags={element.tags}
@@ -266,24 +348,24 @@ class Auctionlist extends Component {
                     type={whichtype}
                   />
                 );
-              })}
-            </Accordion>
-          </InfiniteScroll>
-        </div>
+              })}{" "}
+            </Accordion>{" "}
+          </InfiniteScroll>{" "}
+        </div>{" "}
       </section>
     );
   };
   render = () => {
     if (this.props.auctionlist.loading) {
       return <Loading />;
-    } else if (this.props.auctionlist.errors) {
-      return <Error />;
     } else {
-      return <>{this.ui()}</>;
+      /*else if (this.props.auctionlist.errors) {
+                 return <Error />;
+               } */
+      return <> {this.ui()} </>;
     }
   };
 }
-
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
