@@ -86,3 +86,41 @@ export const PostOrder = (order) => (dispatch) => {
             dispatch({type: POST_FAIL, payload: "Your Order could not be posted\nError: " + error.message});
 		});
 } 
+
+export const RemoveOrder = (itemId) => () => {
+    
+	const bearer = "Bearer " + localStorage.getItem("encheres_token");
+
+    return fetch(devURL+`/orders/${itemId}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: bearer
+			},
+		})
+		.then(
+			(response) => {
+				if (response.ok) {
+					return response;
+				} else {
+					var error = new Error(
+						"Error " + response.status + ": " + response.statusText
+					);
+					error.response = response;
+					alert(error);
+					throw error;
+				}
+			},
+			(error) => {
+				alert(error);
+				throw error;
+			}
+		)
+		.then((response) => response.json())
+		.then((response) =>{
+			console.log(response)
+		})
+		.catch((error) => {
+			console.log(error.message)
+		});
+} 
