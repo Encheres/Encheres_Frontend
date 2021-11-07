@@ -16,20 +16,6 @@ class SingleAuctionComponent extends Component {
     this.setState({ type: this.props.type });
   }
 
-  isUserCreator = async (Organizer) => {
-    const userid = await this.props.auth;
-    if (userid.userId === Organizer) {
-      return (
-        <Button variant="outline-danger" style={{ marginRight: "15px" }}>
-          Edit
-        </Button>
-      );
-    } else {
-      return <></>;
-    }
-
-    //  return this.props.auth.userId === Organizer; //equate to orgamixer id.
-  };
   render = () => {
     return (
       <Accordion.Item
@@ -101,7 +87,12 @@ class SingleAuctionComponent extends Component {
                 >
                   Enter
                 </Button>
-                {this.isUserCreator(this.props.organizerId)}
+                <Button
+                  variant="outline-danger"
+                  style={{ marginRight: "15px" }}
+                >
+                  Edit
+                </Button>
               </div>
             </div>
             <div style={{ marginTop: "1px" }} className="responsive-margin hi">
