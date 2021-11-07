@@ -1,16 +1,8 @@
 import React, { Component } from "react";
+import "./contactus.css";
 //redux stuff
 import { connect } from "react-redux";
-import {Card, CardText, CardBody, Button, Container, Row, Col} from "reactstrap";
-import { Image } from 'react-bootstrap';
 import { contactusform } from "../../apis_redux/actions/contactus";
-import ContactUsImage from "../../assets/images/contact.jpg";
-import Form from 'react-bootstrap/Form';
-import '../Authentication/styles.css'
-import swal from "sweetalert";
-import Select from 'react-select'
-import {customSelectStyles, contactOptions} from '../../variables'
-
 class Contactus extends Component {
   constructor(props) {
     super(props);
@@ -107,12 +99,19 @@ class Contactus extends Component {
           email: email,
           description: message,
           name: name,
-          category: type.value,
+          category: type,
         });
-        swal("Thank you for contacting us", "We will get back to you soon", "success");
+        this.notifyS("Your response has been recorded successfully.");
       } catch (e) {
-        swal("Oops", "Something went wrong", "error");
+        this.notifyF("Some error occured.");
       }
+    }
+  }
+  componentDidMount() {
+    if (this.props.auth) {
+      this.setState({
+        email: this.props.auth.email,
+      });
     }
   }
 

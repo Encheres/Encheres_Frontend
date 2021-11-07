@@ -6,7 +6,6 @@
 .new-item-heading{
     text-align: center !important;
     margin-top: 100px !important;
-    padding-top: 2rem;
 }
 
 .new-item-checkbox{
@@ -158,10 +157,4 @@
 
 .rdtNext:hover,.rdtPrev:hover, .rdtSwitch, .rdtCounter .rdtBtn:hover,.rdtDay:hover {
     background: #243c94 !important;
-}
-
-.selected_button_navigation{
-    transform: scale(1.2);
-    margin-left: .5rem;
-    margin-right: .5rem;
 }

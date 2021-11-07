@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as ipfsClient  from 'ipfs-http-client';
+import moment from 'moment';
 import Datetime from 'react-datetime';
 import {Card, CardText, CardBody, UncontrolledCarousel,
-    CardSubtitle, Button} from "reactstrap";
+    CardSubtitle, Button, Alert} from "reactstrap";
 import Form from 'react-bootstrap/Form';
 import {categoryList} from '../../variables';
 import {DisplayBadges} from '../FrequentComponents/Category_Badges';
@@ -14,7 +15,6 @@ import "./Add.css";
 import {handleCreateAuction} from '../../apis_redux/actions/live_auction'
 import { ipfs_base_url } from '../../apis_redux/apis/encheres';
 import VideoPlayer from '../FrequentComponents/VideoPlayer';
-import swal from 'sweetalert';
 
 
 //Declare IPFS
@@ -75,6 +75,8 @@ class LiveAuction extends Component {
             display_first: true,
 
             assetFileUploading: false,
+            success: false,
+            fail: false,
         }
     }
 
@@ -180,12 +182,13 @@ class LiveAuction extends Component {
 
         } catch (error) {
             console.error(error)
-            swal("Error", "Error uploading image file", "error");
 
             this.setState({
                 assetImageFileUploading: false,
                 buffer: null
             })
+            this.onFailDismiss();
+
         }
     }
 
@@ -203,12 +206,14 @@ class LiveAuction extends Component {
             })
 
         } catch (error) {
-            swal("Error", "Error uploading video file", "error");
             console.log(error)
             this.setState({
                 assetVideoFileUploading: false,
                 buffer: null
             })
+
+            this.onFailDismiss();
+            
         }
     }
 
@@ -355,16 +360,14 @@ class LiveAuction extends Component {
         if(isValid){
             await this.props.handleCreateAuction(data);
             if(this.props.liveAuction.message){
-                swal({
-                    title: "Success",
-                    text: "Auction created successfully",
-                    icon: "success",
+                this.setState({
+                    success: true,
+                    fail:false
                 })
             }else{
-                swal({
-                    title: "Error",
-                    text: "Auction creation failed",
-                    icon: "error",
+                this.setState({
+                    success:false,
+                    fail: true
                 })
             }
         }
@@ -622,6 +625,19 @@ class LiveAuction extends Component {
             </>)
         }
     }
+
+    onSuccessDismiss(){
+        this.setState({
+            success: !this.state.success
+        })
+    }
+
+    onFailDismiss(){
+        this.setState({
+            fail: !this.state.fail
+        })
+    }
+
     
     handleCheckChange() {
         this.setState({
@@ -656,6 +672,12 @@ class LiveAuction extends Component {
                                 {this.state.display_first && this.renderItemForm()}
                                 {!this.state.display_first && this.renderAuctionDetailsForm()}
                             </CardBody>
+                            <Alert color="success" isOpen={this.state.success}>
+                                Sucess!!
+                            </Alert>
+                            <Alert color="danger" isOpen={this.state.fail}>
+                                Failed!!
+                            </Alert>
                         </Card>
                         </div>
                         

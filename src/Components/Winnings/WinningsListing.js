@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -27,29 +26,11 @@ import Web3 from "web3";
 import Account from "../../abis/Account.json";
 class Winnings extends Component {
     constructor(props) {
-=======
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import { FetchPhysicalAssetWinnings } from '../../apis_redux/actions/winning';
-import { PostOrder, RemoveOrder } from '../../apis_redux/actions/order';
-import { UpdateSaleForItem } from '../../apis_redux/actions/item';
-import { UpdateShippedStatusForItem } from '../../apis_redux/actions/item';
-import InfiniteScroll from "react-infinite-scroll-component";
-import Loading from '../loading';
-import RenderError from '../FrequentComponents/RenderError';
-import RenderWinning from './RenderWinning';
-import './winnings.css'
-
-class Winnings extends Component{
-
-    constructor(props){
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
         super(props);
 
         this.state = {
             page: 0,
             winnings: [],
-<<<<<<< HEAD
             winnerDetailsModal: false,
             detailsFilled: false,
             contact: 0,
@@ -276,25 +257,14 @@ class Winnings extends Component{
                 icon: "success",
             });
         }
-=======
-        }
-
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
     }
-   
 
-<<<<<<< HEAD
     async componentDidMount() {
         await this.loadWeb3();
 
         await this.loadAccountSmartContract();
 
         await this.props.FetchPhysicalAssetWinnings(0);
-=======
-    async componentDidMount(){
-
-        await this.props.FetchPhysicalAssetWinnings(0)
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
 
         if (this.props.winnings.winnings.length) {
             this.setState({
@@ -322,7 +292,6 @@ class Winnings extends Component{
         }
     }
 
-<<<<<<< HEAD
     renderTransaction = (asset) => {
         var transactionButton;
         if (!asset.sale) {
@@ -546,8 +515,6 @@ class Winnings extends Component{
             </Card>
         );
     };
-=======
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
 
     render() {
         if (this.props.winnings.isLoading && !this.state.winnings.length) {
@@ -562,7 +529,6 @@ class Winnings extends Component{
                             MY WINNINGS
                         </h3>
                     </div>
-<<<<<<< HEAD
                     {this.state.winnings.length ? (
                         <InfiniteScroll
                             className={"row justify-content-center"}
@@ -599,46 +565,6 @@ class Winnings extends Component{
                             </h4>
                         </div>
                     )}
-=======
-                        {
-                            this.state.winnings.length 
-                            ?
-                            <InfiniteScroll
-                                className={'row justify-content-center'}
-                                dataLength={this.state.winnings.length}
-                                next={() => this.fetchMoreAssets()}
-                                hasMore={this.props.winnings.winnings.length ? true : false}
-                                loader={<h4 style={{color: 'white'}}>Loading...</h4>}
-                                endMessage={
-                                    <div>
-                                        <h4 className='col-12 rainbow-lr winnings-end-note'>
-                                            No More Winnings :( 
-                                            <br/>
-                                            Participate in More Auctions :)
-                                        </h4>
-                                    </div>
-                                }
-                                >
-                                {this.state.winnings.map((asset) => <RenderWinning 
-                                    asset={asset}
-                                    PostOrder={this.props.PostOrder}
-                                    UpdateSaleForItem={this.props.UpdateSaleForItem}
-                                    UpdateShippedStatusForItem={this.props.UpdateShippedStatusForItem}
-                                    RemoveOrder={this.props.RemoveOrder}
-                                    postFail={this.props.orders.postFail}
-                                    errMess={this.props.items.errMess}
-                                 />)}
-                            </InfiniteScroll>
-                            :
-                            <div>
-                                <h4 className='col-12 rainbow-lr winnings-end-note'>
-                                    No More Winnings :(
-                                    <br/>
-                                    Participate in More Auctions :)
-                                </h4>
-                            </div>
-                        }
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                 </div>
             );
         }
@@ -658,16 +584,10 @@ const mapDispatchToProps = (dispatch) => {
         FetchPhysicalAssetWinnings: (page) =>
             dispatch(FetchPhysicalAssetWinnings(page)),
         PostOrder: (order) => dispatch(PostOrder(order)),
-<<<<<<< HEAD
         UpdateSaleForItem: (itemId, sale) =>
             dispatch(UpdateSaleForItem(itemId, sale)),
         UpdateShippedStatusForItem: (itemId, shipped) =>
             dispatch(UpdateShippedStatusForItem(itemId, shipped)),
-=======
-        RemoveOrder: (itemId) => dispatch(RemoveOrder(itemId)),
-        UpdateSaleForItem: (itemId, sale) => dispatch(UpdateSaleForItem(itemId, sale)),
-        UpdateShippedStatusForItem: (itemId, shipped) => dispatch(UpdateShippedStatusForItem(itemId, shipped))
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
     };
 };
 

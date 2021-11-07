@@ -406,13 +406,13 @@ class MyDigitalAssets extends Component {
                             <Button 
                                 onClick={() => this.onCreatedSelect()}
                                 disabled={this.state.created}
-                                className={'special_btn_dis mt-2 new-item-card-button '+ (this.state.created?'selected_button_navigation':'')}>
+                                className='mt-2 new-item-card-button'>
                                     CREATED
                             </Button>
                             <Button 
                                 onClick={() => this.onOwnedSelect()}
                                 disabled={!this.state.created}
-                                className={'special_btn_dis mt-2 new-item-card-button ' + (!this.state.created?'selected_button_navigation':'')}>
+                                className='mt-2 new-item-card-button'>
                                 OWNED
                             </Button>
                         </div>

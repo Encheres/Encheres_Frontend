@@ -48,9 +48,3 @@ export const customSelectStyles = {
         };
     },
 };
-
-export const contactOptions = [
-    { value: "complaint", label: "Complaint" },
-    { value: "feedback", label: "Feedback" },
-    { value: "help", label: "Help" }
-];

@@ -13,8 +13,6 @@ import {
 import Loading from "../loading";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Error from "../FrequentComponents/RenderError";
-import { categoryList } from "../../variables";
-
 const styles = {
   multiValue: (styles) => {
     return {
@@ -24,7 +22,6 @@ const styles = {
     };
   },
 };
-
 class Auctionlist extends Component {
   constructor(props) {
     super(props);
@@ -321,12 +318,15 @@ class Auctionlist extends Component {
                 const two = new Date(element.event_date_time);
                 if (element.completed === true) {
                   //past
+                  //console.log(index, "past");
                   whichtype = 2;
                 } else if (two > one) {
                   //upcomming
                   whichtype = 1;
+                  //console.log(index, "upcomming");
                 } else {
                   whichtype = 0;
+                  //console.log(index, "live");
                 }
 
                 return (
@@ -342,11 +342,9 @@ class Auctionlist extends Component {
                     description="Description"
                     tags={element.tags}
                     addressLine1={element.pickup_point.addressLine1}
-                    addressLine2={element.pickup_point.addressLine2}
                     city={element.pickup_point.city}
                     postalCode={element.pickup_point.postalCode}
-                    state={element.pickup_point.addressState}
-                    country={element.pickup_point.country}
+                    state={element.pickup_point.state}
                     type={whichtype}
                   />
                 );

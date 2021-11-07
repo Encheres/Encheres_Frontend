@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react";
 import moment from "moment";
 import Pusher from "pusher-js";
@@ -26,29 +25,6 @@ import { Link } from "react-router-dom";
 
 class SingleAssetDetail extends React.Component {
     constructor(props) {
-=======
-import React from 'react';
-import moment from 'moment';
-import Pusher from 'pusher-js';
-import { connect } from 'react-redux'; 
-import { fetchItem } from '../../apis_redux/actions/item';
-import { UpdatePhysicalAsset } from '../../apis_redux/actions/physicalAsset';
-import {Card, CardBody, UncontrolledCarousel, CardSubtitle, CardText, Button, Collapse} from 'reactstrap';
-import { Form } from 'react-bootstrap';
-import { renderPhysicalAssetCategories } from '../FrequentComponents/Asset';
-import { CountdownTimer } from '../FrequentComponents/CountdownTimer';
-import Loading from '../loading';
-import RenderError from '../FrequentComponents/RenderError';
-import { FaEthereum } from 'react-icons/fa';
-import './View.css'
-import swal from 'sweetalert';
-import { Link } from 'react-router-dom';
-import {ipfs_base_url} from '../../apis_redux/apis/encheres'
-
-class SingleAssetDetail extends React.Component{
-
-    constructor(props){
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
         super(props);
 
         this.state = {
@@ -203,17 +179,10 @@ class SingleAssetDetail extends React.Component{
             var showcaseElement;
             for (var i = 0; i < asset.asset.images.length; i++) {
                 showcaseElement = {
-<<<<<<< HEAD
                     src: "https://ipfs.infura.io/ipfs/" + asset.asset.images[i],
                     altText: "Slide " + i.toString(),
                     key: i.toString(),
                 };
-=======
-                    src: ipfs_base_url+asset.asset.images[i],
-                    altText: "Slide "+i.toString(),
-                    key: i.toString()
-                }
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
 
                 assetShowcaseCarousel.push(showcaseElement);
             }
@@ -330,7 +299,6 @@ class SingleAssetDetail extends React.Component{
                                                     "MMMM Do YYYY, h:mm A"
                                                 )}
                                             </div>
-<<<<<<< HEAD
                                         ) : (
                                             <div>
                                                 Sale Ended on{" "}
@@ -356,27 +324,6 @@ class SingleAssetDetail extends React.Component{
                                         )}
                                     </div>
                                     <div>
-=======
-                                        <div>
-                                            <CardSubtitle tag="h6" className="new-item-preview-price">
-                                                Showcase Video{"  "}
-                                                <span style={{ marginLeft: 10, color: "cyan" }}>
-                                                    {(!asset.asset.assetVideoHash) ? 
-                                                        "Not Available" : 
-                                                        <a style={{textDecoration: 'none', color: 'cyan'}} href={ipfs_base_url+asset.assetVideoHash}>Link</a>}
-                                                </span>
-                                            </CardSubtitle>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </div>
-                            <div className='col-12 col-md-5 col-6'>
-                                <Card id="new-item-card">
-                                    <CardBody>
-                                        <div className="mt-0 mb-4 new-item-accountbox">
-                                            {ownershipStatus}
-                                        </div>
->>>>>>> 443c222fcd41eb5046162ecb83a23dac5d772469
                                         <CardSubtitle
                                             tag="h6"
                                             className="new-item-preview-price"
