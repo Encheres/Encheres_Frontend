@@ -242,32 +242,37 @@ class NftAssetDetails extends Component {
             return;
         }  
         try{
-            // if(account_address&& (account_address.toLowerCase()!==auction_details.owner_account.toLowerCase())){
-            //     return;
-            // }
-            
-            if(OnSale&& auction_details && auction_details.auction_end_time){
-                let end_date_time = auction_details.auction_end_time;
-                end_date_time = parseInt(end_date_time);
-                console.log(Date.now(), end_date_time)
-                if(Date.now()>=end_date_time){
-                    console.log('ending auction')
-                    const details = await auction_contract.methods.EndAuction(nftId, end_date_time).send({from:auction_details.owner_account});
-                    const det2 = await nftasset_contract.methods.transferAssetOwnership(auction_details.owner_account, auction_details.highest_bidder, nftId).send({from:auction_details.owner_account});
-                    console.log({details, det2});
-                    swal({
-                        title: "Success",
-                        text: "Auction Ended Successfully",
-                        icon: "success"
-                    })
-                    this.setState({
-                        OnSale:false,
-                        auction_details:''
-                    })
-                    await this.fetchAuctionList();
-                    await this.fetchAuctionDetails();
-                }
+            if(!OnSale ||!auction_details||!auction_details.auction_end_time){
+                return;
             }
+            let end_date_time = auction_details.auction_end_time;
+            end_date_time = parseInt(end_date_time);
+            if(Date.now()<end_date_time){
+                return;
+            }
+            if(account_address.toLowerCase()!==auction_details.owner_account.toLowerCase()){
+                this.setState({
+                    OnSale:false,
+                    auction_details:''
+                })
+                return;
+            }
+            console.log('ending auction')
+            const details = await auction_contract.methods.EndAuction(nftId, end_date_time).send({from:auction_details.owner_account});
+            const det2 = await nftasset_contract.methods.transferAssetOwnership(auction_details.owner_account, auction_details.highest_bidder, nftId).send({from:auction_details.owner_account});
+            console.log({details, det2});
+            swal({
+                title: "Success",
+                text: "Auction Ended Successfully",
+                icon: "success"
+            })
+            this.setState({
+                OnSale:false,
+                auction_details:''
+            })
+            await this.fetchAuctionList();
+            await this.fetchAuctionDetails();
+            
         }catch(err){
             // swal({
             //     title: "OOPS!!",
