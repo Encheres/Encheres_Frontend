@@ -404,14 +404,12 @@ class MyDigitalAssets extends Component {
                         <div className='col-12 new-item-card-button-div mt-4'>
                             <Button 
                                 onClick={() => this.onCreatedSelect()}
-                                disabled={this.state.created}
                                 className={'special_btn_dis mt-2 new-item-card-button '+ (this.state.created?'selected_button_navigation':'')}
                             >
                                     CREATED
                             </Button>
                             <Button 
                                 onClick={() => this.onOwnedSelect()}
-                                disabled={!this.state.created}
                                 className={'special_btn_dis mt-2 new-item-card-button ' + (!this.state.created?'selected_button_navigation':'')}
                             >
                                 OWNED
@@ -444,15 +442,13 @@ class MyDigitalAssets extends Component {
                         </h3>
                         <div className='col-12 new-item-card-button-div mt-4'>
                             <Button 
-                                disabled={this.state.created}
                                 onClick={() => this.onCreatedSelect()}
-                                className='mt-2 new-item-card-button'>
+                                className={'mt-2 new-item-card-button '+ (this.state.created?'selected_button_navigation':'')}>
                                     CREATED
                             </Button>
                             <Button 
                                 onClick={() => this.onOwnedSelect()}
-                                disabled={!this.state.created}
-                                className='mt-2 new-item-card-button'>
+                                className={'mt-2 new-item-card-button '+ (!this.state.created?'selected_button_navigation':'')} >
                                 OWNED
                             </Button>
                         </div>
@@ -465,7 +461,7 @@ class MyDigitalAssets extends Component {
                                 <RenderNftAssetCard asset={asset} onSellClick={this.toggleModal}/>
                             ) :
                             this.state.ownedAssets.map((asset) => 
-                                <RenderNftAssetCard asset={asset} />
+                                <RenderNftAssetCard asset={asset} onSellClick={this.toggleModal}/>
                             )
                         }
                     </div>

@@ -176,13 +176,14 @@ class NftAssetDetails extends Component {
             console.log(err)
         }
     }
+
     updateAuctionDetails = async() =>{
         const time = setInterval(async()=>{
             await this.fetchAuctionDetails();
             if(this.state.auction_details.auction_ended){
                 clearInterval(time);
             }
-        },120000) // fetch details every 2 min.
+        },60000) // fetch details every 1 min.
     }
 
     validBid = (bid_value) =>{
@@ -236,20 +237,23 @@ class NftAssetDetails extends Component {
     }
 
     endAuction = async() =>{
-        const {OnSale, auction_details, auction_contract,nftasset_contract, nftId} = this.state;
+        const {OnSale, auction_details, auction_contract,nftasset_contract, nftId, account_address} = this.state;
         if(!OnSale){
             return;
         }  
         try{
-            console.log("trying")
+            // if(account_address&& (account_address.toLowerCase()!==auction_details.owner_account.toLowerCase())){
+            //     return;
+            // }
             
-            if(OnSale&& auction_details && auction_details.end_date_time){
-                let end_date_time = auction_details.end_date_time;
+            if(OnSale&& auction_details && auction_details.auction_end_time){
+                let end_date_time = auction_details.auction_end_time;
                 end_date_time = parseInt(end_date_time);
+                console.log(Date.now(), end_date_time)
                 if(Date.now()>=end_date_time){
-                    console.log('ending aucttion')
+                    console.log('ending auction')
                     const details = await auction_contract.methods.EndAuction(nftId, end_date_time).send({from:auction_details.owner_account});
-                    const det2 = await nftasset_contract.methods.transferAssetOwnership(auction_details.owner_account, auction_details.highest_bidder, nftId).send({from:auction_details.highest_bidder});
+                    const det2 = await nftasset_contract.methods.transferAssetOwnership(auction_details.owner_account, auction_details.highest_bidder, nftId).send({from:auction_details.owner_account});
                     console.log({details, det2});
                     swal({
                         title: "Success",
@@ -260,14 +264,16 @@ class NftAssetDetails extends Component {
                         OnSale:false,
                         auction_details:''
                     })
+                    await this.fetchAuctionList();
+                    await this.fetchAuctionDetails();
                 }
             }
         }catch(err){
-            swal({
-                title: "OOPS!!",
-                text: "Auction End Failed",
-                icon: "error"
-            })
+            // swal({
+            //     title: "OOPS!!",
+            //     text: "Auction End Failed",
+            //     icon: "error"
+            // })
         }
     }
 
