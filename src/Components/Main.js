@@ -98,24 +98,22 @@ class Main extends Component {
           />
           {/*Contact us page*/}{" "}
           <Route exact path="/contact-us" component={() => <ContactUs />} />
+          
           {/* Create Independent-Digital-Asset */}{" "}
-          <Route
-            exact
-            path="/create/independent-digital-assets"
-            component={() => <DigitalAsset />}
-          />
+          <PrivateRoute userAuth={this.props.auth} exact path="/create/independent-digital-assets">
+            <DigitalAsset />
+          </PrivateRoute>
+           
           {/* Create Independent-Physical-Asset */}{" "}
-          <Route
-            exact
-            path="/create/independent-physical-assets"
-            component={() => <PhysicalAsset />}
-          />
+          <PrivateRoute userAuth={this.props.auth} exact path="/create/independent-physical-assets">
+            <PhysicalAsset />
+          </PrivateRoute>
+        
           {/* Create Live-Auction */}{" "}
-          <Route
-            exact
-            path="/create/live_auction"
-            component={() => <LiveAuction />}
-          />
+          <PrivateRoute userAuth={this.props.auth} exact path="/create/live_auction">
+            <LiveAuction />
+          </PrivateRoute>
+          
           {/* View Independent Digital Assets */}{" "}
           <Route
             exact
@@ -135,11 +133,9 @@ class Main extends Component {
             component={this.renderPhysicalAssetDetail}
           />
           {/* My Nfts Listing */}{" "}
-          <Route
-            exact
-            path="/my-digital-assets"
-            component={() => <MyDigitalAssets/>}
-          />
+          <PrivateRoute userAuth={this.props.auth} exact path="/my-digital-assets">
+            <MyDigitalAssets/>
+          </PrivateRoute>
           {/* Nft Asset Details */}{" "}
           <Route
             exact
@@ -147,17 +143,16 @@ class Main extends Component {
             component={this.renderDigitalAssetDetail}
           />
           {/* View Live Auctions List */}{" "}
-          <Route
-            exact
-            path="/view/auctions"
-            component={() => <Auctionlist />}
-          />
+          <PrivateRoute userAuth={this.props.auth} exact path="/view/auctions">
+            <Auctionlist />
+          </PrivateRoute>
           {/* Live Auction Room */}
           <Route
             exact
             path="/view/auctions/:auctionId"
             component={LiveAuctionRoom}
           />
+
           <Route exact path="/my-winnings" component={() => <Winnings />} />
           <Route exact path="/profile/:userId" component={this.renderProfile} />
           <Redirect to="home" />

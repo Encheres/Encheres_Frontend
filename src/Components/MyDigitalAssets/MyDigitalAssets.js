@@ -318,9 +318,8 @@ class MyDigitalAssets extends Component {
                         title: "Success",
                         text: "Auction created successfully",
                         icon: "success",
-                    }, ()=>{
-                        this.toggleModal();
                     })
+                    this.toggleModal();
                     console.log('Auction Created');    
                 }
             }

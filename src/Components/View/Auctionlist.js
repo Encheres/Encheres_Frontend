@@ -244,9 +244,7 @@ class Auctionlist extends Component {
                     auctionName={element._id}
                     eventKey={index}
                     organizer_contact={element.organizer_contact}
-                    time={this.convertTimetoUserLocation(
-                      element.event_date_time
-                    )}
+                    time={element.event_date_time}
                     organizerName="Organizer Name"
                     description="Description"
                     tags={element.tags}

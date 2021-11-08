@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./auctionlist.css";
 import { renderPhysicalAssetCategories } from "../FrequentComponents/Asset";
 import './auctionlist.css'
+import moment from "moment";
 
 class SingleAuctionComponent extends Component {
   constructor(props) {
@@ -76,7 +77,7 @@ class SingleAuctionComponent extends Component {
                     </span>
                   )}
                 </div>
-                <div className="responsive-margin">{this.props.time}</div>
+                <div className="responsive-margin">{moment(this.props.time).format('MMMM Do YYYY, h:mm A')}</div>
               </div>
               <div className="responsive-buttons">
                 { this.props.type===0?
@@ -123,7 +124,7 @@ class SingleAuctionComponent extends Component {
               <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
                 Start Time:{" "}
               </h6>
-              {this.props.time}
+              {moment(this.props.time).format('MMMM Do YYYY, h:mm A')}
               
               <br/>
               <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>

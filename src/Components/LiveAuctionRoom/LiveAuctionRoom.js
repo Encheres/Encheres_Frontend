@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import {Card, CardText, CardBody, Button, UncontrolledCarousel, Row, Col} from "reactstrap";
+import { Image } from 'react-bootstrap';
 import Pusher from 'pusher-js';
 import './auctionRoom.css'
 import {ipfs_base_url} from '../../apis_redux/apis/encheres'
 import {DisplayBadges} from '../FrequentComponents/Category_Badges'
 import { Message } from './Message';
 import {fetchAuctionDetails, updateUserBids, sellLiveItem} from '../../apis_redux/actions/live_auction';
+import {fetchProfile} from '../../apis_redux/actions/userProfile';
 import VideoPlayer from '../FrequentComponents/VideoPlayer'
+import SoldOutImage from '../../assets/images/soldout.jpg'
+import WaitTimeImage from '../../assets/images/wait_time.jpg'
+
 
 // 1) Where to store anonymous name -> get from user profile
-// 4) Image not visible in Brave
 // 5) Chat autoscroll correction
 // 6) Multiple api calls for sell. Try backend trigger.
-// 7) Adding check for start time
 
 // reset variables -> bidprice, bid user, my_price, item_index on sell
 const auctionCountdownDuration = 120;//seconds
@@ -25,7 +28,7 @@ class LiveAuctionRoom extends Component{
     constructor(props){
         super(props);
         this.state = {
-            anonymous_name:'Raju',
+            anonymous_name:'user',
             auction_id:'',
             item_index:0,
             bid_price:0,
@@ -44,12 +47,14 @@ class LiveAuctionRoom extends Component{
         }
     }
     componentDidMount = async()=>{
+        console.log(this.props.match)
         const auction_id = this.props.match.params.auctionId;
         if(auction_id){
             this.setState({
                 auction_id
             })
             await this.props.fetchAuctionDetails({auction_id});
+            await this.props.fetchProfile(this.props.auth.userId);
 
            
             const {REACT_APP_PUSHER_APP_CLUSTER, REACT_APP_PUSHER_KEY} = process.env;
@@ -66,6 +71,11 @@ class LiveAuctionRoom extends Component{
                     
             }else if(this.props.liveAuctionDetails.error){
                 alert("Something went wrong");
+            }
+            if(this.props.userProfile.profile){
+                this.setState({
+                    anonymous_name:this.props.userProfile.profile.anonymous_name
+                })
             }
         }
     }
@@ -446,6 +456,7 @@ class LiveAuctionRoom extends Component{
     render(){
 
         if(this.props.liveAuctionDetails.data){
+            console.log(this.props.liveAuctionDetails.data);
             const auctionDetails = this.props.liveAuctionDetails.data;
             if(auctionDetails.completed||this.state.auctionCompleted){
                 return(
@@ -458,18 +469,62 @@ class LiveAuctionRoom extends Component{
 
                     <Row className="section_content">
                     <Col md={12}>
-                        <Card id="singup_form_card" className='auction_card_desc'>
-                            <CardBody>
-                                <>
-                                    <span className='item_desc_title'>This auction has already been completed</span>
-                                </>
+                        <Card id="singup_form_card">
+                        <CardBody>
+                            <CardText>
+                                <Row>
+                                <Col md={6}>
+                                        <Image src={SoldOutImage} className="login_image" alt="lock image" style={{height:'20rem'}} fluid/>
+                                    </Col>
+                                    <Col md={6}>
+                                            <h4 className="main_heading__form light__blue">
+                                                This auction has already ended. You can explore other auctions. 
+                                            </h4>
+                                    </Col>
+                                </Row>
+                            </CardText>
+                                    
                             </CardBody>
                         </Card>
                     </Col>
                     </Row>
                    </div>
                 )
-            }else{
+            }else if(Date.parse(auctionDetails.event_date_time)> Date.now()){
+                return(
+                    <div className='live_auction_div'>
+                    <Row className="heading_section_row">
+                        <h3 className='section_heading rainbow-lr '>
+                            Live Auction
+                        </h3>
+                    </Row>
+
+                    <Row className="section_content">
+                    <Col md={12}>
+                        <Card id="singup_form_card">
+                        <CardBody>
+                            <CardText>
+                                <Row>
+                                <Col md={6}>
+                                        <Image src={WaitTimeImage} className="login_image" alt="waiting person" style={{height:'20rem'}} fluid/>
+                                    </Col>
+                                    <Col md={6}>
+                                            <h4 className="main_heading__form light__blue">
+                                                Auction has not yet started. You can explore other auctions.
+                                            </h4>
+                                    </Col>
+                                </Row>
+                            </CardText>
+                                    
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    </Row>
+                   </div>
+                )
+
+            }
+            else{
                 if(!this.state.start_timer && this.props.liveAuctionDetails.data.items[this.state.item_index].bid.bidder){
                     this.InitiateTimer();
                 }else if(this.state.start_timer && !this.props.liveAuctionDetails.data.items[this.state.item_index].bid.bidder){
@@ -552,8 +607,9 @@ const mapStateToProps = (state, ownProps)=>{
         ...ownProps,
         auth:state.auth,
         liveAuctionDetails:state.liveAuction,
-        bids:state.bids
+        bids:state.bids,
+        userProfile:state.userProfile
     })
 
 }
-export default connect(mapStateToProps, {fetchAuctionDetails, updateUserBids, sellLiveItem})(LiveAuctionRoom);
+export default connect(mapStateToProps, {fetchAuctionDetails, updateUserBids, sellLiveItem, fetchProfile})(LiveAuctionRoom);

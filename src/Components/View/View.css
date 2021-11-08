@@ -36,7 +36,7 @@
 }
 
 .modal-content{
-    background-color: rgb(34,34,66);
+    background-color: rgb(34,34,66) !important;
 }
 .digital_modal_header{
     color: #fff;
