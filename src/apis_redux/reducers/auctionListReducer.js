@@ -14,13 +14,13 @@ const INITIAL_STATE = {
 const auction_list_reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case LOADING_AUCTION_LIST:
-      return { ...state, loading: true };
+      return { loading: true, payload: [], errors: null };
     case GET_AUCTION_LIST:
-      return { ...state, payload: action.payload, loading: false };
+      return { errors: null, payload: action.payload, loading: false };
     case GET_FILTERED_AUCTION:
-      return { ...state, payload: action.payload, loading: false };
+      return { errors: null, payload: action.payload, loading: false };
     case GET_AUCTION_LIST_ERROR:
-      return { ...state, payload: null, errors: "error", loading: false };
+      return { payload: null, errors: "error", loading: false };
     default:
       return state;
   }

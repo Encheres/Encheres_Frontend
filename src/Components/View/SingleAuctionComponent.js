@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Accordion, Button } from "react-bootstrap";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./auctionlist.css";
 import { renderPhysicalAssetCategories } from "../FrequentComponents/Asset";
-import './auctionlist.css'
+import "./auctionlist.css";
 import moment from "moment";
 
 class SingleAuctionComponent extends Component {
@@ -18,7 +18,20 @@ class SingleAuctionComponent extends Component {
   componentDidMount() {
     this.setState({ type: this.props.type });
   }
+  isUserCreator = async (Organizer) => {
+    const userid = await this.props.auth;
+    if (userid.userId === Organizer) {
+      return (
+        <Button variant="outline-danger" style={{ marginRight: "15px" }}>
+          Edit
+        </Button>
+      );
+    } else {
+      return <></>;
+    }
 
+    //  return this.props.auth.userId === Organizer; //equate to orgamixer id.
+  };
   render = () => {
     return (
       <Accordion.Item
@@ -49,7 +62,8 @@ class SingleAuctionComponent extends Component {
               >
                 <div className="responsive-margin">
                   {this.state.type === 0 ? (
-                    <span className='auction_time_text'
+                    <span
+                      className="auction_time_text"
                       style={{
                         background: "yellow",
                         color: "red",
@@ -58,7 +72,8 @@ class SingleAuctionComponent extends Component {
                       Live
                     </span>
                   ) : this.state.type === 1 ? (
-                    <span className='auction_time_text'
+                    <span
+                      className="auction_time_text"
                       style={{
                         background: "green",
                         color: "white",
@@ -67,7 +82,8 @@ class SingleAuctionComponent extends Component {
                       Upcoming
                     </span>
                   ) : (
-                    <span className='auction_time_text'
+                    <span
+                      className="auction_time_text"
                       style={{
                         background: "grey",
                         color: "white",
@@ -77,25 +93,24 @@ class SingleAuctionComponent extends Component {
                     </span>
                   )}
                 </div>
-                <div className="responsive-margin">{moment(this.props.time).format('MMMM Do YYYY, h:mm A')}</div>
+                <div className="responsive-margin">
+                  {moment(this.props.time).format("MMMM Do YYYY, h:mm A")}
+                </div>
               </div>
               <div className="responsive-buttons">
-                { this.props.type===0?
-                <Button
-                  variant="primary"
-                  style={{ marginRight: "10px" }}
-                >
-                  
-                  <Link style={{color: 'white', textDecoration: 'none'}} to={`/view/auctions/${this.props.auctionName}`}>
-                    Enter Auction
-                  </Link>
-                </Button>
-                :<></>
-              }
-                <Button
-                  variant="danger"
-                  style={{ marginRight: "15px" }}
-                >
+                {this.props.type === 0 ? (
+                  <Button variant="primary" style={{ marginRight: "10px" }}>
+                    <Link
+                      style={{ color: "white", textDecoration: "none" }}
+                      to={`/view/auctions/${this.props.auctionName}`}
+                    >
+                      Enter Auction
+                    </Link>
+                  </Button>
+                ) : (
+                  <></>
+                )}
+                <Button variant="danger" style={{ marginRight: "15px" }}>
                   View Details
                 </Button>
               </div>
@@ -119,18 +134,22 @@ class SingleAuctionComponent extends Component {
             >
               {renderPhysicalAssetCategories(this.props.tags)}
             </div>
-            
+
             <div style={{ marginTop: "5px" }}>
               <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
                 Start Time:{" "}
               </h6>
-              {moment(this.props.time).format('MMMM Do YYYY, h:mm A')}
-              
-              <br/>
+              {moment(this.props.time).format("MMMM Do YYYY, h:mm A")}
+              <br />
               <h6 style={{ marginBottom: "0px", fontWeight: "bold" }}>
                 Pickup Point Address:{" "}
               </h6>
-              {this.props.addressLine1}{this.props.addressLine2?<> , {this.props.addressLine2}</>:<></>}
+              {this.props.addressLine1}
+              {this.props.addressLine2 ? (
+                <> , {this.props.addressLine2}</>
+              ) : (
+                <></>
+              )}
               <br />
               <h6
                 style={{
