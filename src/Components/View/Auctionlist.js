@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import {
   get_auction_list,
   get_filtered_auction,
+  get_all_auctions,
 } from "../../apis_redux/actions/auction_list";
 import Loading from "../loading";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -36,7 +37,9 @@ class Auctionlist extends Component {
       filter: false,
     };
   }
-  componentDidUpdate = () => {};
+  componentDidUpdate = () => {
+    // console.log(this.state);
+  };
   componentDidMount = () => {
     this.clearFilterButtonHandler();
   };
@@ -53,46 +56,56 @@ class Auctionlist extends Component {
       return e.value;
     });
   };
-  buttonPressHandler = () => {
+  buttonPressHandler = async () => {
     /*
       tags , page , time
     */
-    this.setState({ page: 0, data: [], filter: true });
-    // console.log("new state with filter true");
-    this.clearFilterButtonHandler();
+    this.setState({ page: 0, data: [], filter: true }, () => {
+      this.clearFilterButtonHandler();
+    });
   };
 
   clearFilterButtonHandler = async () => {
     if (this.state.filter) {
       //with filters
       // console.log("filter");
-      const tosend = {
-        tags: this.onlyValuesarray(this.state.selectedTag),
-        time: this.state.selectedTime.value,
-        page: this.state.page,
-      };
-      //console.log(tosend);
-      await this.props.get_filtered_auction(tosend);
-      if (!this.props.auctionlist.loading && !this.props.auctionlist.errors) {
-        this.setState({
-          data: [this.state.data, this.props.auctionlist.payload].flat(),
-        });
+      if (this.state.selectedTime === "" && this.state.selectedTag.length > 0) {
+        const whattosend = {
+          tags: this.onlyValuesarray(this.state.selectedTag),
+          page: this.state.page,
+        };
+        await this.props.get_all_auctions(whattosend);
+        if (!this.props.auctionlist.loading && !this.props.auctionlist.errors) {
+          this.setState({
+            data: [this.state.data, this.props.auctionlist.payload].flat(),
+          });
+        }
+      } else {
+        const tosend = {
+          tags: this.onlyValuesarray(this.state.selectedTag),
+          time: this.state.selectedTime.value,
+          page: this.state.page,
+        };
+        //console.log(tosend);
+        await this.props.get_filtered_auction(tosend);
+        if (!this.props.auctionlist.loading && !this.props.auctionlist.errors) {
+          this.setState({
+            data: [this.state.data, this.props.auctionlist.payload].flat(),
+          });
+        }
       }
     } else {
       //console.log("withour filters");
       //without filters
       await this.props.getAllAuctions(this.state.page);
-      while (true) {
-        if (!this.props.auctionlist.loading) {
-          //  console.log("finally done");
-          this.setState({
-            data: [
-              this.state.data.flat(),
-              this.props.auctionlist.payload.flat(),
-            ].flat(),
-          });
-          break;
-        }
+      if (this.props.auctionlist.payload) {
+        //  console.log("finally done");
+        this.setState({
+          data: [
+            this.state.data.flat(),
+            this.props.auctionlist.payload.flat(),
+          ].flat(),
+        });
       }
     }
   };
@@ -143,11 +156,6 @@ class Auctionlist extends Component {
             options={categoryList}
             onChange={(e) => {
               this.setState({ selectedTag: e });
-              if (this.state.selectedTag.length || this.state.selectedTime) {
-                this.setState({ filter: true });
-              } else {
-                this.setState({ filter: false });
-              }
             }}
             value={this.state.selectedTag}
           />
@@ -176,12 +184,6 @@ class Auctionlist extends Component {
             ]}
             onChange={(e) => {
               this.setState({ selectedTime: e });
-
-              if (this.state.selectedTag.length || this.state.selectedTime) {
-                this.setState({ filter: true });
-              } else {
-                this.setState({ filter: false });
-              }
             }}
           />
         </div>
@@ -203,13 +205,15 @@ class Auctionlist extends Component {
           <Button
             color="danger"
             onClick={() => {
-              this.setState({
-                selectedTag: [],
-                selectedTime: "",
-                filter: false,
-                data: [],
-              });
-              this.clearFilterButtonHandler();
+              this.setState(
+                {
+                  selectedTag: [],
+                  selectedTime: "",
+                  filter: false,
+                  data: [],
+                },
+                this.clearFilterButtonHandler()
+              );
             }}
           >
             Clear Filters
@@ -219,7 +223,12 @@ class Auctionlist extends Component {
         <InfiniteScroll
           dataLength={this.state.data.length}
           next={() => this.fetchMoreAssets()}
-          hasMore={this.props.auctionlist.payload.length > 0 ? true : false}
+          hasMore={
+            this.props.auctionlist.payload &&
+            this.props.auctionlist.payload.length > 0
+              ? true
+              : false
+          }
           // loader={<Loading />}
           endMessage={
             <h3 className="col-12 rainbow-lr new-item-heading">
@@ -279,9 +288,9 @@ class Auctionlist extends Component {
   render = () => {
     if (this.props.auctionlist.loading) {
       return <Loading />;
-    } else if (this.props.auctionlist.errors) {
+    } /*else if (this.props.auctionlist.errors) {
       return <Error />;
-    } else {
+    } */ else {
       return <>{this.ui()}</>;
     }
   };
@@ -297,6 +306,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getAllAuctions: (page) => dispatch(get_auction_list(page)),
     get_filtered_auction: (filters) => dispatch(get_filtered_auction(filters)),
+    get_all_auctions: (filters) => dispatch(get_all_auctions(filters)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Auctionlist);

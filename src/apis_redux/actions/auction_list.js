@@ -12,6 +12,7 @@ const {
   GET_FILTERED_AUCTION,
   GET_AUCTION_LIST_ERROR,
   LOADING_AUCTION_LIST,
+  GET_ALL_AUCTIONS,
 } = require("./actionTypes");
 const get_auction_list = (page) => {
   return async (dispatch, getState) => {
@@ -147,6 +148,29 @@ const get_filtered_auction = (filters) => {
     }
   };
 };
-get_auction_list(1);
+const get_all_auctions = (filters) => {
+  return async (dispatch, getState) => {
+    try {
+      let tags = "";
+      for (let i = 0; i < filters.tags.length; i++) {
+        tags = tags + filters.tags[i];
+        if (i !== filters.tags.length - 1) {
+          tags = tags + ",";
+        }
+      }
+      dispatch({ type: LOADING_AUCTION_LIST });
+      console.log(`/all-auctions?page=${filters.page}&tags=${tags}`);
+      const response = await record.get(
+        `/all-auctions?page=${filters.page}&tags=${tags}`
+      );
+      return dispatch({
+        type: GET_AUCTION_LIST,
+        payload: response.data,
+      });
+    } catch (e) {
+      dispatch({ type: GET_AUCTION_LIST_ERROR, error: e });
+    }
+  };
+};
 
-module.exports = { get_auction_list, get_filtered_auction };
+module.exports = { get_auction_list, get_filtered_auction, get_all_auctions };
