@@ -3,6 +3,8 @@ import { Accordion } from 'react-bootstrap';
 import { Button, CardText } from 'reactstrap';
 import { GrDomain } from 'react-icons/gr';
 import swal from 'sweetalert';
+import { connect } from 'react-redux';
+import { fetchAiGeneratedAsset } from '../../apis_redux/actions/aiGeneratedAsset';
 import * as ipfsClient  from 'ipfs-http-client';
 import { ipfs_base_url } from '../../apis_redux/apis/encheres';
 
@@ -100,7 +102,59 @@ class AiGenAsset extends Component{
         }
     }
 
+    async generateAsset(){
+
+        await this.props.fetchAiGeneratedAsset(this.state.content_file_hash, this.state.style_file_hash);
+
+        if(this.props.generatedAssets.errMess){
+
+            this.setState({
+                content_file_hash: '',
+                style_file_hash: ''
+            });
+
+            swal({
+                title: "OOPS!!",
+                text: 'Asset Generation Unsuccessful. Try again!!',
+                icon: "error"
+            })
+        }
+        else if(this.props.generatedAssets.generatedAsset){
+            
+            this.props.setAssetFileHash(this.props.generatedAssets.generatedAsset)
+            swal({
+                title: "Success!!",
+                text: "Your AI generated Asset File Created Sucessfully!!\n Now Provide other details in form and Create Asset",
+                icon: "success"
+            })
+        }
+    }
+
     render(){
+        var assetGenButton;
+
+        if(!this.state.content_file_hash || !this.state.style_file_hash){
+            assetGenButton = <Button className='mt-2 new-item-card-button'
+                                disabled
+                            >
+                                GENERATE ASSET FILE
+                            </Button>
+        }
+        else if(this.state.content_file_hash && this.state.style_file_hash && this.props.generatedAssets.isProcessing){
+            assetGenButton = <Button className='mt-2 new-item-card-button'
+                                disabled
+                            >
+                                GENERATING YOUR ASSET FILE
+                            </Button>
+        }
+        else{
+            assetGenButton = <Button className='mt-2 new-item-card-button'
+                                onClick={() => this.generateAsset()}
+                            >
+                                GENERATE ASSET FILE
+                            </Button>
+        }
+
         return(
             <Accordion className='mt-4'>
                 <Accordion.Item eventKey="0">
@@ -151,11 +205,9 @@ class AiGenAsset extends Component{
                             </Button>
                         </div>
                         <div className='mt-4 new-item-card-button-div'> 
-                            <Button className='mt-2 new-item-card-button'
-                                onClick={() => this.createItem()}
-                            >
-                                GENERATE ART ASSET FILE
-                            </Button>   
+                            {
+                                assetGenButton
+                            } 
                         </div>
                     </Accordion.Body>
                 </Accordion.Item>
@@ -182,4 +234,17 @@ class AiGenAsset extends Component{
     }
 }
 
-export default AiGenAsset;
+const  mapStateToProps = (state) => {
+    return{
+        generatedAssets: state.generatedAssets
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    
+    return {
+        fetchAiGeneratedAsset: (contentHash, styleHash) => dispatch(fetchAiGeneratedAsset(contentHash, styleHash))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AiGenAsset);

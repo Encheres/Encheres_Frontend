@@ -58,6 +58,7 @@ class DigitalAsset extends Component {
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.setAssetFileHash = this.setAssetFileHash.bind(this);
     }
 
     async loadWeb3() {
@@ -271,6 +272,12 @@ class DigitalAsset extends Component {
         }
     }
 
+    setAssetFileHash(hash){
+        this.setState({
+            assetFileHash: hash
+        })
+    }
+
     async createItem() {
         
         if(this.formValidattion()){
@@ -349,7 +356,7 @@ class DigitalAsset extends Component {
                                     </CardText>
                                 </div>
                             </div> 
-                            <AiGenAsset/>
+                            <AiGenAsset setAssetFileHash={this.setAssetFileHash} />
                                 <div className='mb-4' id='new-item-form-error'>{this.state.errors.assetFile}</div>
                             </CardBody>
                             <CardBody> 
