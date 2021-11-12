@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import SingleShipment from "./SingleShipment";
 import RenderError from '../FrequentComponents/RenderError';
 import { connect } from "react-redux";
-import getting_pending_orders_seller from "../../apis_redux/actions/pending_order_seller";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { FetchOrders } from '../../apis_redux/actions/order';
 import Loading from "../loading";
@@ -107,7 +106,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    get_pending_order_seller: ()=>dispatch(getting_pending_orders_seller()),
     FetchOrders: (page) => dispatch(FetchOrders(page))
   };
 };

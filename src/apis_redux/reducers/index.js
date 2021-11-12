@@ -9,7 +9,7 @@ import userProfile from "./userProfile";
 import contact from "./contact_us";
 import auctionlist from './auctionListReducer';
 import liveAuctionReducer from './live_auction'
-import getting_pending_orders_seller from './pending_order_seller';
+//import getting_pending_orders_seller from './pending_order_seller';
 import bids from './bids';
 
 export default combineReducers({
@@ -24,6 +24,6 @@ export default combineReducers({
   resetPass: resetPassword,
   auctionlist : auctionlist,
   liveAuction: liveAuctionReducer,
-  pendingOrderSeller : getting_pending_orders_seller,
+  //pendingOrderSeller : getting_pending_orders_seller,
   bids,
 });

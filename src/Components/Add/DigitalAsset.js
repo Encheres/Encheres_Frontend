@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {renderAssetCategories} from '../FrequentComponents/Asset'
+import AiGenAsset from './AiGenModelComponent';
 import * as ipfsClient  from 'ipfs-http-client';
 import {Badge, Image} from 'react-bootstrap';
 import {Card, CardText, CardBody, 
@@ -343,8 +344,12 @@ class DigitalAsset extends Component {
                                         <span className='fa fa-plus-circle'/>
                                     }
                                     </Button>
+                                    <CardText className='mt-2 new-item-card-text'>
+                                        OR
+                                    </CardText>
                                 </div>
                             </div> 
+                            <AiGenAsset/>
                                 <div className='mb-4' id='new-item-form-error'>{this.state.errors.assetFile}</div>
                             </CardBody>
                             <CardBody> 
