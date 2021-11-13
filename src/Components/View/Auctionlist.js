@@ -288,9 +288,9 @@ class Auctionlist extends Component {
   render = () => {
     if (this.props.auctionlist.loading) {
       return <Loading />;
-    } /*else if (this.props.auctionlist.errors) {
+    } else if (this.props.auctionlist.errors) {
       return <Error />;
-    } */ else {
+    } else {
       return <>{this.ui()}</>;
     }
   };
