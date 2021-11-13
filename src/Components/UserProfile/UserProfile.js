@@ -13,8 +13,11 @@ class UserProfile extends Component{
             <section className= "section-padding-100">
                 <div className='container'>
                     <div className='row'>
-                        <div className='col-md-6'>
-                           <div id='pfp'></div>
+                        <div className=''>
+                           <div id='pfp'>
+                               profile picture
+
+                           </div>
                            {
                                this.props.userId==this.props.user ?
                                 <div className = 'btn-group-vertical'>

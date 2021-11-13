@@ -1,3 +1,9 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
 .textlayout {
     margin: 10px;
     text-align: center; 
@@ -10,13 +16,12 @@
 }
 
 #pfp {
-    height: 150px;
-    width: 150px;
-    position: relative;
-    padding-bottom: 100px;
+    padding-bottom: 150px;
     align-items: center;
-    border: white;
-    border-radius: 0.3em;
+    justify-content: center;
+    
+   /* background-image: url(../../assets/images/user.jpg); */
+    border-image-width: auto;
 }
 
 #options btn-group-vertical {
@@ -24,7 +29,7 @@
 }
 
 .row div {
-    /* text-align: center; */
+     text-align: center; 
 }
 
 button {
@@ -34,17 +39,38 @@ button {
 div .btn-group-vertical {
     width: 60%;
     border-radius: 0;
-    align-items: flex-end;
+    border: none;
+    align-items: center;
+    padding-bottom: 100px;
 }
 
 div .btn-group-vertical:hover {
     color: #03091f;
+   
 }
+
 div .btn-dark { 
     background-color: #03091f;
+    margin: 2px;
     
 }
 
 div .btn-dark {
+    background: linear-gradient(to right, rgb(2, 7, 24), rgb(6, 16, 49), rgb(2, 7, 24));
+    border: none;
+    
+}
+
+div .btn-dark:hover, .btn-dark:focus {
     background: linear-gradient(to right, #A44BC7, cyan, blue, violet);
+    transform: translateY(-2px);
+    font-style: italic;
+    font-size: 1.3em;
+    box-shadow: #03091f;
+    box-sizing: 1.3em;
+}
+
+#content {
+    padding-top: 100px;
+    
 }
