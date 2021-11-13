@@ -411,7 +411,7 @@ class NftAssetDetails extends Component {
                             <CardSubtitle tag="h6" className="new-item-preview-price">
                                 Contract Address{"  "}
                                 <span style={{ marginLeft: 10, color: "cyan" }}>
-                                    {"0x3fc1c8... "}
+                                    {"0x264Cee... "}
                                     <CopyToClipboard text={"0x3fc1c81d8551933349E36A65058d3F79251d8a97"}>
                                         <span className='fa fa-copy' />
                                     </CopyToClipboard>

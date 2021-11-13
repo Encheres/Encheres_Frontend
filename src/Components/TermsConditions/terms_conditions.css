@@ -14,3 +14,6 @@
     font-size: 1.4rem;
 
 }
+.rnb {
+    text-emphasis-color: linear-gradient(to right, #A44BC7, cyan, blue, violet);;
+}

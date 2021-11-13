@@ -292,7 +292,8 @@ class MyDigitalAssets extends Component {
             _ownerAccount:account_address,
             _auctionEndTime: Date.parse(date_time),
             _auctionCreationTime: Date.now(),
-            _auctionStartPrice: window.web3.utils.toBN(base_price* window.web3.utils.toBN("1000000000000000000")),
+            _auctionStartPrice: window.web3.utils.toWei(base_price.toString(), 'Ether'),
+            //_auctionStartPrice: window.web3.utils.toBN(base_price* window.web3.utils.toBN("1000000000000000000")),
             _creatorAccount: creator,
             _royality: royality,
         };
