@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import { Accordion } from 'react-bootstrap';
+import { Accordion, Form } from 'react-bootstrap';
 import { Button, CardText } from 'reactstrap';
 import { GrDomain } from 'react-icons/gr';
 import swal from 'sweetalert';
 import { connect } from 'react-redux';
 import { fetchAiGeneratedAsset } from '../../apis_redux/actions/aiGeneratedAsset';
 import * as ipfsClient  from 'ipfs-http-client';
-import { ipfs_base_url } from '../../apis_redux/apis/encheres';
 
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
@@ -21,8 +20,17 @@ class AiGenAsset extends Component{
             style_file_hash: '',
             generated_asset_file_hash: '',
             content_uploading: false,
-            style_uploading: false
+            style_uploading: false,
+
+            literature: '',
+            literatureLength: 0,
+            errors: {
+                literature: '',
+                literatureLength: ''
+            }
         }
+
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     onFileChange = (e) => {
@@ -130,6 +138,41 @@ class AiGenAsset extends Component{
         }
     }
 
+    handleInputChange(event) {
+        const target = event.target;
+        const name = target.name;
+        this.setState({
+          [name]: event.target.value
+        });
+    }
+
+    formValidattion() {
+
+        const { literatureLength } = this.state;
+        let literatureLengthError = "", error;
+
+        if(literatureLength && isNaN(literatureLength) || literatureLength - this.state.literature <= 0){
+            literatureLengthError = "Literature's Length must be greater than literature's begining length.";
+            error = true
+        }
+
+        this.setState(prevState => ({
+            errors:{
+                literatureLength: literatureLengthError
+            }
+        }))
+        
+        return !error;
+    }
+
+    generateLiteratureAsset(){
+
+        if(!this.formValidattion())
+            return;
+        
+        alert('Form Submitted!!')
+    }
+
     render(){
         var assetGenButton;
 
@@ -220,7 +263,47 @@ class AiGenAsset extends Component{
                 <Accordion.Item eventKey="2">
                     <Accordion.Header style={{whiteSpace: 'pre'}}><span className='fa fa-lg fa-book' />   Use AI Literature Generator</Accordion.Header>
                     <Accordion.Body style={{backgroundColor: '#0B1126'}}>
-                    {/*  */}
+                        <Form className='mt-4'>
+                            <div className='row'>
+                                <div className='col-8'>
+                                    <Form.Group className="mb-3" controlId="literature">
+                                        <Form.Control
+                                            name='literature'
+                                            onChange={this.handleInputChange}
+                                            className='new-item-form-field' 
+                                            style={{backgroundColor: '#03091F', 
+                                                borderWidth: 0,
+                                                color: 'white'
+                                                }}
+                                            placeholder="Enter Literature's Begining" />
+                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.literature}</div>
+                                    </Form.Group>
+                                </div>
+                                <div className='col-4'>
+                                    <Form.Group className="mb-3" controlId="literatureLength">
+                                        <Form.Control
+                                            type='number'
+                                            name='literatureLength'
+                                            onChange={this.handleInputChange}
+                                            className='new-item-form-field' 
+                                            style={{backgroundColor: '#03091F', 
+                                                borderWidth: 0,
+                                                color: 'white'
+                                                }}
+                                            placeholder="Length (words)"
+                                            />
+                                        <div className='mb-4' id='new-item-form-error'>{this.state.errors.literatureLength}</div>
+                                    </Form.Group>
+                                </div>
+                            </div>
+                        </Form>
+                        <div style={{textAlign: 'center'}}>
+                        <Button className='mt-2 mb-4 new-item-card-button'
+                            onClick={() => this.generateLiteratureAsset()}
+                        >
+                            GENERATE LITERATURE ASSET FILE
+                        </Button>
+                        </div>
                     </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="3">
