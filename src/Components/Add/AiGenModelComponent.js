@@ -10,6 +10,7 @@ import * as ipfsClient  from 'ipfs-http-client';
 //Declare IPFS
 const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
+const textToImage = require('text-to-image');
 
 class AiGenAsset extends Component{
     constructor(props){
@@ -151,8 +152,8 @@ class AiGenAsset extends Component{
         const { literatureLength } = this.state;
         let literatureLengthError = "", error;
 
-        if(literatureLength && isNaN(literatureLength) || literatureLength - this.state.literature <= 0){
-            literatureLengthError = "Literature's Length must be greater than literature's begining length.";
+        if(literatureLength && isNaN(literatureLength) || literatureLength <= 0){
+            literatureLengthError = "Next Literature Words must be non zero.";
             error = true
         }
 
@@ -186,14 +187,41 @@ class AiGenAsset extends Component{
             })
         }
         else if(this.props.generatedAssets.generatedAsset){
-            
-            
+            this.literatureTextToAssetFile(this.props.generatedAssets.generatedAsset.generated_literature);
+        }
+    }
+
+    async literatureTextToAssetFile(literature){
+
+        textToImage.generate(literature, {
+            bgColor: '#2A0944',
+            textColor: '#BFA2DB',
+            fontWeight: 'bold',
+            fontFamily: 'cursive',
+            margin: 30
+        })
+        .then(async (imageUri) => {
+            let buffer = new Buffer(imageUri.split(",")[1], 'base64');
+            let file = await ipfs.add(buffer);
+            return file;
+        })
+        .then((file) => {
+            alert(file.path)
+            this.props.setAssetFileHash(file.path);
             swal({
                 title: "Success!!",
                 text: "Your AI generated Asset File Created Sucessfully!!\n Now Provide other details in form and Create Asset",
                 icon: "success"
+            });
+        })
+        .catch((er) => {
+            swal({
+                title: "OOPS!!",
+                text: 'Asset Generation Unsuccessful. Try again!!',
+                icon: "error"
             })
-        }
+        });
+        
     }
 
     render(){
@@ -313,7 +341,7 @@ class AiGenAsset extends Component{
                                                 borderWidth: 0,
                                                 color: 'white'
                                                 }}
-                                            placeholder="Length (words)"
+                                            placeholder="Generation Words Count"
                                             />
                                         <div className='mb-4' id='new-item-form-error'>{this.state.errors.literatureLength}</div>
                                     </Form.Group>

@@ -377,49 +377,49 @@ class DigitalAsset extends Component {
                                         <span><FaMusic/></span> Music
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Literature", 1)}
+                                        onClick={() => this.addCategory("Literature", 2)}
                                         bg={this.state.categories.indexOf("Literature")>=0 ? "light": "secondary"}
                                     >
                                         <span className='fa fa-book'/> Literature
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Domain Names", 2)}
+                                        onClick={() => this.addCategory("Domain Names", 3)}
                                         bg={this.state.categories.indexOf("Domain Names")>=0 ? "light": "secondary"}
                                     >
                                         <span><GrDomain/></span> Domain Names
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Virtual Worlds", 3)} 
+                                        onClick={() => this.addCategory("Virtual Worlds", 4)} 
                                         bg={this.state.categories.indexOf("Virtual Worlds")>=0 ? "light": "secondary"}                             
                                     >
                                         <span><BiWorld/></span> Virtual Worlds
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Trading Cards", 4)}  
+                                        onClick={() => this.addCategory("Trading Cards", 5)}  
                                         bg={this.state.categories.indexOf("Trading Cards")>=0 ? "light": "secondary"}                                                      
                                     >
                                         <span><GiCardRandom/></span> Trading Cards
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Collectibles", 5)} 
+                                        onClick={() => this.addCategory("Collectibles", 6)} 
                                         bg={this.state.categories.indexOf("Collectibles")>=0 ? "light": "secondary"}                                                       
                                     >
                                         <span><GiBearFace/></span> Collectibles
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Sports", 6)} 
+                                        onClick={() => this.addCategory("Sports", 7)} 
                                         bg={this.state.categories.indexOf("Sports")>=0 ? "light": "secondary"}                                                       
                                     >
                                         <span><FaFootballBall/></span> Sports
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Documents", 7)}  
+                                        onClick={() => this.addCategory("Documents", 8)}  
                                         bg={this.state.categories.indexOf("Documents")>=0 ? "light": "secondary"}                                                      
                                     >
                                         <span className='fa fa-file'/> Documents
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
-                                        onClick={() => this.addCategory("Utility", 8)}    
+                                        onClick={() => this.addCategory("Utility", 9)}    
                                         bg={this.state.categories.indexOf("Utility")>=0 ? "light": "secondary"}                                                    
                                     >
                                         <span><FaWallet/></span> Utility
