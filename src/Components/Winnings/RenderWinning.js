@@ -5,10 +5,9 @@ import { Form } from 'react-bootstrap';
 import AddressForm from '../FrequentComponents/AddressForm';
 import { addressValidation } from '../FrequentComponents/AddressForm';
 import swal from 'sweetalert';
-
-
 import Web3 from 'web3';
 import Account from '../../abis/Account.json';
+import { connect } from 'react-redux';
 
 class RenderWinning extends Component {
     constructor(props){
@@ -409,5 +408,8 @@ class RenderWinning extends Component {
         );
     }
 }
-
-export default RenderWinning;
+const mapStateToProps = (state) => ({
+    orders: state.orders,
+    items: state.items,
+});
+export default connect(mapStateToProps,{})(RenderWinning);

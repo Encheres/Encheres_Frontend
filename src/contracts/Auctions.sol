@@ -55,7 +55,8 @@ contract Auctions{
     event auctionEnded(
         uint nftId,
         uint auctionCurrentBid,
-        address payable auctionBuyer
+        address payable prevOwner,
+        address payable currOwner
     );
 
     function CreateAuction(uint _nftId, address payable _ownerAccount, uint256 _auctionEndTime, uint256 _auctionCreationTime, uint _auctionStartPrice, address payable _creatorAccount, uint _royality ) public payable{
@@ -109,20 +110,23 @@ contract Auctions{
         emit bidCreated(_nftId, _auctionCurrentBid, _auctionBuyer);
     }
 
-    function EndAuction(uint _nftId, uint256 _endTime) public payable{
+    function EndAuction(uint _nftId, uint256 _endTime) public payable returns( uint __nftId, uint __auctionCurrentBid, address payable __prevOwner, address payable __currOwner){
         require(_nftId >= 0, "Invalid nftId");
         require(auctionMap[_nftId].auctionEnded == false, "Auction has already ended");
         require(_endTime>=auctionMap[_nftId].auctionEndTime, "Auction has not ended yet");
         auctionMap[_nftId].auctionEnded = true;
+        address payable prevOwner = auctionMap[_nftId].ownerAccount;
+        address payable currOwner = auctionMap[_nftId].ownerAccount;
         if(auctionMap[_nftId].bidStarted){
             uint royality = auctionMap[_nftId].royality;
             auctionMap[_nftId].auctionBuyer.transfer(auctionMap[_nftId].auctionCurrentBid*(100-royality)/100); // transfer the highest bid amount to the auction creator
             auctionMap[_nftId].ownerAccount.transfer(auctionMap[_nftId].auctionCurrentBid*royality/100); // transfer the highest bid amount to the auction owner
             auctionMap[_nftId].ownerAccount = auctionMap[_nftId].auctionBuyer; // update the owner account to the highest bidder wallet address
+            currOwner = auctionMap[_nftId].auctionBuyer;
             auctionMap[_nftId].auctionBuyer = payable(address(0)); // set the auction buyer to null address
             auctionMap[_nftId].bidStarted = false;
         }
-        emit auctionEnded(_nftId,  auctionMap[_nftId].auctionCurrentBid, auctionMap[_nftId].ownerAccount);
+        return(_nftId,  auctionMap[_nftId].auctionCurrentBid, prevOwner, currOwner);
     }
 
     function GetAuctionDetails(uint _nftId) public view returns(address payable, uint256, uint, uint, bool, bool, address payable){
