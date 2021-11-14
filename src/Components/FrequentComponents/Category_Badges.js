@@ -14,6 +14,8 @@ const getIcon = (category) => {
             return <FaPalette/>
         case 'Music':
             return <FaMusic/>
+        case 'Literature':
+            return <span className='fa fa-book'/>
         case 'Domain Names':
             return <GrDomain/>
         case 'Virtual Worlds':

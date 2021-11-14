@@ -4,7 +4,7 @@ import { Button, CardText } from 'reactstrap';
 import { GrDomain } from 'react-icons/gr';
 import swal from 'sweetalert';
 import { connect } from 'react-redux';
-import { fetchAiGeneratedAsset } from '../../apis_redux/actions/aiGeneratedAsset';
+import { fetchAiGeneratedAsset, fetchAiGeneratedLiteratureAsset } from '../../apis_redux/actions/aiGeneratedAsset';
 import * as ipfsClient  from 'ipfs-http-client';
 
 //Declare IPFS
@@ -165,12 +165,35 @@ class AiGenAsset extends Component{
         return !error;
     }
 
-    generateLiteratureAsset(){
+    async generateLiteratureAsset(){
 
         if(!this.formValidattion())
             return;
-        
-        alert('Form Submitted!!')
+
+        await this.props.fetchAiGeneratedLiteratureAsset(this.state.literature, this.state.literatureLength);
+
+        if(this.props.generatedAssets.errMess){
+
+            this.setState({
+                literature: '',
+                literatureLength: 0
+            });
+
+            swal({
+                title: "OOPS!!",
+                text: 'Asset Generation Unsuccessful. Try again!!',
+                icon: "error"
+            })
+        }
+        else if(this.props.generatedAssets.generatedAsset){
+            
+            
+            swal({
+                title: "Success!!",
+                text: "Your AI generated Asset File Created Sucessfully!!\n Now Provide other details in form and Create Asset",
+                icon: "success"
+            })
+        }
     }
 
     render(){
@@ -326,7 +349,8 @@ const  mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     
     return {
-        fetchAiGeneratedAsset: (contentHash, styleHash) => dispatch(fetchAiGeneratedAsset(contentHash, styleHash))
+        fetchAiGeneratedAsset: (contentHash, styleHash) => dispatch(fetchAiGeneratedAsset(contentHash, styleHash)),
+        fetchAiGeneratedLiteratureAsset: (seed_text, next_words_count) => dispatch(fetchAiGeneratedLiteratureAsset(seed_text, next_words_count))
     };
 }
 

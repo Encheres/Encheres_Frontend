@@ -10,6 +10,7 @@ import { BiWorld } from "react-icons/bi";
 const numToCatMap = [
     "Art",
     "Music",
+    "Literature",
     "Domain Names",
     "Virtual Worlds",
     "Trading Cards",
@@ -29,19 +30,21 @@ export const renderAssetCategories = (categories) => {
                 icon = <FaPalette/>
             else if(c === "Music" || c == 1)
                 icon = <FaMusic/>
-            else if(c === "Domain Names" || c == 2)
+            else if(c === "Literature" || c == 2)
+                icon = <span className='fa fa-book' />
+            else if(c === "Domain Names" || c == 3)
                 icon = <GrDomain/>
-            else if(c === "Virtual Worlds" || c == 3)
+            else if(c === "Virtual Worlds" || c == 4)
                 icon = <BiWorld/>
-            else if(c === "Trading Cards" || c == 4)
+            else if(c === "Trading Cards" || c == 5)
                 icon = <GiCardRandom/>
-            else if(c === "Collectibles" || c == 5)
+            else if(c === "Collectibles" || c == 6)
                 icon = <GiBearFace/>
-            else if(c === "Sports" || c == 6)
+            else if(c === "Sports" || c == 7)
                 icon = <FaFootballBall/>
-            else if(c === "Documents" || c == 7)
+            else if(c === "Documents" || c == 8)
                 icon = <span className='fa fa-file'/>
-            else if(c === "Utility" || c == 8)
+            else if(c === "Utility" || c == 9)
                 icon = <FaWallet/>
 
             return(
@@ -63,19 +66,21 @@ export const renderAssetCategoriesFromIds = (categories) => {
                 icon = <FaPalette/>
             else if(c === "Music" || c == 1)
                 icon = <FaMusic/>
-            else if(c === "Domain Names" || c == 2)
+            else if(c === "Literature" || c == 2)
+                icon = <span className='fa fa-book' />
+            else if(c === "Domain Names" || c == 3)
                 icon = <GrDomain/>
-            else if(c === "Virtual Worlds" || c == 3)
+            else if(c === "Virtual Worlds" || c == 4)
                 icon = <BiWorld/>
-            else if(c === "Trading Cards" || c == 4)
+            else if(c === "Trading Cards" || c == 5)
                 icon = <GiCardRandom/>
-            else if(c === "Collectibles" || c == 5)
+            else if(c === "Collectibles" || c == 6)
                 icon = <GiBearFace/>
-            else if(c === "Sports" || c == 6)
+            else if(c === "Sports" || c == 7)
                 icon = <FaFootballBall/>
-            else if(c === "Documents" || c == 7)
+            else if(c === "Documents" || c == 8)
                 icon = <span className='fa fa-file'/>
-            else if(c === "Utility" || c == 8)
+            else if(c === "Utility" || c == 9)
                 icon = <FaWallet/>
 
             return(

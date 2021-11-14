@@ -377,6 +377,12 @@ class DigitalAsset extends Component {
                                         <span><FaMusic/></span> Music
                                     </Badge>
                                     <Badge className='new-item-badge' pill text="dark"
+                                        onClick={() => this.addCategory("Literature", 1)}
+                                        bg={this.state.categories.indexOf("Literature")>=0 ? "light": "secondary"}
+                                    >
+                                        <span className='fa fa-book'/> Literature
+                                    </Badge>
+                                    <Badge className='new-item-badge' pill text="dark"
                                         onClick={() => this.addCategory("Domain Names", 2)}
                                         bg={this.state.categories.indexOf("Domain Names")>=0 ? "light": "secondary"}
                                     >

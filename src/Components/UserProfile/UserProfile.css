@@ -28,9 +28,9 @@ body {
     background-color: aliceblue;
 }
 
-.row div {
-     text-align: center; 
-}
+/* .row div {
+    text-align: center;  
+} */
 
 button {
     width: max-content;
