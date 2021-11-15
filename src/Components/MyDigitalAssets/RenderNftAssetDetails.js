@@ -68,7 +68,6 @@ class NftAssetDetails extends Component {
         if (window.web3) {
           window.web3 = new Web3(window.ethereum)
           await window.ethereum.enable()
-          console.log(window.web3)
         }
         else if (window.web3) {
           window.web3 = new Web3(window.web3.currentProvider)
@@ -121,7 +120,6 @@ class NftAssetDetails extends Component {
                 account_address: accounts[0],
                 account_integrated:true
             })
-            console.log(accounts[0])
 
         }catch(err){
             swal({
@@ -136,7 +134,6 @@ class NftAssetDetails extends Component {
             const { auction_contract } = this.state;
             if(auction_contract){
                 const auctions_list = await auction_contract.methods.GetAvaliableAuctionsList().call();
-                console.log(auctions_list);
                 this.setState({
                     auctions_list
                 })
@@ -160,14 +157,12 @@ class NftAssetDetails extends Component {
                     bid_started: auction_details[5],
                     highest_bidder: auction_details[6]
                 }
-                console.log({data})
                 this.setState({
                     auction_details:data,
                     OnSale:true
                 })
                 this.updateAuctionDetails();
             }else{
-                console.log('not on sale')
                 this.setState({
                     OnSale:false
                 })
@@ -197,7 +192,6 @@ class NftAssetDetails extends Component {
                 bid_value:bid_value_error
             }
         })
-        console.log(this.state.bid_value);
         return bid_value_error?false:true;
     }
  
@@ -237,48 +231,13 @@ class NftAssetDetails extends Component {
     }
 
     endAuction = async() =>{
-        const {OnSale, auction_details, auction_contract,nftasset_contract, nftId, account_address} = this.state;
-        if(!OnSale){
-            return;
-        }  
-        try{
-            if(!OnSale ||!auction_details||!auction_details.auction_end_time){
-                return;
-            }
-            let end_date_time = auction_details.auction_end_time;
-            end_date_time = parseInt(end_date_time);
-            if(Date.now()<end_date_time){
-                return;
-            }
-            if(account_address.toLowerCase()!==auction_details.owner_account.toLowerCase()){
-                this.setState({
-                    OnSale:false,
-                    auction_details:''
-                })
-                return;
-            }
-            console.log('ending auction')
-            const details = await auction_contract.methods.EndAuction(nftId, end_date_time).send({from:auction_details.owner_account});
-            const det2 = await nftasset_contract.methods.transferAssetOwnership(auction_details.owner_account, auction_details.highest_bidder, nftId).send({from:auction_details.owner_account});
-            console.log({details, det2});
-            swal({
-                title: "Success",
-                text: "Auction Ended Successfully",
-                icon: "success"
-            })
+        if(this.state.OnSale){
             this.setState({
-                OnSale:false,
-                auction_details:''
+                OnSale:false
+            }, ()=>{
+                this.getAuctionsList();
+                this.fetchAuctionDetails()
             })
-            await this.fetchAuctionList();
-            await this.fetchAuctionDetails();
-            
-        }catch(err){
-            // swal({
-            //     title: "OOPS!!",
-            //     text: "Auction End Failed",
-            //     icon: "error"
-            // })
         }
     }
 
@@ -288,7 +247,6 @@ class NftAssetDetails extends Component {
         if(auction_details){
             const end_date_time = parseInt(auction_details.auction_end_time);
             if(Date.now()>=end_date_time){
-                // console.log(Date.now(), end_date_time);
                 this.endAuction();
             }
             return(

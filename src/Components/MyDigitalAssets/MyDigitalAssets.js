@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import Loading from '../loading';
 import { RenderNftAssetCard } from './RenderNftAssetCard';
 import { Row, Button, Modal, ModalHeader, ModalBody, ModalFooter  } from "reactstrap";
@@ -11,6 +12,7 @@ import Web3 from 'web3';
 import NftAsset from '../../abis/NftAsset.json';
 import AuctionContract from '../../abis/Auctions.json';
 import Datetime from 'react-datetime';
+import {createDigitalAssetAuction} from '../../apis_redux/actions/digital_assets_auction';
 
 class MyDigitalAssets extends Component {
 
@@ -313,6 +315,9 @@ class MyDigitalAssets extends Component {
                 const res = await auction_contract.methods.CreateAuction(data._nftId, data._ownerAccount, data._auctionEndTime, 
                     data._auctionCreationTime, data._auctionStartPrice, data._creatorAccount, data._royality).send({from:account_address});
                 
+                const schedule_data = {nftId:data._nftId, end_date_time:data._auctionEndTime, owner_account:data._ownerAccount}
+                await this.props.createDigitalAssetAuction(schedule_data);
+                
                 if(res&& res.status===true){
                     console.log(res);
                     swal({
@@ -476,5 +481,10 @@ class MyDigitalAssets extends Component {
         
     }
 }
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    }
+}
 
-export default MyDigitalAssets;
+export default connect(mapStateToProps, {createDigitalAssetAuction})(MyDigitalAssets);
