@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
-import Switch from 'react-switch';
-import { fetchProfile } from '../../apis_redux/actions/userProfile';
+import { fetchProfile, updateProfile, updateAddress } from '../../apis_redux/actions/userProfile';
 import { Button, Container, Row, Col, Card, 
     CardBody, CardTitle, CardSubtitle, Modal, ModalHeader, ModalBody, ModalFooter, CardImg} from "reactstrap";
 import AddressForm from '../FrequentComponents/AddressForm';
-import { addressValidation } from '../FrequentComponents/AddressForm';
 import { Image, Form } from 'react-bootstrap';
 import {FaEthereum,FaHome, FaPencilAlt} from 'react-icons/fa'
 import RenderError from '../FrequentComponents/RenderError';
 import Loading from '../loading';
-import Greetings from '../../assets/images/Hello.jpg'
 import "./UserProfile.css";
+import swal from 'sweetalert';
 
 const identicon = require('identicon');
 
@@ -29,6 +26,7 @@ class UserProfile extends Component{
             anonymous_name: '',
             password: '',
             editAddress: false,
+            editAddressModalOpen: false,
             address:{
                 addressLine1:"",
                 addressLine2:"",
@@ -54,8 +52,7 @@ class UserProfile extends Component{
         }
     }
 
-    async componentDidMount(){
-
+    async getUser(){
         await this.props.fetchProfile(this.props.user);
 
         if(this.props.userProfile.profile.accounts[0]){
@@ -64,21 +61,18 @@ class UserProfile extends Component{
             this.setState({
                 userImage: imageBuffer,   
             });
-        }    
+        }   
+    }
+
+    async componentDidMount(){
+        await this.getUser();
+         
     }
 
     async componentDidUpdate(prevProps){
 
         if(prevProps.user !== this.props.user){
-            await this.props.fetchProfile(this.props.user);
-            
-            if(this.props.userProfile.profile.accounts[0]){
-                const imageBuffer = identicon.generateSync({ id: this.props.userProfile.profile.accounts[0], size: 500 })
-                
-                this.setState({
-                    userImage: imageBuffer,   
-                });
-            }   
+            await this.getUser();
         }
     }
 
@@ -97,26 +91,13 @@ class UserProfile extends Component{
     }
 
     formValidation = ()=>{
-        const {password, address} = this.state;
+        const {password} = this.state;
         let passworderror="";
         let error = false;
 
         if(password && password.trim().length < 6){
             error = true;
             passworderror = "* Password should be 6 or more characters long";
-        }
-
-        if(this.state.editAddress){
-            const addressStatus = addressValidation(address);
-            if(!error){
-                error = addressStatus.error;
-            }
-
-            this.setState({
-                errors:{
-                    address:addressStatus.address_error
-                }
-            })
         }
         
         this.setState({
@@ -128,13 +109,80 @@ class UserProfile extends Component{
         return error;
     }
 
-    submitEditForm(){
+    async submitEditForm(){
         if(!this.formValidation()){
-            alert('Form Submitted!!');
+
+            var updateData = {};
+            if(this.state.name!='')
+                updateData.name = this.state.name;
+            if(this.state.anonymous_name!='')
+                updateData.anonymous_name = this.state.anonymous_name;
+            if(this.state.password!='')
+                updateData.password = this.state.password;
+
+            await this.props.updateProfile(updateData);
+
+            if(this.props.userProfile.error){
+                swal({
+                    title: "OOPS!!",
+                    text: this.props.userProfile.error,
+                    icon: "error"
+                })
+                await this.getUser();
+            }
+            else{
+                swal({
+                    title: "Success!!",
+                    text: this.props.userProfile.message,
+                    icon: "success"
+                })
+
+                await this.getUser();
+            }
+
             this.setState({
                 editModalOpen: false
             })
         }
+    }
+
+    async submitAddressEditForm(){
+        var updateData = {};
+            if(this.state.address.addressLine1!='')
+                updateData.addressLine1 = this.state.address.addressLine1;
+            if(this.state.address.addressLine2!='')
+                updateData.addressLine2 = this.state.address.addressLine2;
+            if(this.state.address.city!='')
+                updateData.city = this.state.address.city;
+            if(this.state.address.addressState!='')
+                updateData.addressState = this.state.address.addressState;
+            if(this.state.address.country!='')
+                updateData.country = this.state.address.country;
+            if(this.state.address.postalCode!='')
+                updateData.postalCode = this.state.address.postalCode;
+
+            await this.props.updateAddress(updateData);
+
+            if(this.props.userProfile.error){
+                swal({
+                    title: "OOPS!!",
+                    text: this.props.userProfile.error,
+                    icon: "error"
+                })
+                await this.getUser();
+            }
+            else{
+                swal({
+                    title: "Success!!",
+                    text: this.props.userProfile.message,
+                    icon: "success"
+                })
+                await this.getUser()
+            }
+
+            this.setState({
+                editAddressModalOpen: false
+            })
     }
 
     handleCheckChange() {
@@ -214,7 +262,14 @@ class UserProfile extends Component{
                                                 onClick={() => this.setState({editModalOpen: !this.state.editModalOpen})}
                                                 style={{width: 200}}
                                                 id='single-asset-purchase-button'>
-                                                <span><FaPencilAlt /> Edit Profile </span>
+                                                <span><FaPencilAlt /> Edit General Profile </span>
+                                            </Button>
+                                            {"  "}
+                                            <Button 
+                                                onClick={() => this.setState({editAddressModalOpen: !this.state.editAddressModalOpen})}
+                                                style={{width: 200}}
+                                                id='single-asset-purchase-button'>
+                                                <span><FaPencilAlt /> Edit Address </span>
                                             </Button>
                                             </div> :
                                             <div></div>
@@ -280,28 +335,7 @@ class UserProfile extends Component{
                                     id='new-item-form-error'>
                                     {this.state.errors.password}
                                 </div>
-                                <div className='mb-4'>
-                                    <span className='new-item-switch-label'>
-                                        Edit Resedential Address
-                                    </span>
-                                    <Switch 
-                                        onChange={() => this.handleCheckChange()} 
-                                        checked={this.state.editAddress}
-                                        height={24}
-                                        width={50}
-                                        offColor='#03091F'
-                                        onColor='#00CAFF'
-                                        />
-                                </div>
-                                {
-                                    this.state.editAddress ?
-                                    <AddressForm 
-                                        address={this.state.address} 
-                                        handleAddressChange = {() => this.handleAddressChange()} 
-                                        errors = {this.state.errors.address}
-                                    /> :
-                                    <></>
-                                }
+                                
                             </ModalBody>
                             <ModalFooter 
                                     style={{backgroundColor: '#0B1126', borderWidth: 0}}
@@ -312,6 +346,40 @@ class UserProfile extends Component{
                                 <Button 
                                     onClick={() => this.setState({
                                         editModalOpen: !this.state.editModalOpen
+                                    })}
+                                    className='fa fa-lg fa-times-circle' />
+                            </ModalFooter>
+                        </Modal>
+                        <Modal isOpen={this.state.editAddressModalOpen} >
+                            <ModalHeader
+                                style={{backgroundColor: '#0B1126', borderWidth: 0}}
+                            >
+                                <div style={{color: 'grey'}}>
+                                    Edit Profile
+                                </div>
+                            </ModalHeader>
+                            <ModalBody
+                                style={{backgroundColor: '#0B1126', borderWidth: 0}}
+                            >
+                                <div className='mb-4' 
+                                    id='new-item-form-error'>
+                                    {"* Only Fill those fields which you need to update."}
+                                </div>
+                                <AddressForm 
+                                    address={this.state.address} 
+                                    handleAddressChange = {this.handleAddressChange} 
+                                    errors = {this.state.errors.address}
+                                /> 
+                            </ModalBody>
+                            <ModalFooter 
+                                    style={{backgroundColor: '#0B1126', borderWidth: 0}}
+                            >
+                                <Button 
+                                    onClick={() => this.submitAddressEditForm()}
+                                    className='fa fa-lg fa-telegram' />
+                                <Button 
+                                    onClick={() => this.setState({
+                                        editAddressModalOpen: !this.state.editAddressModalOpen
                                     })}
                                     className='fa fa-lg fa-times-circle' />
                             </ModalFooter>
@@ -342,7 +410,9 @@ const mapStateToProps = (state, ownprops) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      fetchProfile: (userId) => dispatch(fetchProfile(userId))
+      fetchProfile: (userId) => dispatch(fetchProfile(userId)),
+      updateProfile: (data) => dispatch(updateProfile(data)),
+      updateAddress: (data) => dispatch(updateAddress(data))
     };
   };
 

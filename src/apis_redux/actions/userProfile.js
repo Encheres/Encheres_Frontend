@@ -19,7 +19,7 @@ export const updateProfile = (data) => async (dispatch,getState) =>{
 
     let token = getState().auth.token;
     try{
-        await authRecord(token).patch('/users/me', data);
+        await authRecord(token).patch('/users/me/profile', data);
         // get updated user profile
 
         dispatch({type:UPDATE_USER_PROFILE_SUCCESS,payload:{msg:"Your profile has been updated successfully"}});
