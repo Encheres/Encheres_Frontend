@@ -90,3 +90,15 @@ div .btn-dark:hover, .btn-dark:focus {
     padding-bottom: 30px;
     padding-top: 30px;
 }
+
+#user-detail-container{
+    text-align: center;
+    margin-bottom: 0;
+}
+
+#user-detail-field{
+    background-color: #0B1126;
+    border-radius: 15px;
+    border: solid 2px gray;
+    padding: 10px;
+}

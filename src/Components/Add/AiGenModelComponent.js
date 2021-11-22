@@ -357,12 +357,6 @@ class AiGenAsset extends Component{
                         </div>
                     </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="3">
-                    <Accordion.Header style={{whiteSpace: 'pre'}}><GrDomain style={{backgroundColor: 'white'}}/>   Use AI Domain Names Generator</Accordion.Header>
-                    <Accordion.Body style={{backgroundColor: '#0B1126'}}>
-                    {/*  */}
-                    </Accordion.Body>
-                </Accordion.Item>
             </Accordion> 
         );
     }
