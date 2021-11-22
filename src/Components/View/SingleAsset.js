@@ -196,12 +196,20 @@ class SingleAssetDetail extends React.Component{
 
             if(!asset.shipped){
                 ownershipStatus = <CardText id="new-item-card-account">
-                                    Owned By @{asset.owner && asset.owner.name ? asset.owner.name : "john_bill123"}
+                                    Owned By @<Link to={`/profile/${asset.owner._id}`}>{asset.owner && asset.owner.name ? asset.owner.name : "john_bill123"}</Link>
                                 </CardText>
             }
             else{
                 ownershipStatus = <CardText id="new-item-card-account">
-                                    @{asset.owner.name} Sold asset to @{asset.bidder.name}
+                                    @<Link id='new-item-card-account' 
+                                        to={`/profile/${asset.owner._id}`}
+                                        style={{textDecoration: 'none'}}>
+                                        {asset.owner.name}
+                                    </Link> Sold asset to @<Link id='new-item-card-account' 
+                                        to={`/profile/${asset.bidder._id}`}
+                                        style={{textDecoration: 'none'}}>
+                                        {asset.bidder.name}
+                                    </Link>
                                 </CardText>
             }
             
