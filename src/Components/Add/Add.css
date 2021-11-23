@@ -1,15 +1,15 @@
-#new-item-card-row{
+#new-item-card-row {
     margin-top: 50px;
     margin-bottom: 100px;
 }
 
-.new-item-heading{
+.new-item-heading {
     text-align: center !important;
     margin-top: 100px !important;
     padding-top: 2rem;
 }
 
-.new-item-checkbox{
+.new-item-checkbox {
     height: 10px !important;
     width: 10px !important;
     color: grey;
@@ -17,47 +17,46 @@
 
 /* General Card CSS */
 
-#new-item-form-error{
+#new-item-form-error {
     color: cyan;
     font-size: smaller;
 }
 
-#new-item-card{
-    border-radius: 25px ;
-    background-color: #0B1126;
+#new-item-card {
+    border-radius: 25px;
+    background-color: #0b1126;
     padding-bottom: 30px;
     padding-top: 30px;
     margin-top: 50px;
 }
-.form__card__container{
+.form__card__container {
     border-radius: 25px !important;
-    background-color: #0B1126 !important;
+    background-color: #0b1126 !important;
     padding-bottom: 30px !important;
     padding-top: 30px;
     margin-top: 50px;
     margin-bottom: 5rem;
-} 
+}
 
-.new-item-card-subtitle{
+.new-item-card-subtitle {
     color: white;
 }
 
-.new-item-card-text{
+.new-item-card-text {
     color: white;
     text-align: center;
     margin-top: 20px;
 }
 
-.new-item-card-button-div{
+.new-item-card-button-div {
     text-align: center;
 }
 
+.new-item-card-social {
+    background-color: #0b1126 !important;
+}
 
-.new-item-card-social{
-    background-color: #0B1126 !important;
-} 
-
-.new-item-badge{
+.new-item-badge {
     font-size: medium !important;
     margin-left: 3px;
     margin-right: 3px;
@@ -66,33 +65,33 @@
 
 /* Preview Card */
 
-.new-item-image{
+.new-item-image {
     margin-left: 20px;
     margin-right: 20px;
 }
 
-#new-item-card-username{
+#new-item-card-username {
     text-align: center;
 }
 
-#new-item-card-info{
+#new-item-card-info {
     text-align: center;
     color: grey;
 }
 
-#new-item-card-account{
+#new-item-card-account {
     color: grey;
     text-align: center;
     font-weight: bold;
 }
 
-.new-item-preview-price{
+.new-item-preview-price {
     color: white;
     margin-bottom: 10px !important;
     margin-top: 10px !important;
 }
 
-.new-item-accountbox{
+.new-item-accountbox {
     margin-top: 50px;
     border-radius: 10px;
     border: solid 2px gray;
@@ -102,50 +101,65 @@
 
 /* Create Item Card */
 
-.new-item-card-button{
-    background-image: linear-gradient(to right, violet, #A44BC7, blue, rgb(41, 41, 136));
+.new-item-card-button {
+    background-image: linear-gradient(
+        to right,
+        violet,
+        #a44bc7,
+        blue,
+        rgb(41, 41, 136)
+    );
     margin-left: 10px;
     margin-right: 10px;
     border-radius: 10px !important;
 }
 
-.new-item-dropbox{
+.new-item-dropbox {
     margin-top: 30px;
     border-radius: 10px;
     height: 220px;
     border: dashed 2px gray;
 }
 
-.new-item-art-gen-dropbox{
+.new-item-art-gen-dropbox {
     margin-top: 30px;
     border-radius: 10px;
     height: 400px;
     border: dashed 2px gray;
 }
 
-.new-item-switch-label{
+.new-item-switch-label {
     color: white;
     margin-right: 15px;
 }
 
-.new-item-date-time-label{
+.new-item-date-time-label {
     color: white;
 }
 
 /* Text Beautification */
 
 .rainbow-lr {
-    background: linear-gradient(to right, #A44BC7, cyan, blue, violet);
-    color:transparent;
+    background: linear-gradient(to right, #a44bc7, cyan, blue, violet);
+    color: transparent;
     background-clip: text;
 }
 .rainbow-td {
-    background: linear-gradient(to bottom, red, orange , yellow, green, cyan, blue, violet);
-    color:transparent;
+    background: linear-gradient(
+        to bottom,
+        red,
+        orange,
+        yellow,
+        green,
+        cyan,
+        blue,
+        violet
+    );
+    color: transparent;
     background-clip: text;
 }
 
-.sidebar__heading{
+.sidebar__heading {
     color: white;
     font-size: larger;
     margin-top: 20px;
@@ -153,22 +167,27 @@
     text-align: center;
 }
 
-.selected_items_div{
+.selected_items_div {
     margin-top: 2rem;
     border-top: 2px solid #666;
 }
 
-.rdtPicker, .date_time_input{
-    background-color: #0B1126 !important;
+.rdtPicker,
+.date_time_input {
+    background-color: #0b1126 !important;
     color: #fff;
 }
 
-.rdtNext:hover,.rdtPrev:hover, .rdtSwitch, .rdtCounter .rdtBtn:hover,.rdtDay:hover {
+.rdtNext:hover,
+.rdtPrev:hover,
+.rdtSwitch,
+.rdtCounter .rdtBtn:hover,
+.rdtDay:hover {
     background: #243c94 !important;
 }
 
-.selected_button_navigation{
+.selected_button_navigation {
     transform: scale(1.2);
-    margin-left: .5rem;
-    margin-right: .5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
