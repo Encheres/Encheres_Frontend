@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import {FaCode} from 'react-icons/fa'
+
 
 function Footer(props) {
   return (
@@ -60,7 +62,7 @@ function Footer(props) {
             </div>
             <div className="footer-column col-md-4 col-sm-6 col-xs-12">
               <div className="footer-widget contact-widget">
-                <h3 className="has-line-center">Meet the Creators</h3>
+                <h3 className="has-line-center">Meet the Creators <FaCode /> </h3>
                 <div className="widget-content">
                   <ul className="contact-info" style={{ listStyle: 'none' }}>
                     <li>
@@ -68,10 +70,12 @@ function Footer(props) {
                         <span className="flaticon-support" />
                       </div>
                     </li>
+                    <li><a href='https://www.linkedin.com/in/deepanshujindal' style={{textDecoration:'none', color:'#ffffffad',}}>Deepanshu Jindal</a></li>
                     <li><a href='https://www.linkedin.com/in/bhavesh-kumar-9ab7061b1/' style={{textDecoration:'none', color:'#ffffffad'}}>Bhavesh Kumar</a></li>
+                    <li><a href='https://www.linkedin.com/in/tejus-kaw-051a5218b' style={{textDecoration:'none', color:'#ffffffad'}}>Tejas Kaw</a></li>
                     <li className='has-line-center'><a href='https://www.linkedin.com/in/piyush-narwal-6a1956182/' style={{textDecoration:'none', color:'#ffffffad'}}>Piyush</a></li>
                     
-                    <li>info@yourdomain.com</li>
+                    <li></li>
                   </ul>
                 </div>
               </div>
