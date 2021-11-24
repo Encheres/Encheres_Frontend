@@ -23,15 +23,13 @@ function Footer(props) {
                 <h3 className="has-line-center">About Us</h3>
                 <div className="widget-content">
                   <div className="text">
-                    At the end of the day, going forward, a new normal that has
-                    evolved generation X is on the runway heading towards a
-                    streamlined cloud solution.{' '}
+                    Made with love by students of Punjab Engineering College.{' '}
                   </div>
                   <ul
                     className="social-links"
                     style={{ listStyle: 'none', display: 'flex',alignContent:'center' , justifyContent:'center'}}
                   >
-                    <li style={{ marginRight: '12px' }}>
+                    <li style={{ marginRight: '12px' }}>s
                       <a href="#">
                         <span className="fa fa-facebook-f" />
                       </a>
@@ -70,7 +68,7 @@ function Footer(props) {
                         <span className="flaticon-support" />
                       </div>
                     </li>
-                    <li>10, Mc Donald Avenue, Sunset Park, Newyork</li>
+                    <li className="text"><a href='https://www.linkedin.com/in/piyush-narwal-6a1956182/'>Piyush</a></li>
                     <li>+99 999 9999</li>
                     <li>info@yourdomain.com</li>
                   </ul>
@@ -79,26 +77,11 @@ function Footer(props) {
             </div>
             <div className="footer-column col-md-4 col-sm-12 col-xs-12">
               <div className="footer-widget newsletter-widget">
-                <h3 className="has-line-center">Newsletter</h3>
-                <div className="widget-content">
-                  <div className="text">
-                    Stay Updated with our latest news. We promise not to spam
+                <h3><Link to='/terms_and_conditions' style={{textDecoration:'none', color:'#ffffffad', }}>Terms And Conditions</Link>
+                </h3>
+                <div className="text">
+                    Some terms you need to to agree to use our services.{' '}
                   </div>
-                  <div className="newsletter-form">
-                    <form method="post">
-                      <div className="form-group">
-                        <input
-                          type="email"
-                          name="field-name"
-                          placeholder="Your Email"
-                        />
-                        <button type="submit" className="send-btn">
-                          <span className="fa fa-paper-plane-o" />
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
