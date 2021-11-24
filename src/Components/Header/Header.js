@@ -87,6 +87,27 @@ class Header extends Component {
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <NavItem>
+                  {this.props.signedIn ? (
+                    <UncontrolledDropdown nav inNavbar>
+                      <DropdownToggle nav caret>
+                        <span className="NavBarLink fa fa-user-circle fa-lg" />{" "}
+                      </DropdownToggle>
+                      <DropdownMenu right>
+                        <LinkContainer to={`/profile/${this.props.userId}`}>
+                          <DropdownItem>Account</DropdownItem>
+                        </LinkContainer>
+                        <LinkContainer to='/my-digital-assets'>
+                          <DropdownItem>My Digital Assets </DropdownItem>
+                        </LinkContainer>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  ) : (
+                    <Link to="/login" className='nav-link'>
+                      <span className="NavBarLink fa fa-sign-in fa-lg" />
+                    </Link>
+                  )}
+                </NavItem>
+                <NavItem>
                   {this.props.signedIn ? 
                     <Link to="/pending-shipment" className='nav-link'>
                       <span className="NavBarLink fa fa-truck fa-lg" /> Shipments
@@ -107,17 +128,6 @@ class Header extends Component {
                     </Link>
                   ) : <></>}
                   
-                </NavItem>
-                <NavItem>
-                  {this.props.signedIn ? (
-                    <Link to={`/profile/${this.props.userId}`} className='nav-link'>
-                      <span className="NavBarLink fa fa-user-circle fa-lg" />
-                    </Link>
-                  ) : (
-                    <Link to="/login" className='nav-link'>
-                      <span className="NavBarLink fa fa-sign-in fa-lg" />
-                    </Link>
-                  )}
                 </NavItem>
                 <NavItem>
                   <Link to="/contact-us" className='nav-link'>

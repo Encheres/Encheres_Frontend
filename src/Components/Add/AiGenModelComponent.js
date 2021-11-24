@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import {
     fetchAiGeneratedAsset,
     fetchAiGeneratedLiteratureAsset,
+    fetchAiGeneratedMusicAsset,
 } from "../../apis_redux/actions/aiGeneratedAsset";
 import * as ipfsClient from "ipfs-http-client";
 
@@ -34,7 +35,9 @@ class AiGenAsset extends Component {
             errors: {
                 literature: "",
                 literatureLength: "",
+                note_count: "",
             },
+            music: "100",
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -167,6 +170,39 @@ class AiGenAsset extends Component {
         return !error;
     }
 
+    note_countValidate() {
+        var note_count = this.state.music;
+        for (var i = 0; i < note_count.length; i++) {
+            if (
+                note_count[i] != "0" &&
+                note_count[i] != "1" &&
+                note_count[i] != "2" &&
+                note_count[i] != "3" &&
+                note_count[i] != "4" &&
+                note_count[i] != "5" &&
+                note_count[i] != "6" &&
+                note_count[i] != "7" &&
+                note_count[i] != "8" &&
+                note_count[i] != "9"
+            ) {
+                this.setState({
+                    errors: {
+                        literature: "",
+                        literatureLength: "",
+                        note_count: "this is not a number",
+                    },
+                });
+                swal({
+                    title: "WARNING!!",
+                    text: "note_count is not a number: Try again!!",
+                    icon: "error",
+                });
+                return false;
+            }
+        }
+        return true;
+    }
+
     async generateLiteratureAsset() {
         if (!this.formValidattion()) return;
 
@@ -191,6 +227,13 @@ class AiGenAsset extends Component {
                 this.props.generatedAssets.generatedAsset.generated_literature
             );
         }
+    }
+    async generateMusicAsset() {
+        if (!this.note_countValidate()) {
+            return;
+        }
+        console.log("about to download");
+        await this.props.fetchAiGeneratedMusicAsset(this.state.music);
     }
 
     async literatureTextToAssetFile(literature) {
@@ -353,10 +396,10 @@ class AiGenAsset extends Component {
                                 >
                                     <Form.Group
                                         className="mb-3"
-                                        controlId="literature"
+                                        controlId="music"
                                     >
                                         <Form.Control
-                                            name="literature"
+                                            name="music"
                                             onChange={this.handleInputChange}
                                             className="new-item-form-field"
                                             style={{
@@ -364,10 +407,10 @@ class AiGenAsset extends Component {
                                                 borderWidth: 0,
                                                 color: "white",
                                             }}
-                                            placeholder="Enter Note Count"
+                                            placeholder="Enter Note Count (number)"
                                         />
                                         <div id="new-item-form-error">
-                                            {this.state.errors.literature}
+                                            {this.state.errors.note_count}
                                         </div>
                                     </Form.Group>
                                 </div>
@@ -377,7 +420,7 @@ class AiGenAsset extends Component {
                         <div style={{ textAlign: "center" }}>
                             <Button
                                 className="mt-2 mb-4 new-item-card-button"
-                                onClick={() => this.generateLiteratureAsset()}
+                                onClick={() => this.generateMusicAsset()}
                             >
                                 GENERATE MUSIC FILE
                             </Button>
@@ -453,21 +496,11 @@ class AiGenAsset extends Component {
                         </div>
                     </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="3">
-                    <Accordion.Header style={{ whiteSpace: "pre" }}>
-                        <GrDomain style={{ backgroundColor: "white" }} /> Use AI
-                        Domain Names Generator
-                    </Accordion.Header>
-                    <Accordion.Body style={{ backgroundColor: "#0B1126" }}>
-                        {/*  */}
-                    </Accordion.Body>
-                </Accordion.Item>
             </Accordion>
         );
     }
 }
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
     return {
         generatedAssets: state.generatedAssets,
     };
@@ -481,6 +514,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(
                 fetchAiGeneratedLiteratureAsset(seed_text, next_words_count)
             ),
+        fetchAiGeneratedMusicAsset: (note_count) =>
+            dispatch(fetchAiGeneratedMusicAsset(note_count)),
     };
 };
 

@@ -37,7 +37,7 @@ button {
 }
 
 div .btn-group-vertical {
-    width: 60%;
+    width: 100%;
     border-radius: 0;
     border: none;
     align-items: center;
@@ -70,7 +70,35 @@ div .btn-dark:hover, .btn-dark:focus {
     box-sizing: 1.3em;
 }
 
+#selected-button{
+    background: linear-gradient(to right, #A44BC7, cyan, blue, violet);
+    transform: translateY(-2px);
+    font-style: italic;
+    font-size: 1.3em;
+    box-shadow: #03091f;
+    box-sizing: 1.3em;
+}
+
 #content {
     padding-top: 100px;
     
+}
+
+#user-detail-card{
+    border-radius: 25px ;
+    background-color: #0B1126;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+#user-detail-container{
+    text-align: center;
+    margin-bottom: 0;
+}
+
+#user-detail-field{
+    background-color: #0B1126;
+    border-radius: 15px;
+    border: solid 2px gray;
+    padding: 10px;
 }

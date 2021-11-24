@@ -13,7 +13,7 @@ export default (state=INITIAL_STATE,action)=>{
         case GET_USER_PROFILE_FAILED:
             return{...state, message:null, error:action.payload.error, data:null}
         case UPDATE_USER_PROFILE_SUCCESS:
-            return {...state, message:null, error:null, profile:null}
+            return {...state, message:action.payload.msg, error:null, profile:null}
         case UPDATE_USER_PROFILE_FAILED:
             return{...state, message:null, error:action.payload.error, data:null}
         default:
