@@ -54,17 +54,17 @@ const ipfs = ipfsClient.create({
 
 var demoShowcaseCarousel = [
     {
-        src: "https://ipfs.infura.io/ipfs/QmTD5WhB9hFi8sxMyZVRuEFbdRmi3uq3dt1BSxXqcV112f",
+        src: ipfs_base_url+"QmTD5WhB9hFi8sxMyZVRuEFbdRmi3uq3dt1BSxXqcV112f",
         altText: "Slide 1",
         key: "1",
     },
     {
-        src: "https://ipfs.infura.io/ipfs/QmP9AKueSGHTDz3h8JaG62RsikHRaRBjvQNf43N7dYcQr5",
+        src: ipfs_base_url+"QmP9AKueSGHTDz3h8JaG62RsikHRaRBjvQNf43N7dYcQr5",
         altText: "Slide 2",
         key: "2",
     },
     {
-        src: "https://ipfs.infura.io/ipfs/QmNMAB8Lfi13Jva6PQvF7CLo8qH6erUYrT3Z86paEBfoP6",
+        src: ipfs_base_url+"QmNMAB8Lfi13Jva6PQvF7CLo8qH6erUYrT3Z86paEBfoP6",
         altText: "Slide 3",
         key: "3",
     },
@@ -96,6 +96,7 @@ class PhysicalAsset extends Component {
             contact: 0,
             categories: [],
             createrUsername: "john_bill123",
+            buffer:null,
             address: {
                 addressLine1: "",
                 addressLine2: "",
@@ -104,7 +105,6 @@ class PhysicalAsset extends Component {
                 country: "",
                 postalCode: "",
             },
-
             errors: {
                 assetImagesHash: "",
                 name: "",
@@ -417,7 +417,7 @@ class PhysicalAsset extends Component {
             var tempHash = this.state.assetShowcaseCarousel;
 
             var showcaseElement = {
-                src: "https://ipfs.infura.io/ipfs/" + file.path,
+                src: ipfs_base_url + file.path,
                 altText: "Slide " + assetImagesHash.length.toString(),
                 key: assetImagesHash.length.toString(),
             };
@@ -439,8 +439,6 @@ class PhysicalAsset extends Component {
                 icon: "error",
             });
         }
-
-        //https://ipfs.infura.io/ipfs/<hash>
     }
 
     async uploadAssetVideoFile() {
@@ -466,8 +464,6 @@ class PhysicalAsset extends Component {
 
             this.onFailDismiss();
         }
-
-        //https://ipfs.infura.io/ipfs/<hash>
     }
 
     handleCheckChange() {
@@ -1330,8 +1326,7 @@ class PhysicalAsset extends Component {
                                                     }}
                                                     href={
                                                         ipfs_base_url +
-                                                        this.state
-                                                            .assetVideoHash
+                                                        this.state.assetVideoHash
                                                     }
                                                 >
                                                     Link

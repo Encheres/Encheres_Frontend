@@ -228,7 +228,8 @@ class AiGenAsset extends Component {
             );
         }
     }
-    async generateMusicAsset() {
+    async generateMusicAsset(e) {
+        e.preventDefault();
         if (!this.note_countValidate()) {
             return;
         }
@@ -420,7 +421,7 @@ class AiGenAsset extends Component {
                         <div style={{ textAlign: "center" }}>
                             <Button
                                 className="mt-2 mb-4 new-item-card-button"
-                                onClick={() => this.generateMusicAsset()}
+                                onClick={(e) => this.generateMusicAsset(e)}
                             >
                                 GENERATE MUSIC FILE
                             </Button>
