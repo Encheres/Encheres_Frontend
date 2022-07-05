@@ -30,7 +30,7 @@ git clone https://github.com/Encheres/Encheres_Backend <br />
   <li>Installing libraries</li>
     <ul>
       <li> Install truffle framework globally using (npm install -g truffle@5.0.5) </li>
-      <li> In root directory of project, run (npm install) <li>
+      <li> In root directory of project, run (npm install) </li>
     </ul>
    <li>For Compiling and migrating Smart Contracts</li>
     <ul>
